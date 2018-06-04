@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.IO;
+using System.Text;
 
 namespace Ruetobas
 {
@@ -18,6 +20,46 @@ namespace Ruetobas
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
     {
+        public void TestowaFunkcja()
+        {
+            try
+            {
+                TcpClient tcpclnt = new TcpClient();
+                Console.WriteLine("Connecting.....");
+
+                tcpclnt.Connect("192.168.1.197", 2137);
+                // use the ipaddress as in the server program
+
+                Console.WriteLine("Connected");
+                Console.Write("Enter the string to be transmitted : ");
+
+                String str = "Hello Uorld";
+                Stream stm = tcpclnt.GetStream();
+
+                ASCIIEncoding asen = new ASCIIEncoding();
+                byte[] ba = asen.GetBytes(str);
+                Console.WriteLine("Transmitting.....");
+
+                stm.Write(ba, 0, ba.Length);
+
+                byte[] bb = new byte[100];
+                int k = stm.Read(bb, 0, 100);
+
+                Console.WriteLine(k);
+                for (int i = 0; i < k; i++)
+                    Console.Write(Convert.ToChar(bb[i]));
+                Console.WriteLine();
+                
+                tcpclnt.Close();
+                
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine("Error..... " + e.StackTrace);
+            }
+        }
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
@@ -25,6 +67,7 @@ namespace Ruetobas
 
         public Game()
         {
+            //TestowaFunkcja();
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -81,14 +124,14 @@ namespace Ruetobas
             //Left click
             if (state.LeftButton == ButtonState.Pressed && beforeState.LeftButton == ButtonState.Released)
             {
-                for (int i = Logic.buttons.Count - 1; i >= 0; i--)
+                /*for (int i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
                     if (Geo.RectContains(Logic.buttons[i].location, new Vector2(state.X, state.Y)))
                     { 
                         Logic.buttons[i].clickEvent();
                         i = -1;
                     }
-                }
+                }*/
             }
 
             beforeState = state;
@@ -108,9 +151,9 @@ namespace Ruetobas
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            foreach (Button button in Logic.buttons)
+            foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
-                spriteBatch.Draw(button.texture, button.location, Color.White);
+                spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);
             }
 
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y - 16, 32, 32), Color.White);

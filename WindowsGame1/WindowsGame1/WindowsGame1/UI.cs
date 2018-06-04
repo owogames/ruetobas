@@ -20,4 +20,9 @@ namespace Ruetobas
             this.clickEvent = clickEvent;
         }
     }
+
+    public class TextBox
+    {
+        public string text;
+    }
 }
