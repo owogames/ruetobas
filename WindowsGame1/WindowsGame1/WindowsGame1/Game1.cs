@@ -124,14 +124,14 @@ namespace Ruetobas
             //Left click
             if (state.LeftButton == ButtonState.Pressed && beforeState.LeftButton == ButtonState.Released)
             {
-                /*for (int i = Logic.buttons.Count - 1; i >= 0; i--)
+                for (int i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.buttons[i].location, new Vector2(state.X, state.Y)))
-                    { 
-                        Logic.buttons[i].clickEvent();
+                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, new Vector2(state.X, state.Y)))
+                    {
+                        Logic.buttons.ElementAt(i).Value.clickEvent();
                         i = -1;
                     }
-                }*/
+                }
             }
 
             beforeState = state;
