@@ -20,8 +20,8 @@ namespace Ruetobas
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        public static Texture2D buttonTexture;
+        
+        public static Texture2D cursorTexture;
 
         public Game()
         {
@@ -49,9 +49,9 @@ namespace Ruetobas
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            buttonTexture = Content.Load<Texture2D>("zoltyskurwiel");
+            cursorTexture = Content.Load<Texture2D>("cursor");
 
-            Logic.Init();
+            Logic.Init(this);
             // TODO: use this.Content to load your game content here
         }
 
@@ -81,11 +81,17 @@ namespace Ruetobas
             //Left click
             if (state.LeftButton == ButtonState.Pressed && beforeState.LeftButton == ButtonState.Released)
             {
-                foreach (Button button in Logic.buttons)
+                for (int i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
-                    //if (Geo.RectContains(button.rectangle, ))
+                    if (Geo.RectContains(Logic.buttons[i].location, new Vector2(state.X, state.Y)))
+                    { 
+                        Logic.buttons[i].clickEvent();
+                        i = -1;
+                    }
                 }
             }
+
+            beforeState = state;
 
             // TODO: Add your update logic here
 
@@ -101,12 +107,15 @@ namespace Ruetobas
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
             foreach (Button button in Logic.buttons)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(button.texture, button.position, Color.White);
-                spriteBatch.End();
+                spriteBatch.Draw(button.texture, button.location, Color.White);
             }
+
+            spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y - 16, 32, 32), Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -1,1 +1,2 @@
 Content\zoltyskurwiel.xnb
+Content\cursor.xnb

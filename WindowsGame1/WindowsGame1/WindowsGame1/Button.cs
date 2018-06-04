@@ -10,13 +10,13 @@ namespace Ruetobas
     public class Button
     {
         public Texture2D texture;
-        public Vector2 position;
+        public Rectangle location;
         public Action clickEvent;
 
-        public Button(Texture2D texture, Vector2 position, Action clickEvent)
+        public Button(Texture2D texture, Rectangle location, Action clickEvent)
         {
             this.texture = texture;
-            this.position = position;
+            this.location = location;
             this.clickEvent = clickEvent;
         }
     }
