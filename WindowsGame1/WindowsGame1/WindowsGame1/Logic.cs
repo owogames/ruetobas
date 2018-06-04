@@ -9,20 +9,22 @@ namespace Ruetobas
 {
     public static class Logic
     {
-        public static List<Button> buttons;
+        public static Dictionary<string, Button> buttons;
 
         public static Texture2D buttonTexture;
 
         public static void Init(Game game)
         {
-            buttons = new List<Button>();
+            buttons = new Dictionary<string, Button>();
+
             buttonTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
-            buttons.Add(new Button(buttonTexture, new Rectangle(0, 0, 200, 100), () => NewButton(50, 50)));
+
+            buttons["0"] = new Button(buttonTexture, new Rectangle(0, 0, 200, 100), () => NewButton(50, 50));
         }
 
         public static void NewButton(int x, int y)
         {
-            buttons.Add(new Button(buttonTexture, new Rectangle(x, y, 200, 100), () => NewButton(x + 50, y + 50)));
+            buttons[x.ToString()] = new Button(buttonTexture, new Rectangle(x, y, 200, 100), () => NewButton(x + 50, y + 50));
         }
     }
 }
