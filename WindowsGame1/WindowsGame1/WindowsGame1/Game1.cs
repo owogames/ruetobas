@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.Net.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
