@@ -21,6 +21,8 @@ namespace Ruetobas
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Button
+
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
