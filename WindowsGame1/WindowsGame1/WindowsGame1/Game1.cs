@@ -1,6 +1,6 @@
 using System;
 using System.Net;
-using System.Net.IO;
+using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Ruetobas
 {
-    /// <summary> qrqrqr
+    /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
