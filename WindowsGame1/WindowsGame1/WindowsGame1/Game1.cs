@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Ruetobas
 {
-    /// <summary> elsonkulson
+    /// <summary> siemson
     /// This is the main type for your game
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
