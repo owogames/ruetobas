@@ -21,7 +21,7 @@ namespace Ruetobas
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Button
+        public static Texture2D buttonTexture;
 
         public Game()
         {
@@ -38,7 +38,6 @@ namespace Ruetobas
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -50,7 +49,9 @@ namespace Ruetobas
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            buttonTexture = Content.Load<Texture2D>("zoltyskurwiel");
 
+            Logic.Init();
             // TODO: use this.Content to load your game content here
         }
 
@@ -63,6 +64,7 @@ namespace Ruetobas
             // TODO: Unload any non ContentManager content here
         }
 
+        MouseState state, beforeState;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -73,6 +75,17 @@ namespace Ruetobas
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
+
+            state = Mouse.GetState();
+            
+            //Left click
+            if (state.LeftButton == ButtonState.Pressed && beforeState.LeftButton == ButtonState.Released)
+            {
+                foreach (Button button in Logic.buttons)
+                {
+                    //if (Geo.RectContains(button.rectangle, ))
+                }
+            }
 
             // TODO: Add your update logic here
 
@@ -88,6 +101,12 @@ namespace Ruetobas
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            foreach (Button button in Logic.buttons)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(button.texture, button.position, Color.White);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }

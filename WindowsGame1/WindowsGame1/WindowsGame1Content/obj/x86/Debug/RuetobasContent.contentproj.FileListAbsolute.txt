@@ -1,0 +1,2 @@
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1Content\obj\x86\Debug\RuetobasContent.contentprojResolveAssemblyReference.cache
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1Content\obj\x86\Debug\RuetobasContent.contentproj.CoreCompileInputs.cache

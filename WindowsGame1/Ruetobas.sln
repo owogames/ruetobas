@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsGame1", "WindowsGame1\WindowsGame1\WindowsGame1.csproj", "{2C956403-A8F7-426F-96CE-CFBE0FDDD10C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ruetobas", "WindowsGame1\WindowsGame1\Ruetobas.csproj", "{2C956403-A8F7-426F-96CE-CFBE0FDDD10C}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "WindowsGame1Content", "WindowsGame1\WindowsGame1Content\WindowsGame1Content.contentproj", "{4BFBD174-EA69-45A6-86EF-F8C9625C563D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuetobasContent", "WindowsGame1\WindowsGame1Content\RuetobasContent.contentproj", "{4BFBD174-EA69-45A6-86EF-F8C9625C563D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
