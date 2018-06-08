@@ -20,6 +20,7 @@ namespace Ruetobas
         {
             buttons = new Dictionary<string, Button>();
             textBoxes = new Dictionary<string, TextBox>();
+            inputBoxes = new Dictionary<string, InputBox>();
 
             buttonTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
             font = game.Content.Load<SpriteFont>("font");
@@ -27,6 +28,9 @@ namespace Ruetobas
             buttons["0"] = new Button(buttonTexture, new Rectangle(0, 0, 200, 100), () => NewButton(50, 50));
 
             textBoxes["TEST"] = new TextBox(buttonTexture, font, new Rectangle(100, 100, 300, 300));
+
+            inputBoxes["TEST"] = new InputBox(buttonTexture, font, new Rectangle(500, 0, 200, 30), Color.White, Color.Red, "JESTEM PUSTY :<");
+            inputBoxes["TEST"].text = "NIE JESTEM PUSTY :3";
         }
 
         public static int timer = 0;
