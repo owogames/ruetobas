@@ -55,4 +55,33 @@ namespace Ruetobas
         public int scroll = 0;
         public int lineCount;
     }
+
+    public class InputBox
+    { 
+        public Texture2D texture;
+        public SpriteFont font;
+        public Rectangle location;
+        public Color color;
+        public Color emptyColor;
+        public bool active;
+        public string text;
+        public string emptyText;
+
+        public InputBox(Texture2D texture, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText)
+        {
+            this.texture = texture;
+            this.font = font;
+            this.location = location;
+            this.color = color;
+            this.emptyColor = emptyColor;
+            this.emptyText = emptyText;
+            text = "";
+            active = false;
+        }
+
+        public void Clear()
+        {
+            text = "";
+        }
+    }
 }

@@ -11,6 +11,7 @@ namespace Ruetobas
     {
         public static Dictionary<string, Button> buttons;
         public static Dictionary<string, TextBox> textBoxes;
+        public static Dictionary<string, InputBox> inputBoxes;
 
         public static Texture2D buttonTexture;
         public static SpriteFont font;

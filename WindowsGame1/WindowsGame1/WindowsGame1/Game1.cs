@@ -183,6 +183,21 @@ namespace Ruetobas
                         new Vector2(textBox.Value.location.X, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll)), Color.White);
             }
 
+            foreach (KeyValuePair<string, InputBox> inputBox in Logic.inputBoxes)
+            {
+                // InputBox IB = inputBox.Value; (referencja)
+
+                spriteBatch.Draw(inputBox.Value.texture, inputBox.Value.location, inputBox.Value.active ? Color.Gray : Color.White);
+                if (inputBox.Value.text != "")
+                {
+                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.text, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.color);
+                }
+                else
+                {
+                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.emptyText, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.emptyColor);
+                }
+            }
+
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y - 16, 32, 32), Color.White);
 
             spriteBatch.End();
