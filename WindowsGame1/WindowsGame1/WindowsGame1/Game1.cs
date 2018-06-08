@@ -134,6 +134,25 @@ namespace Ruetobas
                 }
             }
 
+            int scrollWheelDelta = state.ScrollWheelValue - beforeState.ScrollWheelValue;
+            if (scrollWheelDelta != 0)
+            {
+                for (int i = Logic.textBoxes.Count - 1; i >= 0; i--)
+                {
+                    TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
+                    if (Geo.RectContains(textBox.location, new Vector2(state.X, state.Y)))
+                    {
+                        if (scrollWheelDelta < 0)
+                            textBox.scroll++;
+                        else if (textBox.scroll > 0)
+                            textBox.scroll--;
+                        i = -1;
+                    }
+                }
+            }
+
+            Logic.Update(this);
+
             beforeState = state;
 
             // TODO: Add your update logic here
@@ -154,6 +173,14 @@ namespace Ruetobas
             foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
                 spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);
+            }
+
+            foreach (KeyValuePair<string, TextBox> textBox in Logic.textBoxes)
+            {
+                spriteBatch.Draw(textBox.Value.texture, textBox.Value.location, Color.White);
+                for (int i = textBox.Value.scroll; i < textBox.Value.lines.Count && i < textBox.Value.lineCount + textBox.Value.scroll; i++)
+                    spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i],
+                        new Vector2(textBox.Value.location.X, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll)), Color.White);
             }
 
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y - 16, 32, 32), Color.White);
