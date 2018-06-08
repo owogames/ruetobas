@@ -153,7 +153,7 @@ namespace Ruetobas
                     case Keys.D4: if (shift) { key = '$'; } else { key = '4'; } return true;
                     case Keys.D5: if (shift) { key = '%'; } else { key = '5'; } return true;
                     case Keys.D6: if (shift) { key = '^'; } else { key = '6'; } return true;
-                    case Keys.D7: if (shift) { key = '&amp;'; } else { key = '7'; } return true;
+                    case Keys.D7: if (shift) { key = '&'; } else { key = '7'; } return true;
                     case Keys.D8: if (shift) { key = '*'; } else { key = '8'; } return true;
                     case Keys.D9: if (shift) { key = '('; } else { key = '9'; } return true;
 
@@ -279,7 +279,7 @@ namespace Ruetobas
                 }
             }
 
-            spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y - 16, 32, 32), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
 
             spriteBatch.End();
 
