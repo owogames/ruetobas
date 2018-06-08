@@ -4,8 +4,17 @@
 #include <set>
 
 #include "ServerTCP.h"
+#include "Parser.h"
 
 int main() {
+	/*
+	while (true) {
+		std::string s, first, second;
+		std::getline(cin, s);
+		std::tie(first, second) = pars(s);
+		cout << first << "||" << second << "|END" << endl;
+	}
+	*/
 	ServerTCP server(2137);
 	std::set<int> fds;
 
@@ -23,5 +32,5 @@ int main() {
 			}
 		}
 	}
-
+	
 }
