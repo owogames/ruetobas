@@ -39,6 +39,11 @@ namespace Ruetobas
             
         }
 
+        public static void TCPRecieved(string message, Game game)
+        {
+            Console.WriteLine(message);
+        }
+
         public static void NewButton(int x, int y)
         {
             buttons[x.ToString()] = new Button(buttonTexture, new Rectangle(x, y, 200, 100), () => NewButton(x + 50, y + 50));

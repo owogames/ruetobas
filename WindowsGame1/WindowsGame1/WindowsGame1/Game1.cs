@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -20,43 +21,44 @@ namespace Ruetobas
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
     {
-        public void TestowaFunkcja()
+        public TcpClient tcpClient = new TcpClient();
+        public Stream stream;
+        public ASCIIEncoding asen;
+        public ThreadStart tcpThreadStart;
+        public Thread tcpThread;
+
+        public void TCPConnect(string IP, int port)
         {
             try
             {
-                TcpClient tcpclnt = new TcpClient();
-                Console.WriteLine("Connecting.....");
-
-                tcpclnt.Connect("192.168.1.197", 2137);
-                // use the ipaddress as in the server program
-
-                Console.WriteLine("Connected");
-                Console.Write("Enter the string to be transmitted : ");
-
-                String str = "Hello Uorld";
-                Stream stm = tcpclnt.GetStream();
-
-                ASCIIEncoding asen = new ASCIIEncoding();
-                byte[] ba = asen.GetBytes(str);
-                Console.WriteLine("Transmitting.....");
-
-                stm.Write(ba, 0, ba.Length);
-
-                byte[] bb = new byte[100];
-                int k = stm.Read(bb, 0, 100);
-
-                Console.WriteLine(k);
-                for (int i = 0; i < k; i++)
-                    Console.Write(Convert.ToChar(bb[i]));
-                Console.WriteLine();
-                
-                tcpclnt.Close();
-                
+                tcpClient.Connect(IP, port);
+                stream = tcpClient.GetStream();
+                tcpThreadStart = new ThreadStart(TCPListening);
+                tcpThread = new Thread(tcpThreadStart);
+                tcpThread.Start();
             }
-
             catch (Exception e)
             {
-                Console.WriteLine("Error..... " + e.StackTrace);
+                Console.WriteLine("Connection Timed Out: " + e.Message);
+            }
+        }
+
+        public void TCPSend(string msg)
+        {
+            byte[] bytes = asen.GetBytes(msg);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+        
+        public void TCPListening()
+        {
+            byte[] bytes = new byte[100];
+            while (true)
+            {
+                int length = stream.Read(bytes, 0, 100);
+                string msg = "";
+                for (int i = 0; i < length; i++)
+                    msg += Convert.ToChar(bytes[i]);
+                Logic.TCPRecieved(msg, this);
             }
         }
 
@@ -67,7 +69,7 @@ namespace Ruetobas
 
         public Game()
         {
-            //TestowaFunkcja();
+            //TCPConnect("192.168.1.123", 2137);
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
@@ -188,7 +190,8 @@ namespace Ruetobas
             return false;
         }
 
-        MouseState state, beforeState;
+        MouseState mouseState, mouseBeforeState;
+        KeyboardState keyboardState, keyboardBeforeState;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -200,14 +203,15 @@ namespace Ruetobas
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            state = Mouse.GetState();
+            mouseState = Mouse.GetState();
+            keyboardState = Keyboard.GetState();
             
             //Left click
-            if (state.LeftButton == ButtonState.Pressed && beforeState.LeftButton == ButtonState.Released)
+            if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
             {
                 for (int i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, new Vector2(state.X, state.Y)))
+                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, new Vector2(mouseState.X, mouseState.Y)))
                     {
                         Logic.buttons.ElementAt(i).Value.clickEvent();
                         i = -1;
@@ -215,13 +219,13 @@ namespace Ruetobas
                 }
             }
 
-            int scrollWheelDelta = state.ScrollWheelValue - beforeState.ScrollWheelValue;
+            int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
             {
                 for (int i = Logic.textBoxes.Count - 1; i >= 0; i--)
                 {
                     TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                    if (Geo.RectContains(textBox.location, new Vector2(state.X, state.Y)))
+                    if (Geo.RectContains(textBox.location, new Vector2(mouseState.X, mouseState.Y)))
                     {
                         if (scrollWheelDelta < 0)
                             textBox.scroll++;
@@ -234,7 +238,8 @@ namespace Ruetobas
 
             Logic.Update(this);
 
-            beforeState = state;
+            mouseBeforeState = mouseState;
+            keyboardBeforeState = keyboardState;
 
             // TODO: Add your update logic here
 
