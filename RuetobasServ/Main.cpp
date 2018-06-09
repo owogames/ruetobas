@@ -11,7 +11,7 @@
 bool invalid_login(std::string s) {
 	if(s.empty()) return true;
 	for(auto c : s) 
-		if(!isalnum(c)) return true;
+		if(c < 31 || c > 126) return true;
 	return false;
 }
 
