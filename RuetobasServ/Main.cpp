@@ -9,10 +9,10 @@
 #include "Parser.h"
 
 bool invalid_login(std::string s) {
-	if(s.empty()) return false;
+	if(s.empty()) return true;
 	for(auto c : s) 
-		if(!isalnum(c)) return false;
-	return true;
+		if(!isalnum(c)) return true;
+	return false;
 }
 
 int main() {
