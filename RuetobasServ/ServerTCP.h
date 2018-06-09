@@ -33,12 +33,25 @@ private:
 
 	std::queue<std::pair<int, std::string>> msg_queue;
 
+	///przyjmuje nowe po³¹czenie
 	int accept();
+
+	///czyta wiadomoœæ od socketa, wy³¹czaj¹c go, jeœli siê roz³¹czy³
 	std::string getMsg(int fd);
 
 public:
+    ///tworzy serwer na danym porcie
 	ServerTCP(int port);
+
+	///zwraca now¹ wiadomoœæ jako {numer socketa, wiadomoœæ}, lub {-1, ""}, kiedy nie ma ¿adnych wiadomoœci
 	std::pair<int, std::string> read();
+
+	///wysy³a wiadomoœæ do socketa
 	void write(int fd, std::string msg);
+
+	///wywala socketa z serwera
+	void remove(int fd);
+
+	///wyjebuje serwer
 	~ServerTCP();
 };

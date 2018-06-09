@@ -1,36 +1,50 @@
 #include <iostream>
 #include <algorithm>
 #include <tuple>
+#include <string>
+#include <map>
 #include <set>
 
 #include "ServerTCP.h"
 #include "Parser.h"
 
 int main() {
-	/*
-	while (true) {
-		std::string s, first, second;
-		std::getline(cin, s);
-		std::tie(first, second) = pars(s);
-		cout << first << "||" << second << "|END" << endl;
-	}
-	*/
 	ServerTCP server(2137);
-	std::set<int> fds;
+	std::set<std::string> nicks;
+	std::map<int, std::string> users;
 
 	while(true) {
 		int fd;
-		std::string msg;
+		std::string msg, command, text;
 		std::tie(fd, msg) = server.read();
+		std::tie(command, text) = parse(msg);
 
 		if(fd != -1) {
 
-			if(!fds.insert(fd).second) {
-				for(auto fd2 : fds)
-					if(fd2 != fd)
-						server.write(fd2, msg);
-			}
+            if(command == "LOGIN") {
+                if(nicks.find(text) != nicks.end())
+                   server.write(fd, "ERROR Login taken");
+                else {
+                    nicks.insert(text);
+                    users[fd] = text;
+                    for(auto p : users)
+                        server.write(p.first, "JOIN " + text);
+                }
+            }
+
+            else if(command == "CHAT") {
+                for(auto p : users)
+                    server.write(p.first, "CHAT " + users[fd] + " " + text);
+            }
+
+            else if(command == "QUIT") {
+                for(auto p : users)
+                    server.write(p.first, "BYE " + users[fd]);
+                server.remove(fd);
+                nicks.erase(users[fd]);
+                users.erase(fd);
+            }
 		}
 	}
-	
+
 }
