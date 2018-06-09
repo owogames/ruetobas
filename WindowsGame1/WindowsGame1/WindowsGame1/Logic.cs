@@ -61,14 +61,14 @@ namespace Ruetobas
         {
             Console.WriteLine(message);
             if (message.Substring(0, 4) == "CHAT")
-                textBoxes["CHAT"].Append(message.Substring(5));
+                textBoxes["CHAT"].Append(message.Substring(5).Trim());
             if (message.Substring(0, 4) == "JOIN")
-                textBoxes["CHAT"].Append(message.Substring(5) + " has joined the chat.");
+                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the chat.");
             if (message.Substring(0, 3) == "BYE")
-                textBoxes["CHAT"].Append(message.Substring(4) + " has left the chat.");
+                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the chat.");
             if (message.Substring(0, 5) == "ERROR")
             {
-                textBoxes["CHAT"].Append(message.Substring(6));
+                textBoxes["CHAT"].Append(message.Substring(6).Trim());
                 game.tcpThread.Abort();
             }
         }
