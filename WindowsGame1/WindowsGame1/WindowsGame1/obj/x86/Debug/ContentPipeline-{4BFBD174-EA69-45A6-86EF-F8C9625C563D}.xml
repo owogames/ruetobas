@@ -28,6 +28,15 @@
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\font.xnb</Output>
       <Time>2018-06-04T22:39:01.065253+02:00</Time>
     </Item>
+    <Item>
+      <Source>tekstura.png</Source>
+      <Name>tekstura</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura.xnb</Output>
+      <Time>2018-06-09T17:06:10.9180181+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{4BFBD174-EA69-45A6-86EF-F8C9625C563D}</ContentProjectGUID>

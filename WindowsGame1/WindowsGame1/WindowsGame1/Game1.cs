@@ -33,6 +33,7 @@ namespace Ruetobas
             {
                 tcpClient.Connect(IP, port);
                 stream = tcpClient.GetStream();
+                TCPSend("LOGIN " + Logic.username);
                 tcpThreadStart = new ThreadStart(TCPListening);
                 tcpThread = new Thread(tcpThreadStart);
                 tcpThread.Start();
@@ -69,8 +70,9 @@ namespace Ruetobas
 
         public Game()
         {
-            //TCPConnect("192.168.1.123", 2137);
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
         }
 
@@ -190,8 +192,8 @@ namespace Ruetobas
             return false;
         }
 
-        MouseState mouseState, mouseBeforeState;
-        KeyboardState keyboardState, keyboardBeforeState;
+        public MouseState mouseState, mouseBeforeState;
+        public KeyboardState keyboardState, keyboardBeforeState;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
