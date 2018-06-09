@@ -257,7 +257,7 @@ namespace Ruetobas
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
                 spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);

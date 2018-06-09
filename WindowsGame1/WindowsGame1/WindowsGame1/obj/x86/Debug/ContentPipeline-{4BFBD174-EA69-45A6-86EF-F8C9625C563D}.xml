@@ -17,7 +17,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cursor.xnb</Output>
-      <Time>2018-06-04T14:32:39.5305731+02:00</Time>
+      <Time>2018-06-09T19:32:35.6366862+02:00</Time>
     </Item>
     <Item>
       <Source>font.spritefont</Source>
@@ -35,7 +35,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura.xnb</Output>
-      <Time>2018-06-09T17:06:10.9180181+02:00</Time>
+      <Time>2018-06-09T19:31:13.1022214+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
