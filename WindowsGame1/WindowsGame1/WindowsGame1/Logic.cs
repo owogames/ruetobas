@@ -19,7 +19,7 @@ namespace Ruetobas
 
         public const int port = 2137;
 
-        public static string IP = "";
+        public static string IP = "176.221.122.141";
         public static string username = "No Elo"; 
 
         public static void Init(Game game)
@@ -38,7 +38,7 @@ namespace Ruetobas
             //inputBoxes["TEST"] = new InputBox(buttonTexture, font, new Rectangle(500, 0, 200, 30), Color.White, Color.Red, "JESTEM PUSTY :<");
             //inputBoxes["TEST"].text = "NIE JESTEM PUSTY :3";
 
-            //game.TCPConnect(IP, port);
+            game.TCPConnect(IP, port);
         }
 
         public static int timer = 0;
