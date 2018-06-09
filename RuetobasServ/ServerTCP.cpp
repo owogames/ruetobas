@@ -13,35 +13,51 @@ void err(const char* msg) {
 
 const int BUFF_SIZE = 1024;
 
-#ifdef WIN32
+
+
+void ServerTCP::remove(int fd) {
+    FD_CLR(fd, &fds);
+    #ifdef WIN32
+    closesocket(fd);
+    #else
+    close(fd);
+    #endif
+}
+
+
 
 std::string ServerTCP::getMsg(int fd) {
+
 	char buff[BUFF_SIZE];
 	memset(buff, 0, BUFF_SIZE);
 
 	int len = recv(fd, buff, BUFF_SIZE, 0);
 
-	if(len <= 0) {
-		if(len < 0)
-			printf("read failed @ socket %i\n", fd);
-		else
-			printf("socket %i hung up\n", fd);
+	if(len <= 0)
+		printf("read failed @ socket %i\n", fd);
 
-		closesocket(fd);
-
-		FD_CLR(fd, &fds);
+    else if(len < 0) {
+        printf("socket %i hung up\n", fd);
+        remove(fd);
 	}
 	else
-		printf("socket %i sent %.*s\n", fd, len, buff);
+		printf("[%i]: %.*s\n", fd, len, buff);
 
 	return buff;
 }
 
+
+
 int ServerTCP::accept() {
 
-	socklen_t addrlen = sizeof(sockaddr_in);
+    socklen_t addrlen = sizeof(sockaddr_in);
 	sockaddr_in client_addr;
+
+    #ifdef WIN32
 	int newsockfd = ::accept(sockfd, nullptr, nullptr);
+    #else
+	int newsockfd = ::accept(sockfd, (sockaddr*) &client_addr, &addrlen);
+    #endif
 
 	if(newsockfd == -1)
 		err("accept");
@@ -54,8 +70,11 @@ int ServerTCP::accept() {
 	return newsockfd;
 }
 
+
+
 ServerTCP::ServerTCP(int port) {
 
+    #ifdef WIN32
 	WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
         fatal_err("WSAStartup");
@@ -69,7 +88,11 @@ ServerTCP::ServerTCP(int port) {
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
 
-    if(getaddrinfo(NULL, "2137", &hints, &result) != 0)
+	char port_cstr[10];
+	memset(port_cstr, 0, 10);
+	sprintf_s(port_cstr, 10, "%i", port);
+
+    if(getaddrinfo(NULL, port_cstr, &hints, &result) != 0)
         fatal_err("getaddrinfo");
 
     sockfd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
@@ -81,107 +104,12 @@ ServerTCP::ServerTCP(int port) {
 
     freeaddrinfo(result);
 
-    if (listen(sockfd, SOMAXCONN) == SOCKET_ERROR)
+    if(listen(sockfd, SOMAXCONN) == SOCKET_ERROR)
         fatal_err("listen");
 
 
-	FD_ZERO(&fds);
-	FD_SET(sockfd, &fds);
-
-	maxfd = sockfd;
-}
-
-std::pair<int, std::string> ServerTCP::read() {
-	if(msg_queue.empty()) {
-
-		fd_set read_fds = fds;
-		timeval timeout{0, 0};
-
-		if(select(maxfd + 1, &read_fds, NULL, NULL, &timeout) == SOCKET_ERROR)
-			err("select");
-
-		for(int fd = 0; fd <= maxfd; fd++) {
-			if(FD_ISSET(fd, &read_fds)) {
-				if(fd == sockfd) {
-					int newfd = accept();
-					if(newfd != -1)
-						msg_queue.emplace(newfd, "");
-				}
-				else
-					msg_queue.emplace(fd, getMsg(fd));
-			}
-		}
-
-
-	}
-
-	if(msg_queue.empty())
-		return {-1, ""};
-	else {
-		auto ret = msg_queue.front();
-		msg_queue.pop();
-		return ret;
-	}
-}
-
-void ServerTCP::write(int fd, std::string msg) {
-	if(send(fd, msg.data(), msg.size(), 0) == SOCKET_ERROR)
-		err("send");
-}
-
-ServerTCP::~ServerTCP() {
-    closesocket(sockfd);
-    WSACleanup();
-}
-
-#else
-
-
-std::string ServerTCP::getMsg(int fd) {
-	char buff[BUFF_SIZE];
-	memset(buff, 0, BUFF_SIZE);
-
-	int len = recv(fd, buff, BUFF_SIZE, 0);
-
-	if(len <= 0) {
-		if(len < 0)
-			printf("read failed @ socket %i\n", fd);
-		else
-			printf("socket %i hung up\n", fd);
-
-		close(fd);
-
-		FD_CLR(fd, &fds);
-	}
-	else {
-		printf("socket %i sent %.*s\n", fd, len, buff);
-
-	return buff;
-}
-
-
-int ServerTCP::accept() {
-
-	socklen_t addrlen = sizeof(sockaddr_in);
-	sockaddr_in client_addr;
-	int newsockfd = ::accept(sockfd, (sockaddr*) &client_addr, &addrlen);
-
-	if(newsockfd == -1)
-		err("accept");
-	else {
-		FD_SET(newsockfd, &fds);
-		if(newsockfd > maxfd)
-			maxfd = newsockfd;
-	}
-
-	return newsockfd;
-}
-
-
-ServerTCP::ServerTCP(int port) {
-
-
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    #else
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd == -1)
 		fatal_err("socket");
 
@@ -200,12 +128,16 @@ ServerTCP::ServerTCP(int port) {
 
 	if(listen(sockfd, 10) == -1)
 		fatal_err("listen");
+    #endif
+
+
 
 	FD_ZERO(&fds);
 	FD_SET(sockfd, &fds);
 
 	maxfd = sockfd;
 }
+
 
 
 std::pair<int, std::string> ServerTCP::read() {
@@ -228,8 +160,6 @@ std::pair<int, std::string> ServerTCP::read() {
 					msg_queue.emplace(fd, getMsg(fd));
 			}
 		}
-
-
 	}
 
 	if(msg_queue.empty())
@@ -242,14 +172,19 @@ std::pair<int, std::string> ServerTCP::read() {
 }
 
 
+
 void ServerTCP::write(int fd, std::string msg) {
-	if(::write(fd, msg.data(), msg.size()) < 0)
-		err("write");
+	if(send(fd, msg.data(), msg.size(), 0) == -1)
+		err("send");
 }
+
 
 
 ServerTCP::~ServerTCP() {
-
+    #ifdef WIN32
+    closesocket(sockfd);
+    WSACleanup();
+    #else
+    //TODO
+    #endif
 }
-
-#endif
