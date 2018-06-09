@@ -1,18 +1,24 @@
 #include "Parser.h"
 
-pair<string, string> pars(string command) {
-	string first = "", second = "";
-	bool first_part = true;
-	for (int i = 0; i < command.length(); i++) {
-		if (command[i] == ' ' & first_part) {
-			first_part = false;
+pair<string, string> parse(string str) {
+	string command = "", text = "";
+	int part = 0;
+	
+	for(auto c : str) {
+		if(part == 0) {
+			if(isspace(c)) part++;
+			else command += c;
 		}
-		else if (first_part) {
-			first += command[i];
+		if(part == 1) {
+			if(!isspace(c)) part++;
 		}
-		else {
-			second += command[i];
+		if(part == 2) {
+			text += c;
 		}
 	}
-	return make_pair(first, second);
+	
+	while(!text.empty() && isspace(text.back()))
+		text.pop_back();
+	
+	return {command, text};
 }
