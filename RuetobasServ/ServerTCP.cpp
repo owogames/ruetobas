@@ -33,10 +33,10 @@ std::string ServerTCP::getMsg(int fd) {
 
 	int len = recv(fd, buff, BUFF_SIZE, 0);
 
-	if(len <= 0)
+	if(len < 0)
 		printf("read failed @ socket %i\n", fd);
 
-    else if(len < 0) {
+    else if(len == 0) {
         printf("socket %i hung up\n", fd);
         remove(fd);
 	}
@@ -62,6 +62,7 @@ int ServerTCP::accept() {
 	if(newsockfd == -1)
 		err("accept");
 	else {
+        printf("socket %i connected\n", newsockfd);
 		FD_SET(newsockfd, &fds);
 		if(newsockfd > maxfd)
 			maxfd = newsockfd;
