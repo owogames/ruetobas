@@ -8,6 +8,13 @@
 #include "ServerTCP.h"
 #include "Parser.h"
 
+bool invalid_login(std::string s) {
+	if(s.empty()) return false;
+	for(auto c : s) 
+		if(!isalnum(c)) return false;
+	return true;
+}
+
 int main() {
 	ServerTCP server(2137);
 	std::set<std::string> nicks;
@@ -22,29 +29,39 @@ int main() {
 		if(fd != -1) {
 
             if(command == "LOGIN") {
-                if(nicks.find(text) != nicks.end())
+				if(users.find(fd) != users.end())
+					server.write(fd, "ERROR Already Logged In");
+				
+                else if(nicks.find(text) != nicks.end())
                    server.write(fd, "ERROR Login taken");
+                   
+				else if(invalid_login(text))
+					server.write(fd, "ERROR Invalid Login");
+					
                 else {
                     nicks.insert(text);
                     users[fd] = text;
-                    for(auto p : users)
-                        server.write(p.first, "JOIN " + text);
+                    for(auto u : users)
+                        server.write(u.first, "JOIN " + text);
                 }
             }
 
             else if(command == "CHAT") {
-                for(auto p : users)
-                    server.write(p.first, "CHAT " + text);
+				if(users.find(fd) == users.end())
+					server.write(fd, "ERROR Not Logged In");
+				else {
+					for(auto u : users)
+						server.write(u.first, "CHAT " + text);
+				}
             }
 
             else if(command == "QUIT") {
-                for(auto p : users)
-                    server.write(p.first, "BYE " + users[fd]);
+                for(auto u : users)
+                    server.write(u.first, "BYE " + users[fd]);
                 server.remove(fd);
                 nicks.erase(users[fd]);
                 users.erase(fd);
             }
 		}
 	}
-
 }
