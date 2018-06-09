@@ -85,6 +85,8 @@ namespace Ruetobas
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            asen = new ASCIIEncoding();
+            Logic.Init(this);
             base.Initialize();
         }
 
@@ -97,8 +99,6 @@ namespace Ruetobas
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             cursorTexture = Content.Load<Texture2D>("cursor");
-
-            Logic.Init(this);
             // TODO: use this.Content to load your game content here
         }
 

@@ -28,18 +28,18 @@ int main() {
                     nicks.insert(text);
                     users[fd] = text;
                     for(auto p : users)
-                        server.write(p.first, "JOIN " + text + "\n");
+                        server.write(p.first, "JOIN " + text);
                 }
             }
 
             else if(command == "CHAT") {
                 for(auto p : users)
-                    server.write(p.first, "CHAT " + text + "\n");
+                    server.write(p.first, "CHAT " + text);
             }
 
             else if(command == "QUIT") {
                 for(auto p : users)
-                    server.write(p.first, "BYE " + users[fd] + "\n");
+                    server.write(p.first, "BYE " + users[fd]);
                 server.remove(fd);
                 nicks.erase(users[fd]);
                 users.erase(fd);

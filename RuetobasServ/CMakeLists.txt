@@ -1,5 +1,5 @@
 set(CMAKE_CXX_STANDARD 11)
-add_executable(Main Main.cpp ServerTCP.cpp)
+add_executable(Main Main.cpp ServerTCP.cpp Parser.cpp)
 if(WIN32)
   target_link_libraries(Main wsock32 ws2_32)
 endif()
