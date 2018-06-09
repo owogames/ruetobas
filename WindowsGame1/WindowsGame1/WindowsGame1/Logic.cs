@@ -19,7 +19,7 @@ namespace Ruetobas
 
         public const int port = 2137;
 
-        public static string IP = "192.168.0.157";
+        public static string IP = "81.190.71.186";
         public static string username = "No Elo";
 
         public static void Init(Game game)
