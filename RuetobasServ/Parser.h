@@ -4,4 +4,4 @@ using namespace std;
 ///<summary>
 ///Returns pair of strings where first is command's type and second is the command's content.
 ///</summary>
-pair<string, string> pars(string command);
+pair<string, string> parse(string command);

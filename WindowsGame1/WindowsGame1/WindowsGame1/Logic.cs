@@ -19,8 +19,8 @@ namespace Ruetobas
 
         public const int port = 2137;
 
-        public static string IP = "176.221.122.141";
-        public static string username = "No Elo"; 
+        public static string IP = "192.168.0.157";
+        public static string username = "No Elo";
 
         public static void Init(Game game)
         {
@@ -33,7 +33,7 @@ namespace Ruetobas
 
             //buttons["0"] = new Button(buttonTexture, new Rectangle(0, 0, 200, 100), () => NewButton(50, 50));
 
-            textBoxes["TEST"] = new TextBox(chatTexture, font, new Rectangle(440, 100, 400, 400));
+            textBoxes["CHAT"] = new TextBox(chatTexture, font, new Rectangle(440, 100, 400, 400));
 
             //inputBoxes["TEST"] = new InputBox(buttonTexture, font, new Rectangle(500, 0, 200, 30), Color.White, Color.Red, "JESTEM PUSTY :<");
             //inputBoxes["TEST"].text = "NIE JESTEM PUSTY :3";
@@ -49,7 +49,10 @@ namespace Ruetobas
             if (game.keyboardState.IsKeyDown(Keys.Escape) && game.keyboardBeforeState.IsKeyUp(Keys.Escape))
             {
                 if (game.tcpThread != null)
+                {
+                    game.TCPSend("QUIT");
                     game.tcpThread.Abort();
+                }
                 game.Exit();
             }
         }
@@ -58,14 +61,14 @@ namespace Ruetobas
         {
             Console.WriteLine(message);
             if (message.Substring(0, 4) == "CHAT")
-                textBoxes["CHAT"].Append(message.Substring(5));
+                textBoxes["CHAT"].Append(message.Substring(5).Trim());
             if (message.Substring(0, 4) == "JOIN")
-                textBoxes["CHAT"].Append(message.Substring(5) + " has joined the chat.");
+                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the chat.");
             if (message.Substring(0, 3) == "BYE")
-                textBoxes["CHAT"].Append(message.Substring(4) + " has left the chat.");
+                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the chat.");
             if (message.Substring(0, 5) == "ERROR")
             {
-                textBoxes["CHAT"].Append(message.Substring(6));
+                textBoxes["CHAT"].Append(message.Substring(6).Trim());
                 game.tcpThread.Abort();
             }
         }
