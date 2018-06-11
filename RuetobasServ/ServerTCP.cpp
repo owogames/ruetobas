@@ -33,12 +33,14 @@ std::string ServerTCP::getMsg(int fd) {
 
 	int len = recv(fd, buff, BUFF_SIZE, 0);
 
-	if(len < 0)
-		printf("read failed @ socket %i\n", fd);
-
-    else if(len == 0) {
-        printf("socket %i hung up\n", fd);
+	if(len <= 0) {
+		if(len < 0) 
+			printf("read failed @ socket %i\n", fd);
+		else
+			printf("socket %i hung up\n", fd);
+			
         remove(fd);
+        msg_queue.emplace(fd, "QUIT");
 	}
 	else
 		printf("[%i]: %.*s\n", fd, len, buff);
