@@ -59,7 +59,7 @@ namespace Ruetobas
                 string msg = "";
                 for (int i = 0; i < length; i++)
                     msg += Convert.ToChar(bytes[i]);
-                Logic.TCPRecieved(msg, this);
+                Logic.TCPRecieved(msg);
             }
         }
 
@@ -194,6 +194,8 @@ namespace Ruetobas
 
         public MouseState mouseState, mouseBeforeState;
         public KeyboardState keyboardState, keyboardBeforeState;
+
+        string activeInputBoxName = "";
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -203,7 +205,7 @@ namespace Ruetobas
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+                Exit();
 
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
@@ -219,8 +221,45 @@ namespace Ruetobas
                         i = -1;
                     }
                 }
+
+                for (int i = Logic.inputBoxes.Count - 1; i >= 0; i--)
+                {
+                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, new Vector2(mouseState.X, mouseState.Y)))
+                    {
+                        if (activeInputBoxName != "")
+                            Logic.inputBoxes[activeInputBoxName].active = false;
+                        activeInputBoxName = Logic.inputBoxes.ElementAt(i).Key;
+                        Logic.inputBoxes[activeInputBoxName].active = true;
+                        i = -1;
+                    }
+
+                    if (i == 0)
+                    {
+                        if (activeInputBoxName != "")
+                        {
+                            Logic.inputBoxes[activeInputBoxName].active = false;
+                            activeInputBoxName = "";
+                        }
+                    }
+                }
             }
 
+            char key;
+            if (TryConvertKeyboardInput(keyboardState, keyboardBeforeState, out key))
+            {
+                if (activeInputBoxName != "")
+                {
+                    Logic.inputBoxes[activeInputBoxName].text += key;
+                }
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBoxName != "")
+            {
+                if (Logic.inputBoxes[activeInputBoxName].text.Length > 0)
+                    Logic.inputBoxes[activeInputBoxName].text = Logic.inputBoxes[activeInputBoxName].text.Remove(Logic.inputBoxes[activeInputBoxName].text.Length - 1);
+            }
+
+            //Scroll
             int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
             {
@@ -238,13 +277,11 @@ namespace Ruetobas
                 }
             }
 
-            Logic.Update(this);
+            Logic.Update();
 
             mouseBeforeState = mouseState;
             keyboardBeforeState = keyboardState;
-
-            // TODO: Add your update logic here
-
+            
             base.Update(gameTime);
         }
 
@@ -256,7 +293,6 @@ namespace Ruetobas
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
@@ -276,9 +312,12 @@ namespace Ruetobas
                 // InputBox IB = inputBox.Value; (referencja)
 
                 spriteBatch.Draw(inputBox.Value.texture, inputBox.Value.location, inputBox.Value.active ? Color.Gray : Color.White);
+                string text = inputBox.Value.text;
+                if (inputBox.Value.active) text += "|";
+
                 if (inputBox.Value.text != "")
                 {
-                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.text, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.color);
+                    spriteBatch.DrawString(inputBox.Value.font, text, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.color);
                 }
                 else
                 {

@@ -35,7 +35,25 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura.xnb</Output>
-      <Time>2018-06-09T19:31:13.1022214+02:00</Time>
+      <Time>2018-06-11T15:00:36.0203399+02:00</Time>
+    </Item>
+    <Item>
+      <Source>tekstura2.png</Source>
+      <Name>tekstura2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura2.xnb</Output>
+      <Time>2018-06-11T15:00:36.0515414+02:00</Time>
+    </Item>
+    <Item>
+      <Source>tekstura3.png</Source>
+      <Name>tekstura3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura3.xnb</Output>
+      <Time>2018-06-11T15:00:36.0515414+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

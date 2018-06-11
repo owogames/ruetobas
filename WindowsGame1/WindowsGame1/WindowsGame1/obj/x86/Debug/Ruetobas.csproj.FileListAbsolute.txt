@@ -19,3 +19,5 @@ C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\Windo
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cursor.xnb
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\font.xnb
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura2.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura3.xnb
