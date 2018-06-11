@@ -11,7 +11,7 @@
 bool invalid_login(std::string s) {
 	if(s.empty()) return true;
 	for(auto c : s) 
-		if(c < 31 || c > 126) return true;
+		if(c < 32 || c > 126) return true;
 	return false;
 }
 
@@ -19,7 +19,7 @@ int main() {
 	ServerTCP server(2137);
 	std::set<std::string> nicks;
 	std::map<int, std::string> users;
-
+	
 	while(true) {
 		int fd;
 		std::string msg, command, text;
