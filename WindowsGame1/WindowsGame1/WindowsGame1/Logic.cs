@@ -89,9 +89,10 @@ namespace Ruetobas
 
             if (game.TCPConnect(IP, port))
             {
+                
                 inputBoxes.Clear();
                 textBoxes["errorbox"].lines.Clear();
-                textBoxes["errorbox"].lines.Add("Successfully connected");
+                textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
                 textBoxes["CHAT"] = new TextBox(chatTexture, font, new Rectangle(140, 100, 1000, 500));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
@@ -100,7 +101,7 @@ namespace Ruetobas
             else
             {
                 textBoxes["errorbox"].lines.Clear();
-                textBoxes["errorbox"].lines.Add("Error, try again");
+                textBoxes["errorbox"].Append("Error, try again");
             }
         }
     }
