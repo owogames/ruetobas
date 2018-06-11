@@ -27,7 +27,7 @@ namespace Ruetobas
         public ThreadStart tcpThreadStart;
         public Thread tcpThread;
 
-        public void TCPConnect(string IP, int port)
+        public bool TCPConnect(string IP, int port)
         {
             try
             {
@@ -37,10 +37,12 @@ namespace Ruetobas
                 tcpThreadStart = new ThreadStart(TCPListening);
                 tcpThread = new Thread(tcpThreadStart);
                 tcpThread.Start();
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Connection Timed Out: " + e.Message);
+                return false;
             }
         }
 
