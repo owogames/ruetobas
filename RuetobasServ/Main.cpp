@@ -7,6 +7,7 @@
 
 #include "ServerTCP.h"
 #include "Parser.h"
+#include "Tunnel.h"
 
 bool invalid_login(std::string s) {
 	if(s.empty()) return true;
@@ -19,6 +20,8 @@ int main() {
 	ServerTCP server(2137);
 	std::set<std::string> nicks;
 	std::map<int, std::string> users;
+	
+	auto tunnels = parseTunnels("../karty_normalne.txt");
 	
 	while(true) {
 		int fd;
