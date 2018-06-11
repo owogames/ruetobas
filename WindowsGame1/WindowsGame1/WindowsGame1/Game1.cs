@@ -246,8 +246,9 @@ namespace Ruetobas
             {
                 foreach (Keys key in pressedKeys)
                 {
+                    char charkey;
                     if (keyboardBeforeState.IsKeyUp(key) &&
-                        TryConvertKeys(key, out char charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
+                        TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
                         Logic.inputBoxes[activeInputBoxName].text += charkey;
                 }
             }
