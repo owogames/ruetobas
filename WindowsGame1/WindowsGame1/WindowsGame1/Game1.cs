@@ -252,7 +252,7 @@ namespace Ruetobas
                 }
             }
 
-            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBoxName != "" && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 40)
+            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBoxName != "" && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 75)
             {
                 backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
                 if (Logic.inputBoxes[activeInputBoxName].text.Length > 0)
