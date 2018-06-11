@@ -22,7 +22,7 @@ namespace Ruetobas
 
         public const int port = 2137;
 
-        public static string IP = "192.168.0.157";//"81.190.71.186";
+        public static string IP = "192.168.0.157";
         public static string username = "No Elo";
 
         public static void Init(Game game)
@@ -37,12 +37,10 @@ namespace Ruetobas
             chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
             font = game.Content.Load<SpriteFont>("font");
 
-            textBoxes["CHAT"] = new TextBox(chatTexture, font, new Rectangle(140, 100, 1000, 500));
-            inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
-            buttons["SEND"] = new Button(chatSendTexture, new Rectangle(990, 650, 150, 50), SendChatMessage);
-
-
-            game.TCPConnect(IP, port);
+            inputBoxes["ip"] = new InputBox(chatInputTexture, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
+            inputBoxes["nick"] = new InputBox(chatInputTexture, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter choosen username");
+            buttons["connect"] = new Button(chatSendTexture, new Rectangle(500, 500, 380, 50), LoadGameScreen);
+            textBoxes["errorbox"] = new TextBox(chatTexture, font, new Rectangle(140, 650, 1000, 50));
         }
 
         public static int timer = 0;
@@ -82,6 +80,28 @@ namespace Ruetobas
         {
             game.TCPSend("CHAT " + username + ": " + inputBoxes["CHATINPUT"].text);
             inputBoxes["CHATINPUT"].text = "";
+        }
+
+        public static void LoadGameScreen()
+        {
+            IP = inputBoxes["ip"].text;
+            username = inputBoxes["nick"].text;
+
+            if (game.TCPConnect(IP, port))
+            {
+                inputBoxes.Clear();
+                textBoxes["errorbox"].lines.Clear();
+                textBoxes["errorbox"].lines.Add("Successfully connected");
+                textBoxes.Clear();
+                textBoxes["CHAT"] = new TextBox(chatTexture, font, new Rectangle(140, 100, 1000, 500));
+                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
+                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(990, 650, 150, 50), SendChatMessage);
+            }
+            else
+            {
+                textBoxes["errorbox"].lines.Clear();
+                textBoxes["errorbox"].lines.Add("Error, try again");
+            }
         }
     }
 }
