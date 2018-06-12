@@ -12,5 +12,10 @@ namespace Ruetobas
         {
             return point.X >= rect.X && point.Y >= rect.Y && point.X <= rect.X + rect.Width && point.Y <= rect.Y + rect.Height;
         }
+
+        public static Rectangle Shrink(Rectangle rect, int amount)
+        {
+            return new Rectangle(rect.X + amount, rect.Y + amount, rect.Width - 2 * amount, rect.Height - 2 * amount);
+        }
     }
 }

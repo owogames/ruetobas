@@ -13,11 +13,13 @@ namespace Ruetobas
         public static Dictionary<string, Button> buttons;
         public static Dictionary<string, TextBox> textBoxes;
         public static Dictionary<string, InputBox> inputBoxes;
+        public static Dictionary<string, Grid> grids;
 
         public static Game game;
         public static Texture2D chatTexture;
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
+        public static Texture2D skurwielTexture;
         public static SpriteFont font;
 
         public const int port = 2137;
@@ -31,16 +33,20 @@ namespace Ruetobas
             buttons = new Dictionary<string, Button>();
             textBoxes = new Dictionary<string, TextBox>();
             inputBoxes = new Dictionary<string, InputBox>();
+            grids = new Dictionary<string, Grid>();
 
             chatTexture = game.Content.Load<Texture2D>("tekstura");
             chatInputTexture = game.Content.Load<Texture2D>("tekstura2");
             chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
+            skurwielTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
             font = game.Content.Load<SpriteFont>("font");
 
-            inputBoxes["ip"] = new InputBox(chatInputTexture, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
+            grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
+
+            /*inputBoxes["ip"] = new InputBox(chatInputTexture, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(500, 500, 380, 50), LoadGameScreen);
-            textBoxes["errorbox"] = new TextBox(chatTexture, font, new Rectangle(140, 650, 1000, 50));
+            textBoxes["errorbox"] = new TextBox(chatTexture, font, new Rectangle(140, 650, 1000, 50));*/
         }
 
         public static int timer = 0;
@@ -102,6 +108,13 @@ namespace Ruetobas
                 textBoxes["errorbox"].lines.Clear();
                 textBoxes["errorbox"].Append("Error, try again");
             }
+        }
+
+
+
+        public static void BuchnijLolka(int x, int y)
+        {
+            grids["TESTGRID"].fieldTexture[x, y] = skurwielTexture;
         }
     }
 }

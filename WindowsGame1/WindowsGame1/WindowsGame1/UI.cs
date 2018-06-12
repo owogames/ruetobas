@@ -84,4 +84,42 @@ namespace Ruetobas
             text = "";
         }
     }
+
+    public class Grid
+    {
+        public Texture2D boxTexture; //Tekstura tła (ramki)
+        public Texture2D defaultFieldTexture; //Tekstura domyślnego pola
+        public Texture2D[,] fieldTexture; //Tablica tekstur wszystkich pól (można przypisywać w kodzie)
+
+        public int sizeX, sizeY; //Liczba pól siatki
+        public Vector2 fieldSize; //Rozmiar jednego pola w pikselach
+        public Rectangle location; //Pozycja + wielkość obszaru na, którym ma się rysować (łącznie z marginesem)
+        public int margin; //Wielkość marginesu w pikselach
+
+        public Action<int, int> clickEvent; //Funkcja kliknięcia, powinna przyjmować dwa parametry (x, y) -> numer klikniętego pola (numerowane od 0)
+
+        //Techniczne zmienne - nie przejmowac sie xD
+        public Vector2 offset; // o ile przeciągneliśmy grida myszką
+        public RenderTarget2D renderTarget; // super inba XNA elo
+
+        public Grid(Game game, Texture2D boxTexture, Texture2D defaultFieldTexture, int sizeX, int sizeY, Vector2 fieldSize, Rectangle location, int margin, Action<int, int> clickEvent)
+        {
+            this.boxTexture = boxTexture;
+            this.defaultFieldTexture = defaultFieldTexture;
+            this.sizeX = sizeX;
+            this.sizeY = sizeY;
+            this.fieldSize = fieldSize;
+            this.location = location;
+            this.margin = margin;
+            this.clickEvent = clickEvent;
+            offset = new Vector2(0, 0);
+
+            renderTarget = new RenderTarget2D(game.GraphicsDevice, location.Width - 2 * margin, location.Height - 2 * margin);
+
+            fieldTexture = new Texture2D[sizeX, sizeY];
+            for (int x = 0; x < sizeX; x++)
+                for (int y = 0; y < sizeY; y++)
+                    fieldTexture[x, y] = defaultFieldTexture;
+        }
+    }
 }

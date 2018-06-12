@@ -195,6 +195,7 @@ namespace Ruetobas
 
         double backspaceTimer = 0;
         public InputBox activeInputBox = null;
+        Grid draggedGrid;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -209,13 +210,14 @@ namespace Ruetobas
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             pressedKeys = keyboardState.GetPressedKeys();
+            Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
             
             //Left click
             if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
             {
                 for (int i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, new Vector2(mouseState.X, mouseState.Y)))
+                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, mousePos))
                     {
                         Logic.buttons.ElementAt(i).Value.clickEvent();
                         i = -1;
@@ -224,7 +226,7 @@ namespace Ruetobas
 
                 for (int i = Logic.inputBoxes.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, new Vector2(mouseState.X, mouseState.Y)))
+                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, mousePos))
                     {
                         if (activeInputBox != null)
                             activeInputBox.active = false;
@@ -242,6 +244,41 @@ namespace Ruetobas
                         }
                     }
                 }
+
+                for (int i = Logic.grids.Count - 1; i >= 0; i--)
+                {
+                    Grid grid = Logic.grids.ElementAt(i).Value;
+                    if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                    {
+                        int tileX = ((int)mousePos.X - grid.location.X - grid.margin + (int)grid.offset.X) / (int)grid.fieldSize.X;
+                        int tileY = ((int)mousePos.Y - grid.location.Y - grid.margin + (int)grid.offset.Y) / (int)grid.fieldSize.Y;
+                        grid.clickEvent(tileX, tileY);
+                    }
+                }
+            }
+
+            if (mouseState.RightButton == ButtonState.Pressed)
+            {
+                if (mouseBeforeState.RightButton == ButtonState.Released)
+                {
+                    for (int i = Logic.grids.Count - 1; i >= 0; i--)
+                    {
+                        Grid grid = Logic.grids.ElementAt(i).Value;
+                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                            draggedGrid = grid;
+                    }
+                }
+                else
+                {
+                    if (draggedGrid != null)
+                    {
+                        draggedGrid.offset -= new Vector2(mouseState.X - mouseBeforeState.X, mouseState.Y - mouseBeforeState.Y);
+                    }
+                }
+            }
+            else
+            {
+                draggedGrid = null;
             }
             
             if (pressedKeys.Length > 0 && activeInputBox != null)
@@ -272,7 +309,7 @@ namespace Ruetobas
                 for (int i = Logic.textBoxes.Count - 1; i >= 0; i--)
                 {
                     TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                    if (Geo.RectContains(textBox.location, new Vector2(mouseState.X, mouseState.Y)))
+                    if (Geo.RectContains(textBox.location, mousePos))
                     {
                         if (scrollWheelDelta < 0)
                             textBox.scroll++;
@@ -281,6 +318,19 @@ namespace Ruetobas
                         i = -1;
                     }
                 }
+            }
+
+            foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
+            {
+                Grid grid = gridpair.Value;
+                if (grid.offset.X < 0)
+                    grid.offset.X += 10;
+                if (grid.offset.Y < 0)
+                    grid.offset.Y += 10;
+                if (grid.offset.X > grid.sizeX * grid.fieldSize.X - grid.location.Width + 2 * grid.margin)
+                    grid.offset.X -= 10;
+                if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - grid.location.Height + 2 * grid.margin)
+                    grid.offset.Y -= 10;
             }
 
             Logic.Update();
@@ -297,6 +347,27 @@ namespace Ruetobas
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
+            {
+                Grid grid = gridpair.Value;
+                spriteBatch.Begin();
+                GraphicsDevice.SetRenderTarget(grid.renderTarget);
+                GraphicsDevice.Clear(Color.Transparent);
+                for (int x = 0; x < grid.sizeX; x++)
+                {
+                    for (int y = 0; y < grid.sizeY; y++)
+                    {
+                        Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
+                        if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
+                        {
+                            spriteBatch.Draw(grid.fieldTexture[x, y], targetRect, Color.White);
+                        }
+                    }
+                }
+                spriteBatch.End();
+            }
+
+            GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -330,6 +401,13 @@ namespace Ruetobas
                 {
                     spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.emptyText, position, inputBox.Value.emptyColor);
                 }
+            }
+
+            foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
+            {
+                Grid grid = gridpair.Value;
+                spriteBatch.Draw(grid.boxTexture, grid.location, Color.White);
+                spriteBatch.Draw(grid.renderTarget, Geo.Shrink(grid.location, grid.margin), Color.White);
             }
 
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
