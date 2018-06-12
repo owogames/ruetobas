@@ -19,6 +19,7 @@ namespace Ruetobas
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    
     public class Game : Microsoft.Xna.Framework.Game
     {
         public TcpClient tcpClient = new TcpClient();
@@ -105,6 +106,7 @@ namespace Ruetobas
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
+        
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -117,6 +119,7 @@ namespace Ruetobas
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
+        
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -129,6 +132,7 @@ namespace Ruetobas
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
         /// </summary>
+        
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -213,15 +217,16 @@ namespace Ruetobas
         public KeyboardState keyboardState, keyboardBeforeState;
         public Keys[] pressedKeys;
 
-
         double backspaceTimer = 0;
         public InputBox activeInputBox = null;
         Grid draggedGrid;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
@@ -279,6 +284,7 @@ namespace Ruetobas
                 }
             }
 
+            //Right click
             if (mouseState.RightButton == ButtonState.Pressed)
             {
                 if (mouseBeforeState.RightButton == ButtonState.Released)
@@ -303,6 +309,7 @@ namespace Ruetobas
                 draggedGrid = null;
             }
             
+            //Konwersja klawiszy do inputBoxa
             if (pressedKeys.Length > 0 && activeInputBox != null)
             {
                 foreach (Keys key in pressedKeys)
@@ -317,6 +324,7 @@ namespace Ruetobas
                 }
             }
 
+            //Backspace
             if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 75)
             {
                 backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
@@ -342,6 +350,7 @@ namespace Ruetobas
                 }
             }
 
+            //Cofanie gdy przejedziesz grida za bardzo
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
@@ -367,8 +376,10 @@ namespace Ruetobas
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Draw(GameTime gameTime)
         {
+            //Rysowanie gridów
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
@@ -394,19 +405,32 @@ namespace Ruetobas
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
+            //Rysowanie guzików
             foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
                 spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);
             }
 
+            //Rysowanie textBoxów
             foreach (KeyValuePair<string, TextBox> textBox in Logic.textBoxes)
             {
                 spriteBatch.Draw(textBox.Value.texture, textBox.Value.location, Color.White);
                 for (int i = textBox.Value.scroll; i < textBox.Value.lines.Count && i < textBox.Value.lineCount + textBox.Value.scroll; i++)
-                    spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i],
-                        new Vector2(textBox.Value.location.X + textBox.Value.margin, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll)), Color.White);
+                {
+                    float _x = 0;
+
+                    if (textBox.Value.align == Alignment.Left)
+                        _x = (float) textBox.Value.location.X + (float) textBox.Value.margin;
+                    else if(textBox.Value.align == Alignment.Centered)
+                        _x = (float)textBox.Value.location.X + ((float) textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
+
+                    Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll));
+
+                    spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i], position, Color.White);
+                }
             }
 
+            //Rysowanie inputBoxów
             foreach (KeyValuePair<string, InputBox> inputBox in Logic.inputBoxes)
             {
                 // InputBox IB = inputBox.Value; (referencja)
@@ -426,6 +450,7 @@ namespace Ruetobas
                 }
             }
 
+            //Rysowanie gridów c.d.
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
@@ -433,6 +458,7 @@ namespace Ruetobas
                 spriteBatch.Draw(grid.renderTarget, Geo.Shrink(grid.location, grid.margin), Color.White);
             }
 
+            //Rysowanie kursora
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
 
             spriteBatch.End();

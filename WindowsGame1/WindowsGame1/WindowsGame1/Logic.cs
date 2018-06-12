@@ -48,7 +48,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(500, 500, 380, 50), LoadGameScreen);
-            textBoxes["errorbox"] = new TextBox(chatTexture, 10, font, new Rectangle(140, 650, 1000, 50));
+            textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(140, 650, 1000, 50));
         }
 
         public static int timer = 0;
@@ -98,10 +98,11 @@ namespace Ruetobas
             if (game.TCPConnect(IP, port))
             {
                 inputBoxes.Clear();
+                buttons.Clear();
                 textBoxes["errorbox"].lines.Clear();
                 textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
-                textBoxes["CHAT"] = new TextBox(chatTexture, 10, font, new Rectangle(140, 100, 1000, 500));
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(140, 100, 1000, 500));
                 for (int i = 0; i < players.Count; i++)
                     textBoxes["CHAT"].Append("Player ID: " + players[i].ID.ToString() + "username: " + players[i].username);
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
