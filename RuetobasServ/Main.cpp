@@ -36,6 +36,8 @@ int main() {
 		std::tie(fd, msg) = server.read();
 		std::tie(command, text) = parse(msg);
 
+		
+
 		if(fd != -1) {
 
             if(command == "LOGIN") {
@@ -81,6 +83,8 @@ int main() {
                 nicks.erase(users[fd]);
                 users.erase(fd);
             }
+            
+            else if(command == "NOP") {}
             
             else
 				server.write(fd, "ERROR Unknown command");
