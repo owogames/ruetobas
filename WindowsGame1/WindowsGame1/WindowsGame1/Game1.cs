@@ -40,6 +40,7 @@ namespace Ruetobas
                 string msg = "";
                 for (int i = 0; i < length; i++)
                     msg += Convert.ToChar(bytes[i]);
+
                 if (msg.Substring(0, 2) == "OK")
                 {
                     string[] data = msg.Split(' ');
@@ -53,6 +54,7 @@ namespace Ruetobas
                 }
                 else
                 {
+                    Console.WriteLine(msg);
                     return false;
                 }
             }
