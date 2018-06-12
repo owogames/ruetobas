@@ -27,6 +27,8 @@ namespace Ruetobas
         public static string IP = "192.168.0.157";
         public static string username = "No Elo";
 
+        public static List<Player> players = new List<Player>();
+
         public static void Init(Game game)
         {
             Logic.game = game;
@@ -100,6 +102,8 @@ namespace Ruetobas
                 textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, font, new Rectangle(140, 100, 1000, 500));
+                for (int i = 0; i < players.Count; i++)
+                    textBoxes["CHAT"].Append("Player ID: " + players[i].ID.ToString() + "username: " + players[i].username);
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(990, 650, 150, 50), SendChatMessage);
             }

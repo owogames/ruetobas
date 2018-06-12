@@ -35,13 +35,17 @@ namespace Ruetobas
                 stream = tcpClient.GetStream();
                 TCPSend("LOGIN " + Logic.username);
 
-                byte[] bytes = new byte[100];
-                int length = stream.Read(bytes, 0, 100);
+                byte[] bytes = new byte[1000];
+                int length = stream.Read(bytes, 0, 1000);
                 string msg = "";
                 for (int i = 0; i < length; i++)
                     msg += Convert.ToChar(bytes[i]);
                 if (msg.Substring(0, 2) == "OK")
                 {
+                    string[] data = msg.Split(' ');
+                    for (int i = 1; i < data.Length; i++)
+                        Logic.players.Add(new Player(i, data[i]));
+                    Logic.players.Add(new Player(data.Length, Logic.username));
                     tcpThreadStart = new ThreadStart(TCPListening);
                     tcpThread = new Thread(tcpThreadStart);
                     tcpThread.Start();
@@ -265,7 +269,8 @@ namespace Ruetobas
                     {
                         int tileX = ((int)mousePos.X - grid.location.X - grid.margin + (int)grid.offset.X) / (int)grid.fieldSize.X;
                         int tileY = ((int)mousePos.Y - grid.location.Y - grid.margin + (int)grid.offset.Y) / (int)grid.fieldSize.Y;
-                        grid.clickEvent(tileX, tileY);
+                        if (grid.clickEvent != null)
+                            grid.clickEvent(tileX, tileY);
                     }
                 }
             }
