@@ -424,7 +424,7 @@ namespace Ruetobas
                     else if(textBox.Value.align == Alignment.Centered)
                         _x = (float)textBox.Value.location.X + ((float) textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
 
-                    Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll));
+                    Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll) + textBox.Value.margin);
 
                     spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i], position, Color.White);
                 }
