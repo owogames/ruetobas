@@ -38,7 +38,7 @@ namespace Ruetobas
             font = game.Content.Load<SpriteFont>("font");
 
             inputBoxes["ip"] = new InputBox(chatInputTexture, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
-            inputBoxes["nick"] = new InputBox(chatInputTexture, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter choosen username");
+            inputBoxes["nick"] = new InputBox(chatInputTexture, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(500, 500, 380, 50), LoadGameScreen);
             textBoxes["errorbox"] = new TextBox(chatTexture, font, new Rectangle(140, 650, 1000, 50));
         }
@@ -89,7 +89,6 @@ namespace Ruetobas
 
             if (game.TCPConnect(IP, port))
             {
-                
                 inputBoxes.Clear();
                 textBoxes["errorbox"].lines.Clear();
                 textBoxes["errorbox"].Append("Successfully connected");

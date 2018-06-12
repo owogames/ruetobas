@@ -194,7 +194,7 @@ namespace Ruetobas
 
 
         double backspaceTimer = 0;
-        string activeInputBoxName = "";
+        public string activeInputBoxName = "";
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -317,14 +317,15 @@ namespace Ruetobas
                 spriteBatch.Draw(inputBox.Value.texture, inputBox.Value.location, inputBox.Value.active ? Color.Gray : Color.White);
                 string text = inputBox.Value.text;
                 if (inputBox.Value.active) text += "|";
+                Vector2 position = new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y + inputBox.Value.location.Height / 2 - inputBox.Value.font.LineSpacing / 2);
 
                 if (inputBox.Value.text != "")
                 {
-                    spriteBatch.DrawString(inputBox.Value.font, text, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.color);
+                    spriteBatch.DrawString(inputBox.Value.font, text, position, inputBox.Value.color);
                 }
                 else
                 {
-                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.emptyText, new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y), inputBox.Value.emptyColor);
+                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.emptyText, position, inputBox.Value.emptyColor);
                 }
             }
 
