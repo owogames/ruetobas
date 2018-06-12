@@ -31,6 +31,7 @@ namespace Ruetobas
         {
             try
             {
+                tcpClient = new TcpClient();
                 tcpClient.Connect(IP, port);
                 stream = tcpClient.GetStream();
                 TCPSend("LOGIN " + Logic.username);
@@ -55,6 +56,7 @@ namespace Ruetobas
                 else
                 {
                     Console.WriteLine(msg);
+                    tcpClient.Close();
                     return false;
                 }
             }
