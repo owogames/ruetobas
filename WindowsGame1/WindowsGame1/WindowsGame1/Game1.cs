@@ -194,7 +194,7 @@ namespace Ruetobas
 
 
         double backspaceTimer = 0;
-        public string activeInputBoxName = "";
+        public InputBox activeInputBox = null;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -226,40 +226,43 @@ namespace Ruetobas
                 {
                     if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, new Vector2(mouseState.X, mouseState.Y)))
                     {
-                        if (activeInputBoxName != "")
-                            Logic.inputBoxes[activeInputBoxName].active = false;
-                        activeInputBoxName = Logic.inputBoxes.ElementAt(i).Key;
-                        Logic.inputBoxes[activeInputBoxName].active = true;
+                        if (activeInputBox != null)
+                            activeInputBox.active = false;
+                        activeInputBox = Logic.inputBoxes.ElementAt(i).Value;
+                        activeInputBox.active = true;
                         i = -1;
                     }
 
                     if (i == 0)
                     {
-                        if (activeInputBoxName != "")
+                        if (activeInputBox != null)
                         {
-                            Logic.inputBoxes[activeInputBoxName].active = false;
-                            activeInputBoxName = "";
+                            activeInputBox.active = false;
+                            activeInputBox = null;
                         }
                     }
                 }
             }
             
-            if (pressedKeys.Length > 0 && activeInputBoxName != "")
+            if (pressedKeys.Length > 0 && activeInputBox != null)
             {
                 foreach (Keys key in pressedKeys)
                 {
                     char charkey;
                     if (keyboardBeforeState.IsKeyUp(key) &&
                         TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
-                        Logic.inputBoxes[activeInputBoxName].text += charkey;
+                    {
+                        if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width)
+                            activeInputBox.text += charkey;
+                    }
                 }
             }
 
-            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBoxName != "" && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 75)
+            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 75)
             {
                 backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
-                if (Logic.inputBoxes[activeInputBoxName].text.Length > 0)
-                    Logic.inputBoxes[activeInputBoxName].text = Logic.inputBoxes[activeInputBoxName].text.Remove(Logic.inputBoxes[activeInputBoxName].text.Length - 1);
+                if (activeInputBox.text.Length > 0)
+                    activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
             }
 
             //Scroll
