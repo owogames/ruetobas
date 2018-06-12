@@ -7,6 +7,8 @@ using System.Text;
 
 namespace Ruetobas
 {
+    public enum Alignment { Left, Centered };
+
     public class Button
     {
         public Texture2D texture;
@@ -28,20 +30,23 @@ namespace Ruetobas
         public SpriteFont font;
         public Rectangle location;
         public int margin;
+        public Alignment align;
 
-        public TextBox(Texture2D texture, int margin, SpriteFont font, Rectangle location)
+        public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location)
         {
             this.texture = texture;
             this.margin = margin;
+            this.align = align;
             this.font = font;
             this.location = location;
             lines = new List<string>();
             lineCount = location.Height / font.LineSpacing;
         }
-        public TextBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, string line)
+        public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location, string line)
         {
             this.texture = texture;
             this.margin = margin;
+            this.align = align;
             this.font = font;
             this.location = location;
             lines = new List<string>();

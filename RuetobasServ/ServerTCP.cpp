@@ -194,7 +194,7 @@ std::pair<int, std::string> ServerTCP::read() {
 				if(fd == sockfd) {
 					int newfd = accept();
 					if(newfd != -1)
-						msg_queue.emplace(newfd, "");
+						msg_queue.emplace(newfd, "NOP");
 				}
 				else
 					msg_queue.emplace(fd, getMsg(fd));
