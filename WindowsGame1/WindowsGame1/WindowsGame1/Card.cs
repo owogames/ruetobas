@@ -15,14 +15,14 @@ namespace Ruetobas
         public int ID;
         public CardType cardType;
 
-        public static Card ParseString(string line)
+        /*public static Card ParseString(string line, int ID) //linijka z pliku oraz numer linijki (czyli numer karty)
         {
             Tunnel output = new Tunnel();
 
             //Elo Robert zakodź
 
             return output;
-        }
+        }*/
     }
 
     public class Tunnel : Card
@@ -44,8 +44,8 @@ namespace Ruetobas
 
     public class PlacedCard
     {
-        int ID;
-        int rotation;
+        public int ID;
+        public int rotation;
         public PlacedCard(int ID, int rotation)
         {
             this.ID = ID;

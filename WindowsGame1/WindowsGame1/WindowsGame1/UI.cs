@@ -46,7 +46,7 @@ namespace Ruetobas
             this.location = location;
             lines = new List<string>();
             lines.Add(line);
-            lineCount = location.Height / font.LineSpacing;
+            lineCount = (location.Height - 2 * margin) / font.LineSpacing;
         }
 
         public void Append(string line)

@@ -34,10 +34,23 @@ namespace Ruetobas
                 tcpClient.Connect(IP, port);
                 stream = tcpClient.GetStream();
                 TCPSend("LOGIN " + Logic.username);
-                tcpThreadStart = new ThreadStart(TCPListening);
-                tcpThread = new Thread(tcpThreadStart);
-                tcpThread.Start();
-                return true;
+
+                byte[] bytes = new byte[100];
+                int length = stream.Read(bytes, 0, 100);
+                string msg = "";
+                for (int i = 0; i < length; i++)
+                    msg += Convert.ToChar(bytes[i]);
+                if (msg.Substring(0, 2) == "OK")
+                {
+                    tcpThreadStart = new ThreadStart(TCPListening);
+                    tcpThread = new Thread(tcpThreadStart);
+                    tcpThread.Start();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {
@@ -289,7 +302,7 @@ namespace Ruetobas
                     if (keyboardBeforeState.IsKeyUp(key) &&
                         TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
                     {
-                        if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width)
+                        if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width - 2 * activeInputBox.margin)
                             activeInputBox.text += charkey;
                     }
                 }
