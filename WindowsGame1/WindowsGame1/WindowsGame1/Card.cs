@@ -30,6 +30,15 @@ namespace Ruetobas
             enterance = new bool[4];
             graph = new bool[4, 4];
         }
+
+        public static Tunnel ParseString(string line)
+        {
+            Tunnel output;
+
+            //Elo Robert zakodź
+
+            return output;
+        }
     }
 
 
