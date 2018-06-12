@@ -1,5 +1,34 @@
 #include "ServerTCP.h"
 
+#include <iostream>
+#include <string>
+#include <queue>
+
+#include <cstdlib>
+#include <cstring>
+
+#ifdef WIN32
+
+#undef UNICODE
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+#else
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
+#endif
+
+//#define MANUAL_INPUT
+
 void fatal_err(const char* msg) {
 	fprintf(stderr, "%s", msg);
     fflush(stderr);
@@ -144,6 +173,14 @@ ServerTCP::ServerTCP(int port) {
 
 
 std::pair<int, std::string> ServerTCP::read() {
+	#ifdef MANUAL_INPUT
+	int fd;
+	std::string str;
+	std::cin >> fd;
+	std::getline(std::cin, str);
+	return {fd, str};
+	
+	#else
 	if(msg_queue.empty()) {
 
 		fd_set read_fds = fds;
@@ -172,13 +209,21 @@ std::pair<int, std::string> ServerTCP::read() {
 		msg_queue.pop();
 		return ret;
 	}
+	
+	#endif
 }
 
 
 
 void ServerTCP::write(int fd, std::string msg) {
+	#ifdef MANUAL_INPUT
+	std::cout << fd << ": " << msg << std::endl;
+	
+	#else
 	if(send(fd, msg.data(), msg.size(), 0) == -1)
 		err("send");
+		
+	#endif
 }
 
 

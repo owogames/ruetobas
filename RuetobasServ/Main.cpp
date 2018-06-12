@@ -10,8 +10,15 @@
 #include "Tunnel.h"
 
 bool invalid_login(std::string s) {
-	if(s.empty()) return true;
-	for(auto c : s) 
+	if(s.empty() || s.size() > 32) return true;
+	for(auto c : s)
+		if(c < 33 || c > 126) return true;
+	return false;
+}
+
+bool invalid_chat_msg(std::string s) {
+	if(s.empty() || s.size() > 128) return true;
+	for(auto c : s)
 		if(c < 32 || c > 126) return true;
 	return false;
 }
@@ -33,25 +40,34 @@ int main() {
 
             if(command == "LOGIN") {
 				if(users.find(fd) != users.end())
-					server.write(fd, "ERROR Already Logged In");
+					server.write(fd, "ERROR Already logged in");
 				
                 else if(nicks.find(text) != nicks.end())
                    server.write(fd, "ERROR Login taken");
                    
 				else if(invalid_login(text))
-					server.write(fd, "ERROR Invalid Login");
+					server.write(fd, "ERROR Invalid login");
 					
                 else {
                     nicks.insert(text);
                     users[fd] = text;
+                    
+                    std::string usernames;
                     for(auto u : users)
-                        server.write(u.first, "JOIN " + text);
+                        if(u.first != fd) {
+							server.write(u.first, "JOIN " + text);
+							usernames += ' ' + u.second;
+						}
+					
+					server.write(fd, "OK" + usernames);
                 }
             }
 
             else if(command == "CHAT") {
-				if(users.find(fd) == users.end())
-					server.write(fd, "ERROR Not Logged In");
+				if(users.find(fd) == users.end()) 
+					server.write(fd, "ERROR Not logged in");
+				else if(invalid_chat_msg(text))
+					server.write(fd, "ERROR Invalid chat message");
 				else {
 					for(auto u : users)
 						server.write(u.first, "CHAT " + text);
@@ -65,6 +81,9 @@ int main() {
                 nicks.erase(users[fd]);
                 users.erase(fd);
             }
+            
+            else
+				server.write(fd, "ERROR Unknown command");
 		}
 	}
 }
