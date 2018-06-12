@@ -14,6 +14,15 @@ namespace Ruetobas
         public Texture2D texture;
         public int ID;
         public CardType cardType;
+
+        public static Card ParseString(string line)
+        {
+            Tunnel output = new Tunnel();
+
+            //Elo Robert zakodź
+
+            return output;
+        }
     }
 
     public class Tunnel : Card
@@ -29,15 +38,6 @@ namespace Ruetobas
             cardType = CardType.Tunnel;
             enterance = new bool[4];
             graph = new bool[4, 4];
-        }
-
-        public static Tunnel ParseString(string line)
-        {
-            Tunnel output;
-
-            //Elo Robert zakodź
-
-            return output;
         }
     }
 
