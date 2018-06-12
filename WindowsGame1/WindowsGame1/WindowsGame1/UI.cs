@@ -27,17 +27,21 @@ namespace Ruetobas
         public Texture2D texture;
         public SpriteFont font;
         public Rectangle location;
-        public TextBox(Texture2D texture, SpriteFont font, Rectangle location)
+        public int margin;
+
+        public TextBox(Texture2D texture, int margin, SpriteFont font, Rectangle location)
         {
             this.texture = texture;
+            this.margin = margin;
             this.font = font;
             this.location = location;
             lines = new List<string>();
             lineCount = location.Height / font.LineSpacing;
         }
-        public TextBox(Texture2D texture, SpriteFont font, Rectangle location, string line)
+        public TextBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, string line)
         {
             this.texture = texture;
+            this.margin = margin;
             this.font = font;
             this.location = location;
             lines = new List<string>();
@@ -59,6 +63,7 @@ namespace Ruetobas
     public class InputBox
     { 
         public Texture2D texture;
+        public int margin;
         public SpriteFont font;
         public Rectangle location;
         public Color color;
@@ -67,9 +72,10 @@ namespace Ruetobas
         public string text;
         public string emptyText;
 
-        public InputBox(Texture2D texture, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText)
+        public InputBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText)
         {
             this.texture = texture;
+            this.margin = margin;
             this.font = font;
             this.location = location;
             this.color = color;

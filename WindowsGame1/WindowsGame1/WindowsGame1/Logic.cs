@@ -41,12 +41,12 @@ namespace Ruetobas
             skurwielTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
             font = game.Content.Load<SpriteFont>("font");
 
-            grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
+           // grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
 
-            /*inputBoxes["ip"] = new InputBox(chatInputTexture, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
-            inputBoxes["nick"] = new InputBox(chatInputTexture, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
+            inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
+            inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(500, 500, 380, 50), LoadGameScreen);
-            textBoxes["errorbox"] = new TextBox(chatTexture, font, new Rectangle(140, 650, 1000, 50));*/
+            textBoxes["errorbox"] = new TextBox(chatTexture, 10, font, new Rectangle(140, 650, 1000, 50));
         }
 
         public static int timer = 0;
@@ -99,8 +99,8 @@ namespace Ruetobas
                 textBoxes["errorbox"].lines.Clear();
                 textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
-                textBoxes["CHAT"] = new TextBox(chatTexture, font, new Rectangle(140, 100, 1000, 500));
-                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, font, new Rectangle(140, 100, 1000, 500));
+                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 650, 800, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(990, 650, 150, 50), SendChatMessage);
             }
             else

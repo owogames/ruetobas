@@ -371,6 +371,7 @@ namespace Ruetobas
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
             foreach (KeyValuePair<string, Button> button in Logic.buttons)
             {
                 spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);
@@ -381,7 +382,7 @@ namespace Ruetobas
                 spriteBatch.Draw(textBox.Value.texture, textBox.Value.location, Color.White);
                 for (int i = textBox.Value.scroll; i < textBox.Value.lines.Count && i < textBox.Value.lineCount + textBox.Value.scroll; i++)
                     spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i],
-                        new Vector2(textBox.Value.location.X, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll)), Color.White);
+                        new Vector2(textBox.Value.location.X + textBox.Value.margin, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll)), Color.White);
             }
 
             foreach (KeyValuePair<string, InputBox> inputBox in Logic.inputBoxes)
@@ -391,7 +392,7 @@ namespace Ruetobas
                 spriteBatch.Draw(inputBox.Value.texture, inputBox.Value.location, inputBox.Value.active ? Color.Gray : Color.White);
                 string text = inputBox.Value.text;
                 if (inputBox.Value.active) text += "|";
-                Vector2 position = new Vector2(inputBox.Value.location.X, inputBox.Value.location.Y + inputBox.Value.location.Height / 2 - inputBox.Value.font.LineSpacing / 2);
+                Vector2 position = new Vector2(inputBox.Value.location.X + inputBox.Value.margin, inputBox.Value.location.Y + inputBox.Value.location.Height / 2 - inputBox.Value.font.LineSpacing / 2);
 
                 if (inputBox.Value.text != "")
                 {
