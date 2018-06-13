@@ -127,7 +127,7 @@ namespace Ruetobas
 
         public static void BuchnijLolka(int x, int y)
         {
-            grids["TESTGRID"].fieldTexture[x, y] = skurwielTexture;
+            int papiez = 1;
         }
     }
 }
