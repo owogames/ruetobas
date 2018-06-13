@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Ruetobas
 {
     public enum CardType { Tunnel }
-    public enum TunnelObject { None, Ladder, Rock, Gold, Gem}
+    public enum TunnelObject { None, Ladder, Rock, Gem, Gold}
 
     public class Card
     {
@@ -23,19 +23,16 @@ namespace Ruetobas
             {
                 TunnelObject objekt = (TunnelObject)int.Parse(words[size - 1]);
                 Tunnel output = new Tunnel(Logic.skurwielTexture, ID, objekt);
-                for(int i = 1; i < 5; i++)
+                for(int i = 0; i < 4; i++)
                 {
-                    output.entrance[i] = bool.Parse(words[i]);
+                    output.entrance[i] = bool.Parse(words[i + 1]);
                 }
-                for(int i = 5; i < size - 1; i++)
+                for(int i = 0; i < 16; i++)
                 {
-                    int j = i - 5;
-                    output.graph[j / 4, j % 4] = bool.Parse(words[i]);
+                    output.graph[i / 4, i % 4] = bool.Parse(words[i + 5]);
                 }
                 return output;
             }
-
-
             //Elo Robert zakodź
             //Uwaga, przyjmowana tekstura to zoltyskurwiel
             //UWAGA Nie testowane ;)
