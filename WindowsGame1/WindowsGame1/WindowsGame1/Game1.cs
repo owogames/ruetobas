@@ -243,16 +243,18 @@ namespace Ruetobas
             //Left click
             if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
             {
-                for (int i = Logic.buttons.Count - 1; i >= 0; i--)
+                int i;
+                for (i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
                     if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, mousePos))
                     {
                         Logic.buttons.ElementAt(i).Value.clickEvent();
-                        i = -1;
+                        i = -2;
                     }
                 }
 
-                for (int i = Logic.inputBoxes.Count - 1; i >= 0; i--)
+                if (i != -2)
+                for (i = Logic.inputBoxes.Count - 1; i >= 0; i--)
                 {
                     if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, mousePos))
                     {
@@ -260,7 +262,7 @@ namespace Ruetobas
                             activeInputBox.active = false;
                         activeInputBox = Logic.inputBoxes.ElementAt(i).Value;
                         activeInputBox.active = true;
-                        i = -1;
+                        i = -2;
                     }
 
                     if (i == 0)
@@ -273,7 +275,8 @@ namespace Ruetobas
                     }
                 }
 
-                for (int i = Logic.grids.Count - 1; i >= 0; i--)
+                if (i != -2)
+                for (i = Logic.grids.Count - 1; i >= 0; i--)
                 {
                     Grid grid = Logic.grids.ElementAt(i).Value;
                     if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
@@ -282,6 +285,7 @@ namespace Ruetobas
                         int tileY = ((int)mousePos.Y - grid.location.Y - grid.margin + (int)grid.offset.Y) / (int)grid.fieldSize.Y;
                         if (grid.clickEvent != null)
                             grid.clickEvent(tileX, tileY);
+                        i = -2;
                     }
                 }
             }
