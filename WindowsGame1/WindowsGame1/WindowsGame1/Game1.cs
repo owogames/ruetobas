@@ -218,6 +218,8 @@ namespace Ruetobas
         public Keys[] pressedKeys;
 
         double backspaceTimer = 0;
+        double backspaceStart = 0;
+        bool backspaceHeld = false;
         public InputBox activeInputBox = null;
         Grid draggedGrid;
 
@@ -325,13 +327,26 @@ namespace Ruetobas
             }
 
             //Backspace
-            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 75)
+            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null)
             {
-                backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
-                if (activeInputBox.text.Length > 0)
-                    activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                if(backspaceHeld == false)
+                {
+                    if (activeInputBox.text.Length > 0)
+                        activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                    backspaceStart = gameTime.TotalGameTime.TotalMilliseconds;
+                }
+                if(backspaceHeld && gameTime.TotalGameTime.TotalMilliseconds - backspaceStart > 500 && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 25)
+                {
+                    backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
+                    if (activeInputBox.text.Length > 0)
+                        activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                }
+                backspaceHeld = true;
             }
-
+            else
+            {
+                backspaceHeld = false;
+            }
             //Scroll
             int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
