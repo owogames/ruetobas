@@ -103,7 +103,7 @@ namespace Ruetobas
                 }
             }
 
-            if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes["CHATINPUT"].active)
+            if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
                 SendChatMessage();
         }
 
@@ -135,7 +135,6 @@ namespace Ruetobas
             if (data[0] == "ERROR")
             {
                 textBoxes["CHAT"].Append(message.Substring(6).Trim());
-                game.tcpThread.Abort();
             }
             if (data[0] == "PLACE")
             {
