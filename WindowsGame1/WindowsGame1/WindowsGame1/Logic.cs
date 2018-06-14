@@ -98,7 +98,7 @@ namespace Ruetobas
                 {
                     string line = players[i].username;
                     if (players[i].username == playerTurn)
-                        line += " - currently playing";
+                        line = " > " + line;
                     playerTextBox.Append(line);
                 }
             }
@@ -109,83 +109,87 @@ namespace Ruetobas
 
         public static void TCPRecieved(string message)
         {
-            Console.WriteLine(message);
-            string[] data = message.Split(' ');
-            if (data[0] == "CHAT")
-                textBoxes["CHAT"].Append(message.Substring(5).Trim());
-            if (data[0] == "JOIN")
+            string[] submessages = message.Split('\n');
+            foreach (string sub in submessages)
             {
-                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the game.");
-                players.Add(new Player(0, message.Substring(5).Trim()));
-                SortPlayers();
-            }
-            if (data[0] == "BYE")
-            {
-                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the game.");
-                for (int i = 0; i < players.Count; i++)
+                Console.WriteLine(sub);
+                string[] data = sub.Split(' ');
+                if (data[0] == "CHAT")
+                    textBoxes["CHAT"].Append(sub.Substring(5).Trim());
+                if (data[0] == "JOIN")
                 {
-                    if (players[i].username == message.Substring(4).Trim())
+                    textBoxes["CHAT"].Append(sub.Substring(5).Trim() + " has joined the game.");
+                    players.Add(new Player(0, sub.Substring(5).Trim()));
+                    SortPlayers();
+                }
+                if (data[0] == "BYE")
+                {
+                    textBoxes["CHAT"].Append(sub.Substring(4).Trim() + " has left the game.");
+                    for (int i = 0; i < players.Count; i++)
                     {
-                        players.RemoveAt(i);
-                        i = players.Count;
+                        if (players[i].username == sub.Substring(4).Trim())
+                        {
+                            players.RemoveAt(i);
+                            i = players.Count;
+                        }
+                    }
+                    SortPlayers();
+                }
+                if (data[0] == "ERROR")
+                {
+                    textBoxes["CHAT"].Append(sub.Substring(6).Trim());
+                }
+                if (data[0] == "PLACE")
+                {
+                    int ID = int.Parse(data[1]);
+                    int x = int.Parse(data[2]);
+                    int y = int.Parse(data[3]);
+                    int orientation = int.Parse(data[4]);
+                    map[x, y] = new PlacedCard(ID, orientation);
+                    grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
+                }
+                if (data[0] == "START")
+                {
+                    buttons.Remove("READY");
+                    textBoxes["CHAT"].Append("You Are:");
+                    if (rand.Next(1, 2) == 1)
+                        textBoxes["CHAT"].Append("N00b digger");
+                    else textBoxes["CHAT"].Append("Reutobas bitcher");
+                    Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
+                    boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
+                    map[5, 7] = new PlacedCard(1, 0);
+                    map[13, 5] = new PlacedCard(45, 0);
+                    map[13, 7] = new PlacedCard(45, 0);
+                    map[13, 9] = new PlacedCard(45, 0);
+                    boardGrid.fieldTexture[5, 7] = cardTexture[1];
+                    boardGrid.fieldTexture[13, 5] = cardTexture[45];
+                    boardGrid.fieldTexture[13, 7] = cardTexture[45];
+                    boardGrid.fieldTexture[13, 9] = cardTexture[45];
+                    game.gridToAdd = boardGrid;
+                    for (int i = 0; i < 6; i++)
+                        cardHand[i] = int.Parse(data[i + 1]);
+                }
+                if (data[0] == "GIB")
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (cardHand[i] == 0)
+                        {
+                            cardHand[i] = int.Parse(data[1]);
+                            i = 6;
+                        }
                     }
                 }
-                SortPlayers();
-            }
-            if (data[0] == "ERROR")
-            {
-                textBoxes["CHAT"].Append(message.Substring(6).Trim());
-            }
-            if (data[0] == "PLACE")
-            {
-                int ID = int.Parse(data[1]);
-                int x = int.Parse(data[2]);
-                int y = int.Parse(data[3]);
-                int orientation = int.Parse(data[4]);
-                map[x, y] = new PlacedCard(ID, orientation);
-                grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
-            }
-            if (data[0] == "START")
-            {
-                buttons.Remove("READY");
-                textBoxes["CHAT"].Append("You Are:");
-                if (rand.Next(1, 2) == 1)
-                    textBoxes["CHAT"].Append("N00b digger");
-                else textBoxes["CHAT"].Append("Reutobas bitcher");
-                Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
-                boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
-                map[5, 7] = new PlacedCard(1, 0);
-                map[13, 5] = new PlacedCard(45, 0);
-                map[13, 7] = new PlacedCard(45, 0);
-                map[13, 9] = new PlacedCard(45, 0);
-                boardGrid.fieldTexture[5, 7] = cardTexture[1];
-                boardGrid.fieldTexture[13, 5] = cardTexture[45];
-                boardGrid.fieldTexture[13, 7] = cardTexture[45];
-                boardGrid.fieldTexture[13, 9] = cardTexture[45];
-                game.gridToAdd = boardGrid;
-                for (int i = 0; i < 6; i++)
-                    cardHand[i] = int.Parse(data[i + 1]);
-            }
-            if (data[0] == "GIB")
-            {
-                for (int i = 0; i < 6; i++)
+                if (data[0] == "TURN")
                 {
-                    if (cardHand[i] == 0)
-                    {
-                        cardHand[i] = int.Parse(data[1]);
-                        i = 6;
-                    }
+                    playerTurn = data[1].Trim();
                 }
-            }
-            if (data[0] == "TURN")
-            {
-                playerTurn = data[1].Trim();
-            }
-            if (data[0] == "OK")
-            {
-                if(data[1] == "READY")
+                if (data[0] == "OK")
                 {
-                    buttons["READY"].texture = ReadyTexture;
+                    if (data[1] == "READY")
+                    {
+                        buttons["READY"].texture = ReadyTexture;
+                    }
                 }
             }
         }
