@@ -86,6 +86,19 @@ namespace Ruetobas
                 game.Exit();
             }
 
+            if (textBoxes.ContainsKey("PLAYERLIST"))
+            {
+                TextBox playerTextBox = textBoxes["PLAYERLIST"];
+                playerTextBox.lines.Clear();
+                for (int i = 0; i < players.Count; i++)
+                {
+                    string line = players[i].username;
+                    if (players[i].username == playerTurn)
+                        line += " - currently playing";
+                    playerTextBox.Append(line);
+                }
+            }
+
             if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes["CHATINPUT"].active)
                 SendChatMessage();
         }
@@ -201,7 +214,7 @@ namespace Ruetobas
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
                 grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, BuchnijLolka);
-                grids["USERS"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(160, 680), new Rectangle(1120, 40, 160, 680), 0, BuchnijLolka);
+                textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1120, 40, 160, 680));
             }
             else
             {
