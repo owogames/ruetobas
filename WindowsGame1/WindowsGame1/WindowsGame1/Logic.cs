@@ -138,9 +138,9 @@ namespace Ruetobas
             }
             if (data[0] == "PLACE")
             {
-                int x = int.Parse(data[1]);
-                int y = int.Parse(data[2]);
-                int ID = int.Parse(data[3]);
+                int ID = int.Parse(data[1]);
+                int x = int.Parse(data[2]);
+                int y = int.Parse(data[3]);
                 int orientation = int.Parse(data[4]);
                 map[x, y] = new PlacedCard(ID, orientation);
                 grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
@@ -152,16 +152,17 @@ namespace Ruetobas
                 if (rand.Next(1, 2) == 1)
                     textBoxes["CHAT"].Append("N00b digger");
                 else textBoxes["CHAT"].Append("Reutobas bitcher");
-                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
-                grids["BOARD"].offset = new Vector2(grids["BOARD"].sizeX * grids["BOARD"].fieldSize.X / 2, grids["BOARD"].sizeY * grids["BOARD"].fieldSize.Y / 2);
+                Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
+                boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
                 map[5, 7] = new PlacedCard(1, 0);
                 map[13, 5] = new PlacedCard(45, 0);
                 map[13, 7] = new PlacedCard(45, 0);
                 map[13, 9] = new PlacedCard(45, 0);
-                grids["BOARD"].fieldTexture[5, 7] = cardTexture[1];
-                grids["BOARD"].fieldTexture[13, 5] = cardTexture[45];
-                grids["BOARD"].fieldTexture[13, 7] = cardTexture[45];
-                grids["BOARD"].fieldTexture[13, 9] = cardTexture[45];
+                boardGrid.fieldTexture[5, 7] = cardTexture[1];
+                boardGrid.fieldTexture[13, 5] = cardTexture[45];
+                boardGrid.fieldTexture[13, 7] = cardTexture[45];
+                boardGrid.fieldTexture[13, 9] = cardTexture[45];
+                game.gridToAdd = boardGrid;
                 for (int i = 0; i < 6; i++)
                     cardHand[i] = int.Parse(data[i + 1]);
             }
@@ -303,15 +304,22 @@ namespace Ruetobas
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
             Color c = (selectedCard == x) ? Color.LightYellow : Color.White;
-            spriteBatch.Draw(cards[cardHand[x]].texture, location, c);
+            if (selectedRot == 0 || x != selectedCard)
+                spriteBatch.Draw(cards[cardHand[x]].texture, location, c);
+            else
+            {
+                location.X += location.Width;
+                location.Y += location.Height;
+                spriteBatch.Draw(cards[cardHand[x]].texture, location, null, c, (float)Math.PI, Vector2.Zero, SpriteEffects.None, 0);
+            }
         }
 
 
         public static void HandClick(int x, int y)
         {
-            selectedRot = 0;
             if (x == selectedCard && cards[cardHand[x]].cardType == CardType.Tunnel)
-                selectedRot = 1;
+                selectedRot = 1 - selectedRot;
+            else selectedRot = 0;
             selectedCard = x;
         }
 
@@ -324,12 +332,12 @@ namespace Ruetobas
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {
+                game.TCPSend("PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString());
                 for (int i = selectedCard; i < 5; i++)
                     cardHand[i] = cardHand[i + 1];
                 selectedCard = -1;
                 cardHand[5] = 0;
                 selectedRot = 0;
-                game.TCPSend("PLACE " + x.ToString() + " " + y.ToString() + " " + cardHand[selectedCard].ToString() + " " + selectedRot.ToString());
             }
         }
 

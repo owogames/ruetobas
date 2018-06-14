@@ -246,6 +246,8 @@ namespace Ruetobas
         public InputBox activeInputBox = null;
         Grid draggedGrid;
 
+        public Grid gridToAdd;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -417,6 +419,12 @@ namespace Ruetobas
 
             mouseBeforeState = mouseState;
             keyboardBeforeState = keyboardState;
+
+            if (gridToAdd != null)
+            {
+                Logic.grids["BOARD"] = gridToAdd;
+                gridToAdd = null;
+            }
             
             base.Update(gameTime);
         }
