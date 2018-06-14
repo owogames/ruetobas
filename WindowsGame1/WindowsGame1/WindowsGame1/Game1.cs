@@ -15,6 +15,10 @@ using Microsoft.Xna.Framework.Media;
 using System.IO;
 using System.Text;
 
+using Keys = Microsoft.Xna.Framework.Input.Keys;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using MouseState = Microsoft.Xna.Framework.Input.MouseState;
+
 namespace Ruetobas
 {
     /// <summary>
