@@ -148,6 +148,21 @@ namespace Ruetobas
             }
             if (data[0] == "START")
             {
+                buttons.Remove("READY");
+                textBoxes["CHAT"].Append("You Are:");
+                if (rand.Next(1, 2) == 1)
+                    textBoxes["CHAT"].Append("N00b digger");
+                else textBoxes["CHAT"].Append("Reutobas bitcher");
+                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
+                grids["BOARD"].offset = new Vector2(grids["BOARD"].sizeX * grids["BOARD"].fieldSize.X / 2, grids["BOARD"].sizeY * grids["BOARD"].fieldSize.Y / 2);
+                map[5, 7] = new PlacedCard(1, 0);
+                map[13, 5] = new PlacedCard(45, 0);
+                map[13, 7] = new PlacedCard(45, 0);
+                map[13, 9] = new PlacedCard(45, 0);
+                grids["BOARD"].fieldTexture[5, 7] = cardTexture[1];
+                grids["BOARD"].fieldTexture[13, 5] = cardTexture[45];
+                grids["BOARD"].fieldTexture[13, 7] = cardTexture[45];
+                grids["BOARD"].fieldTexture[13, 9] = cardTexture[45];
                 for (int i = 0; i < 6; i++)
                     cardHand[i] = int.Parse(data[i + 1]);
             }
@@ -221,7 +236,6 @@ namespace Ruetobas
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
                 buttons["READY"] = new Button(NotReadyTexture, new Rectangle(0, 0, 920, 520), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
-                //grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
@@ -329,8 +343,7 @@ namespace Ruetobas
 
         public static void Ready()
         {
-            game.TCPSend("READY");
-            
+            game.TCPSend("READY");           
         }
     }
 }
