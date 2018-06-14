@@ -64,6 +64,11 @@ namespace Ruetobas
             entrance = new bool[4];
             graph = new bool[4, 4];
         }
+        public bool GetEntrance(int entrance_number)
+        {
+            entrance_number = (entrance_number % 4) + 4; //dotatnie modulo
+            return entrance[entrance_number % 4];
+        }
     }
 
 

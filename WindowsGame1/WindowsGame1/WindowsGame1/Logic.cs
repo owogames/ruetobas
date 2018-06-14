@@ -171,14 +171,42 @@ namespace Ruetobas
 
         public static int CheckCardPlacement(int x, int y, int ID, int rot)
         {
-
+            if (cards[map[x, y].ID].cardType != CardType.Empty)
+                return 3;
             if (cards[ID].cardType != CardType.Tunnel)
                 return 4;
+
+            Vector2[] placements = { new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0)};
+            bool any_valid_card = false;
+            Tunnel center = (Tunnel)cards[ID];
+
+            for (int i = 0; i < 4; i++)
+            {
+                PlacedCard current = map[x + (int)placements[i].X, y + (int)placements[i].Y];
+                if (current.ID == 45 || current.ID == 0)
+                    continue;
+                else
+                {
+                    any_valid_card = true;
+                    Tunnel currentTL = (Tunnel)cards[current.ID];
+                    if(center.GetEntrance(i + rot * 2) != currentTL.GetEntrance(i + (current.rotation - 1) * 2))
+                    {
+                        return 2;
+                    }
+                }
+            }
+            //    0       0    
+            //  3 C 1 - 3 T 1  //no rotation
+            //    2       2    
+
+            if (any_valid_card == false)
+                return 1;
+            return 0; 
+            //0 - OK
             //1 - karta musi przylegać do innej karty (pamiętać, żeby nie brać karty 45 pod uwagę)
             //2 - tunele wychodzące z karty muszą pasować do sąsiednich kart
             //3 - karta musi być położona na pustym polu
             //4 - karta musi tunelem
-            return 0; //OK
         }
 
 
