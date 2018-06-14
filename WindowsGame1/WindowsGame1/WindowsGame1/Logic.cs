@@ -25,6 +25,8 @@ namespace Ruetobas
 
         public static PlacedCard[,] map;
 
+        public static List<Card> cards;
+
         public const int port = 2137;
 
         public static string IP = "192.168.0.157";
@@ -143,9 +145,13 @@ namespace Ruetobas
 
         public static int CheckCardPlacement(int x, int y, int ID, int rot)
         {
+
+            if (cards[ID].cardType != CardType.Tunnel)
+                return 4;
             //1 - karta musi przylegać do innej karty (pamiętać, żeby nie brać karty 45 pod uwagę)
             //2 - tunele wychodzące z karty muszą pasować do sąsiednich kart
             //3 - karta musi być położona na pustym polu
+            //4 - karta musi tunelem
             return 0; //OK
         }
 

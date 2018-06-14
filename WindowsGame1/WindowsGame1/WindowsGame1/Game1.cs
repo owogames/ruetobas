@@ -343,6 +343,8 @@ namespace Ruetobas
                 if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
                     activeInputBox.Append(GetClipboard());
             }
+            else if (keyboardState.IsKeyDown(Keys.Delete))
+                activeInputBox.Clear();
             else if (pressedKeys.Length > 0 && activeInputBox != null)
             {
                 foreach (Keys key in pressedKeys)
