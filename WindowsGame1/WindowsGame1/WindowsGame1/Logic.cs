@@ -31,6 +31,7 @@ namespace Ruetobas
         public static List<Card> cards;
 
         public static int selectedCard = -1;
+        public static int selectedRot = 0;
         public static int[] cardHand = new int[6];
         public static string playerTurn = ""; //Nazwa gracza, który ma teraz turę. Kompletnie nie mam pojęcia jak ją nazwać xD
         //Ogłaszam konkurs. Ten kto wymyśli najlepszą nazwę zmiennej ^ dostaje 1% przychodu
@@ -270,6 +271,9 @@ namespace Ruetobas
 
         public static void HandClick(int x, int y)
         {
+            selectedRot = 0;
+            if (x == selectedCard && cards[cardHand[x]].cardType == CardType.Tunnel)
+                selectedRot = 1;
             selectedCard = x;
         }
 
@@ -279,14 +283,15 @@ namespace Ruetobas
                 return;
             if (playerTurn != username)
                 return;
-            int result = CheckCardPlacement(x, y, cardHand[selectedCard], 0);
+            int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {
                 for (int i = selectedCard; i < 5; i++)
                     cardHand[i] = cardHand[i + 1];
                 selectedCard = -1;
                 cardHand[5] = 0;
-                game.TCPSend("PLACE " + x + " " + y + " " + cardHand[selectedCard] + " 0");
+                selectedRot = 0;
+                game.TCPSend("PLACE " + x.ToString() + " " + y.ToString() + " " + cardHand[selectedCard].ToString() + " " + selectedRot.ToString());
             }
         }
 
