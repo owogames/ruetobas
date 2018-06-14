@@ -54,6 +54,7 @@ namespace Ruetobas
                     for (int i = 1; i < data.Length; i++)
                         Logic.players.Add(new Player(i, data[i]));
                     Logic.players.Add(new Player(data.Length, Logic.username));
+                    Logic.SortPlayers();
                     tcpThreadStart = new ThreadStart(TCPListening);
                     tcpThread = new Thread(tcpThreadStart);
                     tcpThread.Start();
@@ -343,6 +344,8 @@ namespace Ruetobas
                 if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
                     activeInputBox.Append(GetClipboard());
             }
+            else if (keyboardState.IsKeyDown(Keys.Delete))
+                activeInputBox.Clear();
             else if (pressedKeys.Length > 0 && activeInputBox != null)
             {
                 foreach (Keys key in pressedKeys)
@@ -466,9 +469,9 @@ namespace Ruetobas
                     float _x = 0;
 
                     if (textBox.Value.align == Alignment.Left)
-                        _x = (float) textBox.Value.location.X + (float) textBox.Value.margin;
+                        _x = textBox.Value.location.X + textBox.Value.margin;
                     else if(textBox.Value.align == Alignment.Centered)
-                        _x = (float)textBox.Value.location.X + ((float) textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
+                        _x = textBox.Value.location.X + (textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
 
                     Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll) + textBox.Value.margin);
 

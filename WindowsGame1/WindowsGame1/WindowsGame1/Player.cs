@@ -21,5 +21,16 @@ namespace Ruetobas
             score = 0;
             playerClass = PlayerClass.Unknown;
         }
+
+        public static int CompareByName(Player p1, Player p2)
+        {
+            if (p1 == null && p2 == null)
+                return 0;
+            if (p1 == null)
+                return 1;
+            if (p2 == null)
+                return -1;
+            return p1.username.CompareTo(p2.username);
+        }
     }
 }
