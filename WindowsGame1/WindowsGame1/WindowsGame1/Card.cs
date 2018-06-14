@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Ruetobas
 {
-    public enum CardType { Tunnel }
+    public enum CardType { Empty, Tunnel }
     public enum TunnelObject { None, Ladder, Rock, Gem, Gold}
 
     public class Card
@@ -54,6 +54,11 @@ namespace Ruetobas
             cardType = CardType.Tunnel;
             entrance = new bool[4];
             graph = new bool[4, 4];
+        }
+        public bool GetEntrance(int entrance_number)
+        {
+            entrance_number = (entrance_number % 4) + 4; //dotatnie modulo
+            return entrance[entrance_number % 4];
         }
     }
 
