@@ -94,6 +94,24 @@ namespace Ruetobas
         {
             text = "";
         }
+
+        public void Append(string new_text)
+        {
+            int i = 0;
+            for (; i < new_text.Length; i++)
+            {
+                if (font.MeasureString(text + new_text.Substring(0,i + 1)).X > location.Width - 2 * margin)
+                {
+                    text += new_text.Substring(0, i);
+                    return;
+                }
+            }
+            text += new_text;
+        }
+        public void Append(char new_text)
+        {
+            Append(new_text.ToString());
+        }
     }
 
     public class Grid

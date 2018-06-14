@@ -319,9 +319,14 @@ namespace Ruetobas
             {
                 draggedGrid = null;
             }
-            
+
             //Konwersja klawiszy do inputBoxa
-            if (pressedKeys.Length > 0 && activeInputBox != null)
+            if (keyboardState.IsKeyDown(Keys.LeftControl))
+            {
+                if (Clipboard.ContainsText())
+                    activeInputBox.Append(Clipboard.GetText().ToString());
+            }
+            else if (pressedKeys.Length > 0 && activeInputBox != null)
             {
                 foreach (Keys key in pressedKeys)
                 {
@@ -329,8 +334,9 @@ namespace Ruetobas
                     if (keyboardBeforeState.IsKeyUp(key) &&
                         TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
                     {
-                        if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width - 2 * activeInputBox.margin)
-                            activeInputBox.text += charkey;
+                        activeInputBox.Append(charkey);
+                        //if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width - 2 * activeInputBox.margin)
+                        //    activeInputBox.text += charkey;
                     }
                 }
             }
