@@ -159,7 +159,12 @@ namespace Ruetobas
         public static void BoardDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
             float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
-            spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, grids["BOARD"].fieldSize / 2, SpriteEffects.None, 0);
+            if (map[x, y].rotation == 1)
+            {
+                location.X += location.Width;
+                location.Y += location.Height;
+            }
+            spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
         }
 
         public static void BuchnijLolka(int x, int y)
