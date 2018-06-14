@@ -1,5 +1,3 @@
-#include <iostream>
-#include <fstream>
 #include <vector>
 
 ///karta, która jest tunelem

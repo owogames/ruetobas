@@ -5,12 +5,12 @@
 #include <ws2tcpip.h>
 #else
 //TODO: wywal niepotrzeble includy z linuxa
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
+
+
+
+
+
+
 
 #endif
 

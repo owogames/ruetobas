@@ -1,3 +1,7 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
 #include "Tunnel.h"
 
 std::vector<Tunnel> parseTunnels(const char* file) {

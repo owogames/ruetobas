@@ -10,19 +10,17 @@
 #include "ServerTCP.h"
 #include "StringProcessing.h"
 #include "Tunnel.h"
-//#include "Board.h"
+#include "Player.h"
+#include "Board.h"
 
-//5, 7
-
-//const int NUM_CARDS = 
-
-int main() {
+int main() {	
+	
 	ServerTCP server(2137);
 	
-	std::set<std::string> nicks;
-	std::map<int, std::string> users;
-	std::set<int> ready;
+	std::set<std::string> usernames;
+	std::map<int, Player> players;
 	
+	int ready_cnt = 0;
 	bool running = false;
 	
 	std::vector<int> cards(41);
@@ -35,87 +33,139 @@ int main() {
 		int fd;
 		std::string msg, command, text;
 		std::tie(fd, msg) = server.read();
-		std::tie(command, text) = parse(msg);
+		std::tie(command, text) = split(msg);
 
 		
-
 		if(fd == -1) continue;
 
 		if(command == "LOGIN") {
+			
 			if(running) 
 				server.write(fd, "ERROR The game is already running");
-			else if(users.find(fd) != users.end())
+				
+			else if(players.find(fd) != players.end())
 				server.write(fd, "ERROR Already logged in");
-			else if(nicks.find(text) != nicks.end())
+				
+			else if(usernames.find(text) != usernames.end())
 				server.write(fd, "ERROR Login taken");
-			else if(invalid_login(text))
+				
+			else if(invalidLogin(text))
 				server.write(fd, "ERROR Invalid login");
 				
 			else {
-				nicks.insert(text);
-				users[fd] = text;
+				usernames.insert(text);
+				players[fd] = Player(text);
 				
-				std::string usernames;
-				for(auto u : users)
+				std::string username_list;
+				for(auto u : players)
 					if(u.first != fd) {
 						server.write(u.first, "JOIN " + text);
-						usernames += ' ' + u.second;
+						username_list += ' ' + u.second.name;
 					}
 				
-				server.write(fd, "OK" + usernames);
+				server.write(fd, "OK" + username_list);
 			}
 		}
 
 		else if(command == "CHAT") {
-			if(users.find(fd) == users.end())
+			if(players.find(fd) == players.end())
 				server.write(fd, "ERROR Not logged in");
-			else if(invalid_chat_msg(text))
+				
+			else if(invalidChatMsg(text))
 				server.write(fd, "ERROR Invalid chat message");
+				
 			else {
-				for(auto u : users)
+				for(auto u : players)
 					server.write(u.first, "CHAT " + text);
 			}
 		}
 
 		else if(command == "QUIT") {
-			for(auto u : users)
-				server.write(u.first, "BYE " + users[fd]);
+			for(auto p : players)
+				server.write(p.first, "BYE " + players[fd].name);
 			server.remove(fd);
-			nicks.erase(users[fd]);
-			users.erase(fd);
+			usernames.erase(players[fd].name);
+			players.erase(fd);
 		}
 		
 		else if(command == "READY") {
+			
 			if(running) 
 				server.write(fd, "ERROR The game is already running");
-			else if(ready.find(fd) != ready.end())
+				
+			else if(players[fd].ready)
 				server.write(fd, "ERROR Already ready");
+				
 			else {
-				ready.insert(fd);
+				players[fd].ready = true;
+				ready_cnt++;
 				
-				server.write(fd, "OK");
-				for(auto u : users)
-					if(u.first != fd)
-						server.write(u.first, "READY " + users[fd]);
+				server.write(fd, "OK READY");
+				for(auto p : players)
+					if(p.first != fd)
+						server.write(p.first, "READY " + players[fd].name);
 				
-				if(ready.size() == users.size()) {
-					running = true;
+				if(ready_cnt == players.size()) {
 					
-					for(auto u : users) {
-						std::stringstream ss;
-						ss << "START";
+					running = true;
+					initBoard();
+					
+					for(auto p : players) {
+						std::string card_list = "START";
+
 						for(int i = 0; i < 6; i++) {
-							ss << ' ' << cards.back();
+							card_list += ' ' + toStr(cards.back());
+							players[fd].addCard(cards.back());
 							cards.pop_back();
 						}
-						server.write(u.first, ss.str());
+						server.write(p.first, card_list);
 					}
-						
 				}
 			}
 		}
 		
-		else if(command == "NOP") {}
+		else if(command == "PLACE") {
+			std::vector<int> v;
+			
+			if(!running)
+				server.write(fd, "ERROR The game is not yet running");
+			
+			else if(!intList(text, v)) 
+				server.write(fd, "ERROR Incorrect command syntax");
+				
+			else {
+				if(!players[fd].hasCard(v[0]))
+					server.write(fd, "ERROR You don't have that card");
+				
+				else if(!placeCard(v[0], v[1], v[2], v[3])) 
+					server.write(fd, "ERROR Invalid move");
+				
+				else {
+					for(auto p : players)
+						server.write(p.first, msg);
+					
+					players[fd].removeCard(v[0]);
+						
+					if(cards.empty()) 	
+						server.write(fd, "GIB 0");
+					
+					else {
+						server.write(fd, "GIB " + toStr(cards.back()));
+						players[fd].addCard(cards.back());
+						cards.pop_back();
+					}
+					
+					int id, x, y;
+					bool flip;
+					while(revealedCard(id, x, y, flip)) {	
+						for(auto p : players)
+							server.write(p.first, "PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
+					}
+				}
+			}
+		}
+		
+		else if(command == "") {}
 		
 		else
 			server.write(fd, "ERROR Unknown command");

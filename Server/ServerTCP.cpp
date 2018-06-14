@@ -91,7 +91,7 @@ int ServerTCP::accept() {
     #endif
 
 	if(newsockfd == -1)
-		err("accept");
+		err("accept\n");
 	else {
         printf("socket %i connected\n", newsockfd);
 		FD_SET(newsockfd, &fds);
@@ -109,7 +109,7 @@ ServerTCP::ServerTCP(int port) {
     #ifdef WIN32
 	WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
-        fatal_err("WSAStartup");
+        fatal_err("WSAStartup\n");
 
 	addrinfo *result = NULL;
     addrinfo hints;
@@ -125,25 +125,25 @@ ServerTCP::ServerTCP(int port) {
 	sprintf_s(port_cstr, 10, "%i", port);
 
     if(getaddrinfo(NULL, port_cstr, &hints, &result) != 0)
-        fatal_err("getaddrinfo");
+        fatal_err("getaddrinfo\n");
 
     sockfd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if(sockfd == INVALID_SOCKET)
-        fatal_err("socket");
+        fatal_err("socket\n");
 
     if(bind(sockfd, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR)
-        fatal_err("bind");
+        fatal_err("bind\n");
 
     freeaddrinfo(result);
 
     if(listen(sockfd, SOMAXCONN) == SOCKET_ERROR)
-        fatal_err("listen");
+        fatal_err("listen\n");
 
 
     #else
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd == -1)
-		fatal_err("socket");
+		fatal_err("socket\n");
 
 	sockaddr_in my_addr;
 	my_addr.sin_family = AF_INET;
@@ -153,13 +153,13 @@ ServerTCP::ServerTCP(int port) {
 
 	int yes = 1;
 	if(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
-		fatal_err("setsockopt");
+		fatal_err("setsockopt\n");
 
 	if(bind(sockfd, (sockaddr*) &my_addr, sizeof(sockaddr)) == -1)
-		fatal_err("bind");
+		fatal_err("bind\n");
 
 	if(listen(sockfd, 10) == -1)
-		fatal_err("listen");
+		fatal_err("listen\n");
     #endif
 
 
@@ -187,14 +187,14 @@ std::pair<int, std::string> ServerTCP::read() {
 		timeval timeout{0, 0};
 
 		if(select(maxfd + 1, &read_fds, NULL, NULL, &timeout) == -1)
-			err("select");
+			err("select\n");
 
 		for(int fd = 0; fd <= maxfd; fd++) {
 			if(FD_ISSET(fd, &read_fds)) {
 				if(fd == sockfd) {
 					int newfd = accept();
 					if(newfd != -1)
-						msg_queue.emplace(newfd, "NOP");
+						msg_queue.emplace(newfd, "");
 				}
 				else
 					msg_queue.emplace(fd, getMsg(fd));
@@ -221,7 +221,7 @@ void ServerTCP::write(int fd, std::string msg) {
 	
 	#else
 	if(send(fd, msg.data(), msg.size(), 0) == -1)
-		err("send");
+		err("send\n");
 		
 	#endif
 }

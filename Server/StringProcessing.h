@@ -1,11 +1,17 @@
 #include <string>
-//#include <utility>
+#include <vector>
 
 ///@brief rozdziel wiadomość na komendę i treść komendy
-std::pair<std::string, std::string> parse(const std::string& str);
+std::pair<std::string, std::string> split(const std::string& str);
 
 ///@brief sprawdza, czy login jest legitny
-bool invalid_login(const std::string& str);
+bool invalidLogin(const std::string& str);
 
 ///@brief sprawdza, czy wiadomość chatu jest legitna
-bool invalid_chat_msg(const std::string& str);
+bool invalidChatMsg(const std::string& str);
+
+///@brief rozbija stringa na listę intów
+bool intList(const std::string& str, std::vector<int>& v);
+
+///@brief int -> string (c++ taki super język xddddd)
+std::string toStr(int x);
