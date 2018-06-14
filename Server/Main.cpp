@@ -1,21 +1,23 @@
 #include <iostream>
-#include <sstream>
 #include <algorithm>
 #include <numeric>
 #include <tuple>
 #include <string>
 #include <map>
 #include <set>
+#include <chrono>
 
-#include "ServerTCP.h"
+#include "TCP.h"
 #include "StringProcessing.h"
 #include "Tunnel.h"
 #include "Player.h"
 #include "Board.h"
 
-int main() {	
+int main() {
 	
-	ServerTCP server(2137);
+	srand(std::chrono::system_clock::now().time_since_epoch().count());
+	
+	wakeMeUp(2137);
 	
 	std::set<std::string> usernames;
 	std::map<int, Player> players;
@@ -29,10 +31,12 @@ int main() {
 	
 	auto tunnels = parseTunnels("../karty_normalne.txt");
 	
+	auto curr_player_itr = players.begin();
+	
 	while(true) {
 		int fd;
 		std::string msg, command, text;
-		std::tie(fd, msg) = server.read();
+		std::tie(fd, msg) = read();
 		std::tie(command, text) = split(msg);
 
 		
@@ -41,16 +45,16 @@ int main() {
 		if(command == "LOGIN") {
 			
 			if(running) 
-				server.write(fd, "ERROR The game is already running");
+				write(fd, "ERROR The game is already running");
 				
 			else if(players.find(fd) != players.end())
-				server.write(fd, "ERROR Already logged in");
+				write(fd, "ERROR Already logged in");
 				
 			else if(usernames.find(text) != usernames.end())
-				server.write(fd, "ERROR Login taken");
+				write(fd, "ERROR Login taken");
 				
 			else if(invalidLogin(text))
-				server.write(fd, "ERROR Invalid login");
+				write(fd, "ERROR Invalid login");
 				
 			else {
 				usernames.insert(text);
@@ -59,31 +63,31 @@ int main() {
 				std::string username_list;
 				for(auto u : players)
 					if(u.first != fd) {
-						server.write(u.first, "JOIN " + text);
+						write(u.first, "JOIN " + text);
 						username_list += ' ' + u.second.name;
 					}
 				
-				server.write(fd, "OK" + username_list);
+				write(fd, "OK" + username_list);
 			}
 		}
 
 		else if(command == "CHAT") {
 			if(players.find(fd) == players.end())
-				server.write(fd, "ERROR Not logged in");
+				write(fd, "ERROR Not logged in");
 				
 			else if(invalidChatMsg(text))
-				server.write(fd, "ERROR Invalid chat message");
+				write(fd, "ERROR Invalid chat message");
 				
 			else {
 				for(auto u : players)
-					server.write(u.first, "CHAT " + text);
+					write(u.first, "CHAT " + text);
 			}
 		}
 
 		else if(command == "QUIT") {
 			for(auto p : players)
-				server.write(p.first, "BYE " + players[fd].name);
-			server.remove(fd);
+				write(p.first, "BYE " + players[fd].name);
+			remove(fd);
 			usernames.erase(players[fd].name);
 			players.erase(fd);
 		}
@@ -91,19 +95,19 @@ int main() {
 		else if(command == "READY") {
 			
 			if(running) 
-				server.write(fd, "ERROR The game is already running");
+				write(fd, "ERROR The game is already running");
 				
 			else if(players[fd].ready)
-				server.write(fd, "ERROR Already ready");
+				write(fd, "ERROR Already ready");
 				
 			else {
 				players[fd].ready = true;
 				ready_cnt++;
 				
-				server.write(fd, "OK READY");
+				write(fd, "OK READY");
 				for(auto p : players)
 					if(p.first != fd)
-						server.write(p.first, "READY " + players[fd].name);
+						write(p.first, "READY " + players[fd].name);
 				
 				if(ready_cnt == players.size()) {
 					
@@ -115,11 +119,16 @@ int main() {
 
 						for(int i = 0; i < 6; i++) {
 							card_list += ' ' + toStr(cards.back());
-							players[fd].addCard(cards.back());
+							players[p.first].addCard(cards.back());
 							cards.pop_back();
 						}
-						server.write(p.first, card_list);
+						write(p.first, card_list);
 					}
+					
+					curr_player_itr = players.begin();
+					
+					for(auto p : players)
+						write(p.first, "TURN " + curr_player_itr->second.name);
 				}
 			}
 		}
@@ -128,29 +137,32 @@ int main() {
 			std::vector<int> v;
 			
 			if(!running)
-				server.write(fd, "ERROR The game is not yet running");
+				write(fd, "ERROR The game is not yet running");
 			
-			else if(!intList(text, v)) 
-				server.write(fd, "ERROR Incorrect command syntax");
+			else if(!intList(text, v) || v.size() != 4) 
+				write(fd, "ERROR Incorrect command syntax");
+				
+			else if(fd != curr_player_itr->first)
+				write(fd, "ERROR Not your turn");
 				
 			else {
 				if(!players[fd].hasCard(v[0]))
-					server.write(fd, "ERROR You don't have that card");
+					write(fd, "ERROR You don't have that card");
 				
 				else if(!placeCard(v[0], v[1], v[2], v[3])) 
-					server.write(fd, "ERROR Invalid move");
+					write(fd, "ERROR Invalid move");
 				
 				else {
 					for(auto p : players)
-						server.write(p.first, msg);
+						write(p.first, msg);
 					
 					players[fd].removeCard(v[0]);
 						
 					if(cards.empty()) 	
-						server.write(fd, "GIB 0");
+						write(fd, "GIB 0");
 					
 					else {
-						server.write(fd, "GIB " + toStr(cards.back()));
+						write(fd, "GIB " + toStr(cards.back()));
 						players[fd].addCard(cards.back());
 						cards.pop_back();
 					}
@@ -159,16 +171,29 @@ int main() {
 					bool flip;
 					while(revealedCard(id, x, y, flip)) {	
 						for(auto p : players)
-							server.write(p.first, "PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
+							write(p.first, "PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
 					}
+					
+					++curr_player_itr;
+					if(curr_player_itr == players.end())
+						curr_player_itr = players.begin();
+					
+					for(auto p : players)
+						write(p.first, "TURN " + curr_player_itr->second.name);
 				}
+				
+				
+				
 			}
 		}
 		
 		else if(command == "") {}
 		
 		else
-			server.write(fd, "ERROR Unknown command");
+			write(fd, "ERROR Unknown command");
 	}
+	
+	
+	endMyLife();
 
 }

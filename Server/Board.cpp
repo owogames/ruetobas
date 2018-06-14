@@ -14,5 +14,5 @@ bool placeCard(int id, int x, int y, bool flip) {
 
 bool revealedCard(int& id, int& x, int& y, bool& flip) {
 	//TODO
-	return -1;
+	return false;
 }
