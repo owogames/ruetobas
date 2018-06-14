@@ -218,6 +218,23 @@ namespace Ruetobas
             return false;
         }
 
+        string clipboard = "";
+        private void GetClipboardHelper()
+        {
+            clipboard = "";
+            if (Clipboard.ContainsText())
+                clipboard = Clipboard.GetText();
+        }
+
+        private string GetClipboard()
+        {
+            Thread thread = new Thread(GetClipboardHelper);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return clipboard;
+        }
+
         public MouseState mouseState, mouseBeforeState;
         public KeyboardState keyboardState, keyboardBeforeState;
         public Keys[] pressedKeys;
@@ -323,8 +340,8 @@ namespace Ruetobas
             //Konwersja klawiszy do inputBoxa
             if (keyboardState.IsKeyDown(Keys.LeftControl))
             {
-                if (Clipboard.ContainsText())
-                    activeInputBox.Append(Clipboard.GetText().ToString());
+                if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
+                    activeInputBox.Append(GetClipboard());
             }
             else if (pressedKeys.Length > 0 && activeInputBox != null)
             {
