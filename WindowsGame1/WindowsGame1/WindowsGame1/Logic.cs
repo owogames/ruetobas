@@ -152,7 +152,7 @@ namespace Ruetobas
                 {
                     buttons.Remove("READY");
                     textBoxes["CHAT"].Append("You Are:");
-                    if (rand.Next(1, 2) == 1)
+                    if (rand.Next(1, 3) == 1)
                         textBoxes["CHAT"].Append("N00b digger");
                     else textBoxes["CHAT"].Append("Reutobas bitcher");
                     Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
