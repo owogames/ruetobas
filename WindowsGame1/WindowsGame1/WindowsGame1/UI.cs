@@ -108,6 +108,7 @@ namespace Ruetobas
             }
             text += new_text;
         }
+
         public void Append(char new_text)
         {
             Append(new_text.ToString());

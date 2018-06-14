@@ -335,8 +335,6 @@ namespace Ruetobas
                         TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
                     {
                         activeInputBox.Append(charkey);
-                        //if (activeInputBox.font.MeasureString(activeInputBox.text + charkey).X <= activeInputBox.location.Width - 2 * activeInputBox.margin)
-                        //    activeInputBox.text += charkey;
                     }
                 }
             }
