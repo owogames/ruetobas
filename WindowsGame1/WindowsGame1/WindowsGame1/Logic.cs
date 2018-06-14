@@ -32,6 +32,8 @@ namespace Ruetobas
 
         public static int selectedCard = -1;
         public static int[] cardHand = new int[6];
+        public static string playerTurn = ""; //Nazwa gracza, który ma teraz turę. Kompletnie nie mam pojęcia jak ją nazwać xD
+        //Ogłaszam konkurs. Ten kto wymyśli najlepszą nazwę zmiennej ^ dostaje 1% przychodu
 
         public const int port = 2137;
 
@@ -94,9 +96,24 @@ namespace Ruetobas
             if (data[0] == "CHAT")
                 textBoxes["CHAT"].Append(message.Substring(5).Trim());
             if (data[0] == "JOIN")
-                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the chat.");
+            {
+                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the game.");
+                players.Add(new Player(0, message.Substring(5).Trim()));
+                SortPlayers();
+            }
             if (data[0] == "BYE")
-                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the chat.");
+            {
+                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the game.");
+                for (int i = 0; i < players.Count; i++)
+                {
+                    if (players[i].username == message.Substring(4).Trim())
+                    {
+                        players.RemoveAt(i);
+                        i = players.Count;
+                    }
+                }
+                SortPlayers();
+            }
             if (data[0] == "ERROR")
             {
                 textBoxes["CHAT"].Append(message.Substring(6).Trim());
@@ -115,6 +132,21 @@ namespace Ruetobas
             {
                 for (int i = 0; i < 6; i++)
                     cardHand[i] = int.Parse(data[i + 1]);
+            }
+            if (data[0] == "GIB")
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    if (cardHand[i] == 0)
+                    {
+                        cardHand[i] = int.Parse(data[1]);
+                        i = 6;
+                    }
+                }
+            }
+            if (data[0] == "TURN")
+            {
+                playerTurn = data[1].Trim();
             }
         }
 
@@ -139,6 +171,13 @@ namespace Ruetobas
             }
         }
 
+        public static void SortPlayers()
+        {
+            players.Sort(Player.CompareByName);
+            for (int i = 0; i < players.Count; i++)
+                players[i].ID = i;
+        }
+
         public static void LoadGameScreen()
         {
             IP = inputBoxes["ip"].text;
@@ -156,7 +195,7 @@ namespace Ruetobas
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(920, 0, 200, 470));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
-                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 30, 30, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
+                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
@@ -238,15 +277,19 @@ namespace Ruetobas
         {
             if (selectedCard == -1)
                 return;
+            if (playerTurn != username)
+                return;
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], 0);
             if (result == 0)
             {
                 for (int i = selectedCard; i < 5; i++)
                     cardHand[i] = cardHand[i + 1];
                 selectedCard = -1;
+                cardHand[5] = 0;
                 game.TCPSend("PLACE " + x + " " + y + " " + cardHand[selectedCard] + " 0");
             }
         }
+
 
         public static void BuchnijLolka(int x, int y)
         {

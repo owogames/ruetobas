@@ -21,19 +21,16 @@ namespace Ruetobas
             score = 0;
             playerClass = PlayerClass.Unknown;
         }
-        public static Player operator < (Player one, Player two)
+
+        public static int CompareByName(Player p1, Player p2)
         {
-            int comparision = one.username.CompareTo(two.username);
-            if (comparision < 0)
-                return one;
-            return two;
-        }
-        public static Player operator >(Player one, Player two)
-        {
-            int comparision = one.username.CompareTo(two.username);
-            if (comparision > 0)
-                return one;
-            return two;
+            if (p1 == null && p2 == null)
+                return 0;
+            if (p1 == null)
+                return 1;
+            if (p2 == null)
+                return -1;
+            return p1.username.CompareTo(p2.username);
         }
     }
 }

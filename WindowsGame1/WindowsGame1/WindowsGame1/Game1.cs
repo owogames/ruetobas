@@ -54,6 +54,7 @@ namespace Ruetobas
                     for (int i = 1; i < data.Length; i++)
                         Logic.players.Add(new Player(i, data[i]));
                     Logic.players.Add(new Player(data.Length, Logic.username));
+                    Logic.SortPlayers();
                     tcpThreadStart = new ThreadStart(TCPListening);
                     tcpThread = new Thread(tcpThreadStart);
                     tcpThread.Start();
