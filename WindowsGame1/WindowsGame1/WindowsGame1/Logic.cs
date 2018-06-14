@@ -184,7 +184,7 @@ namespace Ruetobas
             {
                 if(data[1] == "READY")
                 {
-                    buttons["READY"].texture = NotReadyTexture;
+                    buttons["READY"].texture = ReadyTexture;
                 }
             }
         }
