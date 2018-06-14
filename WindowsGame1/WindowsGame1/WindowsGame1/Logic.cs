@@ -127,7 +127,7 @@ namespace Ruetobas
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(920, 0, 200, 470));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
-                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 30, 30, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka);
+                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 30, 30, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
@@ -150,10 +150,16 @@ namespace Ruetobas
         }
 
 
+        public static void BoardDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
+        {
+            float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
+            spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, grids["BOARD"].fieldSize / 2, SpriteEffects.None, 0);
+        }
 
         public static void BuchnijLolka(int x, int y)
         {
             grids["BOARD"].fieldTexture[x, y] = skurwielTexture;
+            map[x, y].rotation = 1 - map[x, y].rotation;
         }
     }
 }

@@ -108,6 +108,7 @@ namespace Ruetobas
         public int margin; //Wielkość marginesu w pikselach
 
         public Action<int, int> clickEvent; //Funkcja kliknięcia, powinna przyjmować dwa parametry (x, y) -> numer klikniętego pola (numerowane od 0)
+        public Action<SpriteBatch, Rectangle, int, int> drawEvent; //funkcja rysująca
 
         //Techniczne zmienne - nie przejmowac sie xD
         public Vector2 offset; // o ile przeciągneliśmy grida myszką
@@ -123,6 +124,7 @@ namespace Ruetobas
             this.location = location;
             this.margin = margin;
             this.clickEvent = clickEvent;
+            drawEvent = DefaultDraw;
             offset = new Vector2(0, 0);
 
             renderTarget = new RenderTarget2D(game.GraphicsDevice, location.Width - 2 * margin, location.Height - 2 * margin);
@@ -131,6 +133,17 @@ namespace Ruetobas
             for (int x = 0; x < sizeX; x++)
                 for (int y = 0; y < sizeY; y++)
                     fieldTexture[x, y] = defaultFieldTexture;
+        }
+
+        public Grid(Game game, Texture2D boxTexture, Texture2D defaultFieldTexture, int sizeX, int sizeY, Vector2 fieldSize, Rectangle location, int margin, Action<int, int> clickEvent, Action<SpriteBatch, Rectangle, int, int> drawEvent)
+            :this(game, boxTexture, defaultFieldTexture, sizeX, sizeY, fieldSize, location, margin, clickEvent)
+        {
+            this.drawEvent = drawEvent;
+        }
+
+        public void DefaultDraw(SpriteBatch spriteBatch, Rectangle location, int gridX, int gridY)
+        {
+            spriteBatch.Draw(fieldTexture[gridX, gridY], location, Color.White);
         }
     }
 }

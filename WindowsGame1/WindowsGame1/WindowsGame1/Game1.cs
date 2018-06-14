@@ -418,7 +418,7 @@ namespace Ruetobas
                         Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
                         if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
                         {
-                            spriteBatch.Draw(grid.fieldTexture[x, y], targetRect, Color.White);
+                            grid.drawEvent(spriteBatch, targetRect, x, y);
                         }
                     }
                 }
