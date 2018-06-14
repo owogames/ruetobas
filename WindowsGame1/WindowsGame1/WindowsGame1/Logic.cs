@@ -98,79 +98,98 @@ namespace Ruetobas
                 {
                     string line = players[i].username;
                     if (players[i].username == playerTurn)
-                        line += " - currently playing";
+                        line = " > " + line;
                     playerTextBox.Append(line);
                 }
             }
 
-            if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes["CHATINPUT"].active)
+            if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
                 SendChatMessage();
         }
 
         public static void TCPRecieved(string message)
         {
-            Console.WriteLine(message);
-            string[] data = message.Split(' ');
-            if (data[0] == "CHAT")
-                textBoxes["CHAT"].Append(message.Substring(5).Trim());
-            if (data[0] == "JOIN")
+            string[] submessages = message.Split('\n');
+            foreach (string sub in submessages)
             {
-                textBoxes["CHAT"].Append(message.Substring(5).Trim() + " has joined the game.");
-                players.Add(new Player(0, message.Substring(5).Trim()));
-                SortPlayers();
-            }
-            if (data[0] == "BYE")
-            {
-                textBoxes["CHAT"].Append(message.Substring(4).Trim() + " has left the game.");
-                for (int i = 0; i < players.Count; i++)
+                Console.WriteLine(sub);
+                string[] data = sub.Split(' ');
+                if (data[0] == "CHAT")
+                    textBoxes["CHAT"].Append(sub.Substring(5).Trim());
+                if (data[0] == "JOIN")
                 {
-                    if (players[i].username == message.Substring(4).Trim())
+                    textBoxes["CHAT"].Append(sub.Substring(5).Trim() + " has joined the game.");
+                    players.Add(new Player(0, sub.Substring(5).Trim()));
+                    SortPlayers();
+                }
+                if (data[0] == "BYE")
+                {
+                    textBoxes["CHAT"].Append(sub.Substring(4).Trim() + " has left the game.");
+                    for (int i = 0; i < players.Count; i++)
                     {
-                        players.RemoveAt(i);
-                        i = players.Count;
+                        if (players[i].username == sub.Substring(4).Trim())
+                        {
+                            players.RemoveAt(i);
+                            i = players.Count;
+                        }
+                    }
+                    SortPlayers();
+                }
+                if (data[0] == "ERROR")
+                {
+                    textBoxes["CHAT"].Append(sub.Substring(6).Trim());
+                }
+                if (data[0] == "PLACE")
+                {
+                    int ID = int.Parse(data[1]);
+                    int x = int.Parse(data[2]);
+                    int y = int.Parse(data[3]);
+                    int orientation = int.Parse(data[4]);
+                    map[x, y] = new PlacedCard(ID, orientation);
+                    grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
+                }
+                if (data[0] == "START")
+                {
+                    buttons.Remove("READY");
+                    textBoxes["CHAT"].Append("You Are:");
+                    if (rand.Next(1, 3) == 1)
+                        textBoxes["CHAT"].Append("N00b digger");
+                    else textBoxes["CHAT"].Append("Reutobas bitcher");
+                    Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
+                    boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
+                    map[5, 7] = new PlacedCard(1, 0);
+                    map[13, 5] = new PlacedCard(45, 0);
+                    map[13, 7] = new PlacedCard(45, 0);
+                    map[13, 9] = new PlacedCard(45, 0);
+                    boardGrid.fieldTexture[5, 7] = cardTexture[1];
+                    boardGrid.fieldTexture[13, 5] = cardTexture[45];
+                    boardGrid.fieldTexture[13, 7] = cardTexture[45];
+                    boardGrid.fieldTexture[13, 9] = cardTexture[45];
+                    game.gridToAdd = boardGrid;
+                    for (int i = 0; i < 6; i++)
+                        cardHand[i] = int.Parse(data[i + 1]);
+                }
+                if (data[0] == "GIB")
+                {
+                    for (int i = 0; i < 6; i++)
+                    {
+                        if (cardHand[i] == 0)
+                        {
+                            cardHand[i] = int.Parse(data[1]);
+                            i = 6;
+                        }
                     }
                 }
-                SortPlayers();
-            }
-            if (data[0] == "ERROR")
-            {
-                textBoxes["CHAT"].Append(message.Substring(6).Trim());
-                game.tcpThread.Abort();
-            }
-            if (data[0] == "PLACE")
-            {
-                int x = int.Parse(data[1]);
-                int y = int.Parse(data[2]);
-                int ID = int.Parse(data[3]);
-                int orientation = int.Parse(data[4]);
-                map[x, y] = new PlacedCard(ID, orientation);
-                grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
-            }
-            if (data[0] == "START")
-            {
-                for (int i = 0; i < 6; i++)
-                    cardHand[i] = int.Parse(data[i + 1]);
-            }
-            if (data[0] == "GIB")
-            {
-                for (int i = 0; i < 6; i++)
+                if (data[0] == "TURN")
                 {
-                    if (cardHand[i] == 0)
-                    {
-                        cardHand[i] = int.Parse(data[1]);
-                        i = 6;
-                    }
+                    playerTurn = data[1].Trim();
                 }
-            }
-            if (data[0] == "TURN")
-            {
-                playerTurn = data[1].Trim();
-            }
-            if (data[0] == "OK")
-            {
-                if(data[1] == "READY")
+                if (data[0] == "OK")
                 {
-                    buttons["READY"].texture = NotReadyTexture;
+                    if (data[1] == "READY")
+                    {
+                        buttons["READY"].texture = ReadyTexture;
+                    }
                 }
             }
         }
@@ -221,11 +240,10 @@ namespace Ruetobas
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
                 buttons["READY"] = new Button(NotReadyTexture, new Rectangle(0, 0, 920, 520), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
-                //grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
-                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
-                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
-                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
-                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, BuchnijLolka);
+                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, null);
+                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, HandClick, HandDraw);
+                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, null);
+                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, null);
                 textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1120, 40, 160, 680));
             }
             else
@@ -290,15 +308,22 @@ namespace Ruetobas
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
             Color c = (selectedCard == x) ? Color.LightYellow : Color.White;
-            spriteBatch.Draw(cards[cardHand[x]].texture, location, c);
+            if (selectedRot == 0 || x != selectedCard)
+                spriteBatch.Draw(cards[cardHand[x]].texture, location, c);
+            else
+            {
+                location.X += location.Width;
+                location.Y += location.Height;
+                spriteBatch.Draw(cards[cardHand[x]].texture, location, null, c, (float)Math.PI, Vector2.Zero, SpriteEffects.None, 0);
+            }
         }
 
 
         public static void HandClick(int x, int y)
         {
-            selectedRot = 0;
             if (x == selectedCard && cards[cardHand[x]].cardType == CardType.Tunnel)
-                selectedRot = 1;
+                selectedRot = 1 - selectedRot;
+            else selectedRot = 0;
             selectedCard = x;
         }
 
@@ -311,12 +336,12 @@ namespace Ruetobas
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {
+                game.TCPSend("PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString());
                 for (int i = selectedCard; i < 5; i++)
                     cardHand[i] = cardHand[i + 1];
                 selectedCard = -1;
                 cardHand[5] = 0;
                 selectedRot = 0;
-                game.TCPSend("PLACE " + x.ToString() + " " + y.ToString() + " " + cardHand[selectedCard].ToString() + " " + selectedRot.ToString());
             }
         }
 
@@ -329,8 +354,7 @@ namespace Ruetobas
 
         public static void Ready()
         {
-            game.TCPSend("READY");
-            
+            game.TCPSend("READY");           
         }
     }
 }

@@ -139,3 +139,5 @@ C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\NotReadyButton.xnb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\ReadyButton.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\NotReadyButton.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\ReadyButton.xnb
