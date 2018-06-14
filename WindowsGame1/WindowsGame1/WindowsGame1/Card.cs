@@ -42,10 +42,6 @@ namespace Ruetobas
                 }
                 return output;
             }
-            //Elo Robert zakodź
-            //Uwaga, przyjmowana tekstura to zoltyskurwiel
-            //UWAGA Nie testowane ;)
-            //Prawdopodobnie parsowanie bool.Parse może nie wyjść po konwertuję "0" na false a nie "false" na false
             return null;
         }
     }

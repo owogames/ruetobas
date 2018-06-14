@@ -30,6 +30,7 @@ namespace Ruetobas
 
         public static List<Card> cards;
 
+        public static int selectedCard = -1;
         public static int[] cardHand = new int[6];
 
         public const int port = 2137;
@@ -157,7 +158,7 @@ namespace Ruetobas
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
                 grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 30, 30, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
-                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka);
+                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
                 grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, BuchnijLolka);
                 grids["USERS"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(160, 680), new Rectangle(1120, 40, 160, 680), 0, BuchnijLolka);
@@ -219,6 +220,32 @@ namespace Ruetobas
                 location.Y += location.Height;
             }
             spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+        }
+
+        public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
+        {
+            Color c = (selectedCard == x) ? Color.LightYellow : Color.White;
+            spriteBatch.Draw(cards[cardHand[x]].texture, location, c);
+        }
+
+
+        public static void HandClick(int x, int y)
+        {
+            selectedCard = x;
+        }
+
+        public static void BoardClick(int x, int y)
+        {
+            if (selectedCard == -1)
+                return;
+            int result = CheckCardPlacement(x, y, cardHand[selectedCard], 0);
+            if (result == 0)
+            {
+                for (int i = selectedCard; i < 5; i++)
+                    cardHand[i] = cardHand[i + 1];
+                selectedCard = -1;
+                game.TCPSend("PLACE " + x + " " + y + " " + cardHand[selectedCard] + " 0");
+            }
         }
 
         public static void BuchnijLolka(int x, int y)
