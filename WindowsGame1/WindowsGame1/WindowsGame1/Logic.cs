@@ -153,7 +153,7 @@ namespace Ruetobas
                 if (rand.Next(1, 2) == 1)
                     textBoxes["CHAT"].Append("N00b digger");
                 else textBoxes["CHAT"].Append("Reutobas bitcher");
-                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BuchnijLolka, BoardDraw);
+                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
                 grids["BOARD"].offset = new Vector2(grids["BOARD"].sizeX * grids["BOARD"].fieldSize.X / 2, grids["BOARD"].sizeY * grids["BOARD"].fieldSize.Y / 2);
                 map[5, 7] = new PlacedCard(1, 0);
                 map[13, 5] = new PlacedCard(45, 0);
@@ -236,10 +236,10 @@ namespace Ruetobas
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
                 buttons["READY"] = new Button(NotReadyTexture, new Rectangle(0, 0, 920, 520), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
-                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, BuchnijLolka);
-                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, BuchnijLolka, HandDraw);
-                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, BuchnijLolka);
-                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, BuchnijLolka);
+                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, null);
+                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, HandClick, HandDraw);
+                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, null);
+                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, null);
                 textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1120, 40, 160, 680));
             }
             else
