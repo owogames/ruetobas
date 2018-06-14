@@ -468,9 +468,9 @@ namespace Ruetobas
                     float _x = 0;
 
                     if (textBox.Value.align == Alignment.Left)
-                        _x = (float) textBox.Value.location.X + (float) textBox.Value.margin;
+                        _x = textBox.Value.location.X + textBox.Value.margin;
                     else if(textBox.Value.align == Alignment.Centered)
-                        _x = (float)textBox.Value.location.X + ((float) textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
+                        _x = textBox.Value.location.X + (textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
 
                     Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll) + textBox.Value.margin);
 

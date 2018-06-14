@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace Ruetobas
 {
     public static class Logic
     {
+        public static Random rand = new Random();
+
         public static Dictionary<string, Button> buttons;
         public static Dictionary<string, TextBox> textBoxes;
         public static Dictionary<string, InputBox> inputBoxes;
@@ -26,6 +29,8 @@ namespace Ruetobas
         public static PlacedCard[,] map;
 
         public static List<Card> cards;
+
+        public static int[] cardHand = new int[6];
 
         public const int port = 2137;
 
@@ -105,12 +110,32 @@ namespace Ruetobas
                 map[x, y] = new PlacedCard(ID, orientation);
                 grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
             }
+            if (data[0] == "START")
+            {
+                for (int i = 0; i < 6; i++)
+                    cardHand[i] = int.Parse(data[i + 1]);
+            }
         }
 
         public static void SendChatMessage()
         {
             game.TCPSend("CHAT " + username + ": " + inputBoxes["CHATINPUT"].text);
             inputBoxes["CHATINPUT"].text = "";
+        }
+
+        public static void ReadCards()
+        {
+            cards = new List<Card> { Card.EmptyCard() };
+            using (StreamReader sr = new StreamReader("data\\cards.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+                    Card card = Card.ParseString(line, cards.Count);
+                    cards.Add(card);
+                }
+                sr.Close();
+            }
         }
 
         public static void LoadGameScreen()
@@ -126,6 +151,7 @@ namespace Ruetobas
                 textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
 
+                ReadCards();
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(920, 0, 200, 470));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
@@ -169,8 +195,8 @@ namespace Ruetobas
 
         public static void BuchnijLolka(int x, int y)
         {
-            grids["BOARD"].fieldTexture[x, y] = skurwielTexture;
-            map[x, y].rotation = 1 - map[x, y].rotation;
+            map[x, y].ID = rand.Next(1, 44);
+            grids["BOARD"].fieldTexture[x, y] = cards[map[x, y].ID].texture;
         }
     }
 }

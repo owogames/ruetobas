@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Ruetobas
 {
-    public enum CardType { Tunnel }
+    public enum CardType { Empty, Tunnel }
     public enum TunnelObject { None, Ladder, Rock, Gem, Gold}
 
     public class Card
@@ -15,21 +15,30 @@ namespace Ruetobas
         public int ID;
         public CardType cardType;
 
+        public static Card EmptyCard()
+        {
+            Card card = new Card();
+            card.texture = Logic.cardTexture[0];
+            card.ID = 0;
+            card.cardType = CardType.Empty;
+            return card;
+        }
+
         public static Card ParseString(string line, int ID) //linijka z pliku oraz numer linijki (czyli numer karty)
         {
-            string[] words = line.Split();
+            string[] words = line.Split(' ');
             int size = words.Length;
             if(words[0] == "T")
             {
                 TunnelObject objekt = (TunnelObject)int.Parse(words[size - 1]);
-                Tunnel output = new Tunnel(Logic.skurwielTexture, ID, objekt);
+                Tunnel output = new Tunnel(Logic.cardTexture[ID], ID, objekt);
                 for(int i = 0; i < 4; i++)
                 {
-                    output.entrance[i] = bool.Parse(words[i + 1]);
+                    output.entrance[i] = Convert.ToBoolean(int.Parse(words[i + 1]));
                 }
                 for(int i = 0; i < 16; i++)
                 {
-                    output.graph[i / 4, i % 4] = bool.Parse(words[i + 5]);
+                    output.graph[i / 4, i % 4] = Convert.ToBoolean(int.Parse(words[i + 5]));
                 }
                 return output;
             }
