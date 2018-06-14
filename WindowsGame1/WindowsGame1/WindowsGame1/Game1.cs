@@ -356,6 +356,7 @@ namespace Ruetobas
             {
                 backspaceHeld = false;
             }
+
             //Scroll
             int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
