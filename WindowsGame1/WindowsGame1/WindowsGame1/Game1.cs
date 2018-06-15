@@ -101,8 +101,8 @@ namespace Ruetobas
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
             Content.RootDirectory = "Content";
         }
 
@@ -301,18 +301,20 @@ namespace Ruetobas
                 }
 
                 if (i != -2)
-                for (i = Logic.grids.Count - 1; i >= 0; i--)
-                {
-                    Grid grid = Logic.grids.ElementAt(i).Value;
-                    if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                    for (i = Logic.grids.Count - 1; i >= 0; i--)
                     {
-                        int tileX = ((int)mousePos.X - grid.location.X - grid.margin + (int)grid.offset.X) / (int)grid.fieldSize.X;
-                        int tileY = ((int)mousePos.Y - grid.location.Y - grid.margin + (int)grid.offset.Y) / (int)grid.fieldSize.Y;
-                        if (grid.clickEvent != null)
-                            grid.clickEvent(tileX, tileY);
-                        i = -2;
+                        Grid grid = Logic.grids.ElementAt(i).Value;
+                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                        {
+                            int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
+                            int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
+                            int tileX = pressX / (int)grid.fieldSize.X;
+                            int tileY = pressY / (int)grid.fieldSize.Y;
+                            if (grid.clickEvent != null)
+                                grid.clickEvent(tileX, tileY);
+                            i = -2;
+                        }
                     }
-                }
             }
 
             //Right click
@@ -331,7 +333,7 @@ namespace Ruetobas
                 {
                     if (draggedGrid != null)
                     {
-                        draggedGrid.offset -= new Vector2(mouseState.X - mouseBeforeState.X, mouseState.Y - mouseBeforeState.Y);
+                        draggedGrid.offset -= new Vector2(mouseState.X - mouseBeforeState.X, mouseState.Y - mouseBeforeState.Y) / draggedGrid.zoom;
                     }
                 }
             }
@@ -387,7 +389,8 @@ namespace Ruetobas
             int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
             {
-                for (int i = Logic.textBoxes.Count - 1; i >= 0; i--)
+                int i;
+                for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
                 {
                     TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
                     if (Geo.RectContains(textBox.location, mousePos))
@@ -396,7 +399,20 @@ namespace Ruetobas
                             textBox.scroll++;
                         else if (textBox.scroll > 0)
                             textBox.scroll--;
-                        i = -1;
+                        i = -2;
+                    }
+                }
+
+                if (i != -2)
+                for (i = Logic.grids.Count - 1; i >= 0; i--)
+                {
+                    Grid grid = Logic.grids.ElementAt(i).Value;
+                    if (Geo.RectContains(grid.location, mousePos))
+                    {
+                        if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
+                            grid.zoom -= 0.1f;
+                        else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
+                            grid.zoom += 0.1f;
                     }
                 }
             }
@@ -405,14 +421,14 @@ namespace Ruetobas
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
-                if (grid.offset.X < 0)
-                    grid.offset.X += 10;
-                if (grid.offset.Y < 0)
-                    grid.offset.Y += 10;
-                if (grid.offset.X > grid.sizeX * grid.fieldSize.X - grid.location.Width + 2 * grid.margin)
-                    grid.offset.X -= 10;
-                if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - grid.location.Height + 2 * grid.margin)
-                    grid.offset.Y -= 10;
+                if (grid.offset.X < grid.location.Width / 2 - grid.margin)
+                    grid.offset.X = Math.Min(grid.offset.X + 20, grid.location.Width / 2 - grid.margin);
+                if (grid.offset.Y < grid.location.Height / 2 - grid.margin)
+                    grid.offset.Y = Math.Min(grid.offset.Y + 20, grid.location.Height / 2 - grid.margin);
+                if (grid.offset.X > grid.sizeX * grid.fieldSize.X - grid.location.Width / 2 + grid.margin)
+                    grid.offset.X = Math.Max(grid.offset.X - 20, grid.sizeX * grid.fieldSize.X - grid.location.Width / 2 + grid.margin);
+                if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - grid.location.Height / 2 + grid.margin)
+                    grid.offset.Y = Math.Max(grid.offset.Y - 20, grid.sizeY * grid.fieldSize.Y - grid.location.Height / 2 + grid.margin);
             }
 
             Logic.Update();
@@ -448,6 +464,12 @@ namespace Ruetobas
                     for (int y = 0; y < grid.sizeY; y++)
                     {
                         Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
+                        targetRect.X = (int)(grid.zoom * targetRect.X);
+                        targetRect.Y = (int)(grid.zoom * targetRect.Y);
+                        targetRect.Width = (int)(grid.zoom * targetRect.Width);
+                        targetRect.Height = (int)(grid.zoom * targetRect.Height);
+                        targetRect.X += grid.location.Width / 2 - grid.margin;
+                        targetRect.Y += grid.location.Height / 2 - grid.margin;
                         if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
                         {
                             grid.drawEvent(spriteBatch, targetRect, x, y);

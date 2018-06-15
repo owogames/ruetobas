@@ -133,6 +133,7 @@ namespace Ruetobas
 
         //Techniczne zmienne - nie przejmowac sie xD
         public Vector2 offset; // o ile przeciągneliśmy grida myszką
+        public float zoom; //Przybliżenie
         public RenderTarget2D renderTarget; // super inba XNA elo
 
         public Grid(Game game, Texture2D boxTexture, Texture2D defaultFieldTexture, int sizeX, int sizeY, Vector2 fieldSize, Rectangle location, int margin, Action<int, int> clickEvent)
@@ -146,7 +147,8 @@ namespace Ruetobas
             this.margin = margin;
             this.clickEvent = clickEvent;
             drawEvent = DefaultDraw;
-            offset = new Vector2(0, 0);
+            offset = new Vector2(sizeX * fieldSize.X / 2, sizeY * fieldSize.Y / 2);
+            zoom = 1.0f;
 
             renderTarget = new RenderTarget2D(game.GraphicsDevice, location.Width - 2 * margin, location.Height - 2 * margin);
 

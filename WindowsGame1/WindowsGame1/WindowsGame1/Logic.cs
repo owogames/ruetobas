@@ -71,10 +71,10 @@ namespace Ruetobas
 
             // grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
 
-            inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 300, 1000, 50), Color.White, Color.LightGray, "Enter server IP");
-            inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(140, 400, 1000, 50), Color.White, Color.LightGray, "Enter username");
-            buttons["connect"] = new Button(chatSendTexture, new Rectangle(140, 500, 1000, 50), LoadGameScreen);
-            textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(140, 650, 1000, 50));
+            inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
+            inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username");
+            buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
+            textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
 
         public static int timer = 0;
@@ -155,16 +155,16 @@ namespace Ruetobas
                     if (rand.Next(1, 3) == 1)
                         textBoxes["CHAT"].Append("N00b digger");
                     else textBoxes["CHAT"].Append("Reutobas bitcher");
-                    Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 920, 520), 10, BoardClick, BoardDraw);
+                    Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
                     boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
-                    map[5, 7] = new PlacedCard(1, 0);
-                    map[13, 5] = new PlacedCard(45, 0);
-                    map[13, 7] = new PlacedCard(45, 0);
-                    map[13, 9] = new PlacedCard(45, 0);
-                    boardGrid.fieldTexture[5, 7] = cardTexture[1];
-                    boardGrid.fieldTexture[13, 5] = cardTexture[45];
-                    boardGrid.fieldTexture[13, 7] = cardTexture[45];
-                    boardGrid.fieldTexture[13, 9] = cardTexture[45];
+                    map[4, 6] = new PlacedCard(1, 0);
+                    map[12, 4] = new PlacedCard(45, 0);
+                    map[12, 6] = new PlacedCard(45, 0);
+                    map[12, 8] = new PlacedCard(45, 0);
+                    boardGrid.fieldTexture[4, 6] = cardTexture[1];
+                    boardGrid.fieldTexture[12, 4] = cardTexture[45];
+                    boardGrid.fieldTexture[12, 6] = cardTexture[45];
+                    boardGrid.fieldTexture[12, 8] = cardTexture[45];
                     game.gridToAdd = boardGrid;
                     for (int i = 0; i < 6; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
@@ -213,6 +213,7 @@ namespace Ruetobas
                 }
                 sr.Close();
             }
+            cards.Add(Card.ParseString("T 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", 45));
         }
 
         public static void SortPlayers()
@@ -236,15 +237,15 @@ namespace Ruetobas
                 textBoxes.Clear();
 
                 ReadCards();
-                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(920, 0, 200, 470));
-                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(920, 470, 160, 50), Color.White, Color.LightGray, "Enter message...");
-                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1080, 470, 40, 50), SendChatMessage);
-                buttons["READY"] = new Button(NotReadyTexture, new Rectangle(0, 0, 920, 520), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
-                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(80, 200), new Rectangle(0, 520, 80, 200), 0, null);
-                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(140, 200), new Rectangle(80, 520, 840, 200), 0, HandClick, HandDraw);
-                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(200, 64), new Rectangle(920, 520, 200, 200), 1, null);
-                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(53, 40), new Rectangle(1120, 0, 160, 40), 1, null);
-                textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1120, 40, 160, 680));
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 0, 300, 705));
+                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 705, 240, 75), Color.White, Color.LightGray, "Enter message...");
+                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1620, 705, 60, 75), SendChatMessage);
+                buttons["READY"] = new Button(NotReadyTexture, new Rectangle(0, 0, 1380, 780), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
+                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(120, 300), new Rectangle(0, 780, 120, 300), 0, null);
+                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(210, 300), new Rectangle(120, 780, 1260, 300), 0, HandClick, HandDraw);
+                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(300, 96), new Rectangle(1380, 780, 300, 300), 1, null);
+                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(80, 60), new Rectangle(1680, 0, 240, 60), 1, null);
+                textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
             else
             {
@@ -331,8 +332,8 @@ namespace Ruetobas
         {
             if (selectedCard == -1)
                 return;
-            if (playerTurn != username)
-                return;
+            //if (playerTurn != username)
+            //    return;
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {
