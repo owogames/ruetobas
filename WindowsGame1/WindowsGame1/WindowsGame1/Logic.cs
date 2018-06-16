@@ -155,17 +155,19 @@ namespace Ruetobas
                     if (rand.Next(1, 3) == 1)
                         textBoxes["CHAT"].Append("N00b digger");
                     else textBoxes["CHAT"].Append("Reutobas bitcher");
-                    Grid boardGrid = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
-                    boardGrid.offset = new Vector2(boardGrid.sizeX * boardGrid.fieldSize.X / 2, boardGrid.sizeY * boardGrid.fieldSize.Y / 2);
                     map[4, 6] = new PlacedCard(1, 0);
                     map[12, 4] = new PlacedCard(45, 0);
                     map[12, 6] = new PlacedCard(45, 0);
                     map[12, 8] = new PlacedCard(45, 0);
-                    boardGrid.fieldTexture[4, 6] = cardTexture[1];
-                    boardGrid.fieldTexture[12, 4] = cardTexture[45];
-                    boardGrid.fieldTexture[12, 6] = cardTexture[45];
-                    boardGrid.fieldTexture[12, 8] = cardTexture[45];
-                    game.gridToAdd = boardGrid;
+                    for (int i = 0; i < 17; i++)
+                        for (int j = 0; j < 13; j++)
+                            grids["BOARD"].fieldTexture[i, j] = cardTexture[0];
+                    grids["BOARD"].fieldTexture[4, 6] = cardTexture[1];
+                    grids["BOARD"].fieldTexture[12, 4] = cardTexture[45];
+                    grids["BOARD"].fieldTexture[12, 6] = cardTexture[45];
+                    grids["BOARD"].fieldTexture[12, 8] = cardTexture[45];
+                    grids["BOARD"].enabled = true;
+                    buttons["READY"].enabled = false;
                     for (int i = 0; i < 6; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
                 }
@@ -213,7 +215,7 @@ namespace Ruetobas
                 }
                 sr.Close();
             }
-            cards.Add(Card.ParseString("T 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", 45));
+            cards[0].cardType = CardType.Empty;
         }
 
         public static void SortPlayers()
@@ -245,6 +247,8 @@ namespace Ruetobas
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(210, 300), new Rectangle(120, 780, 1260, 300), 0, HandClick, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(300, 96), new Rectangle(1380, 780, 300, 300), 1, null);
                 grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(80, 60), new Rectangle(1680, 0, 240, 60), 1, null);
+                grids["BOARD"] = new Grid(game, chatTexture, cardTexture[0], 17, 13, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
+                grids["BOARD"].enabled = false;
                 textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
             else
@@ -332,8 +336,8 @@ namespace Ruetobas
         {
             if (selectedCard == -1)
                 return;
-            //if (playerTurn != username)
-            //    return;
+            if (playerTurn != username)
+                return;
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {

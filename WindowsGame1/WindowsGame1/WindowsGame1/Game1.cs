@@ -246,8 +246,6 @@ namespace Ruetobas
         public InputBox activeInputBox = null;
         Grid draggedGrid;
 
-        public Grid gridToAdd;
-
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -271,7 +269,7 @@ namespace Ruetobas
                 int i;
                 for (i = Logic.buttons.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, mousePos))
+                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, mousePos) && Logic.buttons.ElementAt(i).Value.enabled)
                     {
                         Logic.buttons.ElementAt(i).Value.clickEvent();
                         i = -2;
@@ -281,7 +279,7 @@ namespace Ruetobas
                 if (i != -2)
                 for (i = Logic.inputBoxes.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, mousePos))
+                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, mousePos) && Logic.inputBoxes.ElementAt(i).Value.enabled)
                     {
                         if (activeInputBox != null)
                             activeInputBox.active = false;
@@ -304,7 +302,7 @@ namespace Ruetobas
                     for (i = Logic.grids.Count - 1; i >= 0; i--)
                     {
                         Grid grid = Logic.grids.ElementAt(i).Value;
-                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
                         {
                             int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
                             int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
@@ -325,7 +323,7 @@ namespace Ruetobas
                     for (int i = Logic.grids.Count - 1; i >= 0; i--)
                     {
                         Grid grid = Logic.grids.ElementAt(i).Value;
-                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos))
+                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
                             draggedGrid = grid;
                     }
                 }
@@ -385,6 +383,12 @@ namespace Ruetobas
                 backspaceHeld = false;
             }
 
+            //Wy³¹czanie nieaktywnych obiektów
+            if (activeInputBox != null && !activeInputBox.enabled)
+                activeInputBox = null;
+            if (draggedGrid != null && !draggedGrid.enabled)
+                draggedGrid = null;
+
             //Scroll
             int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
             if (scrollWheelDelta != 0)
@@ -393,7 +397,7 @@ namespace Ruetobas
                 for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
                 {
                     TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                    if (Geo.RectContains(textBox.location, mousePos))
+                    if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled)
                     {
                         if (scrollWheelDelta < 0)
                             textBox.scroll++;
@@ -407,7 +411,7 @@ namespace Ruetobas
                 for (i = Logic.grids.Count - 1; i >= 0; i--)
                 {
                     Grid grid = Logic.grids.ElementAt(i).Value;
-                    if (Geo.RectContains(grid.location, mousePos))
+                    if (Geo.RectContains(grid.location, mousePos) && grid.enabled)
                     {
                         if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
                             grid.zoom -= 0.1f;
@@ -435,12 +439,6 @@ namespace Ruetobas
 
             mouseBeforeState = mouseState;
             keyboardBeforeState = keyboardState;
-
-            if (gridToAdd != null)
-            {
-                Logic.grids["BOARD"] = gridToAdd;
-                gridToAdd = null;
-            }
             
             base.Update(gameTime);
         }
@@ -456,27 +454,30 @@ namespace Ruetobas
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
-                spriteBatch.Begin();
-                GraphicsDevice.SetRenderTarget(grid.renderTarget);
-                GraphicsDevice.Clear(Color.Transparent);
-                for (int x = 0; x < grid.sizeX; x++)
+                if (grid.enabled)
                 {
-                    for (int y = 0; y < grid.sizeY; y++)
+                    spriteBatch.Begin();
+                    GraphicsDevice.SetRenderTarget(grid.renderTarget);
+                    GraphicsDevice.Clear(Color.Transparent);
+                    for (int x = 0; x < grid.sizeX; x++)
                     {
-                        Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
-                        targetRect.X = (int)(grid.zoom * targetRect.X);
-                        targetRect.Y = (int)(grid.zoom * targetRect.Y);
-                        targetRect.Width = (int)(grid.zoom * targetRect.Width);
-                        targetRect.Height = (int)(grid.zoom * targetRect.Height);
-                        targetRect.X += grid.location.Width / 2 - grid.margin;
-                        targetRect.Y += grid.location.Height / 2 - grid.margin;
-                        if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
+                        for (int y = 0; y < grid.sizeY; y++)
                         {
-                            grid.drawEvent(spriteBatch, targetRect, x, y);
+                            Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
+                            targetRect.X = (int)(grid.zoom * targetRect.X);
+                            targetRect.Y = (int)(grid.zoom * targetRect.Y);
+                            targetRect.Width = (int)(grid.zoom * targetRect.Width);
+                            targetRect.Height = (int)(grid.zoom * targetRect.Height);
+                            targetRect.X += grid.location.Width / 2 - grid.margin;
+                            targetRect.Y += grid.location.Height / 2 - grid.margin;
+                            if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
+                            {
+                                grid.drawEvent(spriteBatch, targetRect, x, y);
+                            }
                         }
                     }
+                    spriteBatch.End();
                 }
-                spriteBatch.End();
             }
 
             GraphicsDevice.SetRenderTarget(null);
@@ -484,57 +485,86 @@ namespace Ruetobas
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-            //Rysowanie guzików
-            foreach (KeyValuePair<string, Button> button in Logic.buttons)
-            {
-                spriteBatch.Draw(button.Value.texture, button.Value.location, Color.White);
-            }
+            List<string> UIelements = new List<string>();
 
-            //Rysowanie textBoxów
-            foreach (KeyValuePair<string, TextBox> textBox in Logic.textBoxes)
+            foreach (KeyValuePair<string, Button> pair in Logic.buttons)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, TextBox> pair in Logic.textBoxes)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, InputBox> pair in Logic.inputBoxes)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, Grid> pair in Logic.grids)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            UIelements.Sort();
+
+            for (int id = 0; id < UIelements.Count; id++)
             {
-                spriteBatch.Draw(textBox.Value.texture, textBox.Value.location, Color.White);
-                for (int i = textBox.Value.scroll; i < textBox.Value.lines.Count && i < textBox.Value.lineCount + textBox.Value.scroll; i++)
+                string name = UIelements[id];
+
+                //Rysowanie guzików
+                if (Logic.buttons.ContainsKey(name))
                 {
-                    float _x = 0;
-
-                    if (textBox.Value.align == Alignment.Left)
-                        _x = textBox.Value.location.X + textBox.Value.margin;
-                    else if(textBox.Value.align == Alignment.Centered)
-                        _x = textBox.Value.location.X + (textBox.Value.location.Width - textBox.Value.font.MeasureString(textBox.Value.lines[i]).X)/2;
-
-                    Vector2 position = new Vector2(_x, textBox.Value.location.Y + textBox.Value.font.LineSpacing * (i - textBox.Value.scroll) + textBox.Value.margin);
-
-                    spriteBatch.DrawString(textBox.Value.font, textBox.Value.lines[i], position, Color.White);
+                    Button button = Logic.buttons[name];
+                    spriteBatch.Draw(button.texture, button.location, Color.White);
                 }
-            }
 
-            //Rysowanie inputBoxów
-            foreach (KeyValuePair<string, InputBox> inputBox in Logic.inputBoxes)
-            {
-                // InputBox IB = inputBox.Value; (referencja)
-
-                spriteBatch.Draw(inputBox.Value.texture, inputBox.Value.location, inputBox.Value.active ? Color.Gray : Color.White);
-                string text = inputBox.Value.text;
-                if (inputBox.Value.active) text += "|";
-                Vector2 position = new Vector2(inputBox.Value.location.X + inputBox.Value.margin, inputBox.Value.location.Y + inputBox.Value.location.Height / 2 - inputBox.Value.font.LineSpacing / 2);
-
-                if (inputBox.Value.text != "")
+                //Rysowanie textBoxów
+                if (Logic.textBoxes.ContainsKey(name))
                 {
-                    spriteBatch.DrawString(inputBox.Value.font, text, position, inputBox.Value.color);
-                }
-                else
-                {
-                    spriteBatch.DrawString(inputBox.Value.font, inputBox.Value.emptyText, position, inputBox.Value.emptyColor);
-                }
-            }
+                    TextBox textBox = Logic.textBoxes[name];
+                    if (textBox.enabled)
+                    {
+                        spriteBatch.Draw(textBox.texture, textBox.location, Color.White);
+                        for (int i = textBox.scroll; i < textBox.lines.Count && i < textBox.lineCount + textBox.scroll; i++)
+                        {
+                            float _x = 0;
 
-            //Rysowanie gridów c.d.
-            foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
-            {
-                Grid grid = gridpair.Value;
-                spriteBatch.Draw(grid.boxTexture, grid.location, Color.White);
-                spriteBatch.Draw(grid.renderTarget, Geo.Shrink(grid.location, grid.margin), Color.White);
+                            if (textBox.align == Alignment.Left)
+                                _x = textBox.location.X + textBox.margin;
+                            else if (textBox.align == Alignment.Centered)
+                                _x = textBox.location.X + (textBox.location.Width - textBox.font.MeasureString(textBox.lines[i]).X) / 2;
+
+                            Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
+
+                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position, Color.White);
+                        }
+                    }
+                }
+
+                //Rysowanie inputBoxów
+                if (Logic.inputBoxes.ContainsKey(name))
+                {
+                    InputBox inputBox = Logic.inputBoxes[name];
+                    spriteBatch.Draw(inputBox.texture, inputBox.location, inputBox.active ? Color.Gray : Color.White);
+                    string text = inputBox.text;
+                    if (inputBox.active) text += "|";
+                    Vector2 position = new Vector2(inputBox.location.X + inputBox.margin, inputBox.location.Y + inputBox.location.Height / 2 - inputBox.font.LineSpacing / 2);
+
+                    if (inputBox.text != "")
+                    {
+                        spriteBatch.DrawString(inputBox.font, text, position, inputBox.color);
+                    }
+                    else
+                    {
+                        spriteBatch.DrawString(inputBox.font, inputBox.emptyText, position, inputBox.emptyColor);
+                    }
+                }
+
+                //Rysowanie gridów
+                if (Logic.grids.ContainsKey(name))
+                {
+                    Grid grid = Logic.grids[name];
+                    spriteBatch.Draw(grid.boxTexture, grid.location, Color.White);
+                    spriteBatch.Draw(grid.renderTarget, Geo.Shrink(grid.location, grid.margin), Color.White);
+                }
             }
 
             //Rysowanie kursora

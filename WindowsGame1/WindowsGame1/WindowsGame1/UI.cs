@@ -14,6 +14,8 @@ namespace Ruetobas
         public Texture2D texture;
         public Rectangle location;
         public Action clickEvent;
+        
+        public bool enabled = true;
 
         public Button(Texture2D texture, Rectangle location, Action clickEvent)
         {
@@ -31,6 +33,8 @@ namespace Ruetobas
         public Rectangle location;
         public int margin;
         public Alignment align;
+
+        public bool enabled = true;
 
         public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location)
         {
@@ -76,6 +80,8 @@ namespace Ruetobas
         public bool active;
         public string text;
         public string emptyText;
+
+        public bool enabled = true;
 
         public InputBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText)
         {
@@ -135,6 +141,8 @@ namespace Ruetobas
         public Vector2 offset; // o ile przeciągneliśmy grida myszką
         public float zoom; //Przybliżenie
         public RenderTarget2D renderTarget; // super inba XNA elo
+
+        public bool enabled = true;
 
         public Grid(Game game, Texture2D boxTexture, Texture2D defaultFieldTexture, int sizeX, int sizeY, Vector2 fieldSize, Rectangle location, int margin, Action<int, int> clickEvent)
         {
