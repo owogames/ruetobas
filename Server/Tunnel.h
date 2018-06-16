@@ -6,8 +6,6 @@ struct Tunnel {
 	bool open[4];
 	///graf
 	bool G[4][4];
-	///czy ma kryształ
-	bool crystal;
 	///rodzaj tunelu
 	enum {NORMAL, LADDER, NOGOLD, CRYSTAL, GOLD} type;
 };
