@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ruetobas
 {
-    public enum PlayerClass { Unknown, DiggerA, DiggerB, Ruetobas, Boss, Profiteer, Pig }
+    public enum PlayerClass { Unknown, Reggid, Ruetobas, Boss, Profiteer, Pig }
 
     public class Player
     {
