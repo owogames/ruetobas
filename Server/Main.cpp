@@ -63,6 +63,7 @@ void readyPlayer(int fd) {
 
 
 bool everyoneReady() {
+	if(players.empty()) return false;
 	for(auto p : players)
 		if(!p.second.ready) return false;
 	return true;
@@ -180,7 +181,7 @@ int main() {
 			newGame();
 		}
 
-
+		
 
 		if(command == "LOGIN") {
 			if(running) 
