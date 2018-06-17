@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "Tunnel.h"
+#include <algorithm>
 #include <queue>
 #include <tuple>
 

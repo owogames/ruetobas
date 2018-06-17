@@ -1,8 +1,7 @@
 set(CMAKE_CXX_STANDARD 11)
 project(Main)
 add_executable(Main Main.cpp 
-                    ServerTCP.cpp 
-					TCP.cpp
+                    TCP.cpp 
                     StringProcessing.cpp 
                     Tunnel.cpp
                     Player.cpp
