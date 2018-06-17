@@ -215,7 +215,7 @@ namespace Ruetobas
 
         public static void ReadCards()
         {
-            cards = new List<Card> { Card.EmptyCard() };
+            cards = new List<Card> { };
             using (StreamReader sr = new StreamReader("data\\cards.txt"))
             {
                 while (!sr.EndOfStream)
