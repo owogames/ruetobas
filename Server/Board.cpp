@@ -8,7 +8,7 @@ using namespace std;
 static pair <int, bool> board[19][15];
 static int dis[19][15][4];
 static int t[3];
-static vector<Tunnel> tunnels;
+static vector <Tunnel> tunnels;
 
 void initBoard() {
 	tunnels = parseTunnels("../karty_normalne.txt");

@@ -29,8 +29,6 @@ int main() {
 	std::iota(cards.begin(), cards.end(), 1);
 	std::random_shuffle(cards.begin(), cards.end());
 	
-	auto tunnels = parseTunnels("../karty_normalne.txt");
-	
 	auto curr_player_itr = players.begin();
 	
 	while(true) {
