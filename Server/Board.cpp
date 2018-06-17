@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <queue>
 #include <tuple>
+#include <algorithm>
 
 using namespace std;
 
@@ -12,6 +13,7 @@ static int t[3];
 static vector <Tunnel> tunnels;
 
 void initBoard() {
+
 	tunnels = parseTunnels("../karty_normalne.txt");
 	board[5][7] = make_pair(1, 0);
 	board[13][7] = make_pair(45, 0);
@@ -37,7 +39,7 @@ bool placeCard(int id, int x, int y, bool flip) {
 	return true;
 }
 
-bool revealedCard(int& id, int& x, int& y, bool& flip) {
+bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 	
 	queue < tuple <int, int, int> > q;
 	
@@ -60,11 +62,29 @@ bool revealedCard(int& id, int& x, int& y, bool& flip) {
 		if (board[x][y].first == 45)
 		{
 			if (y == 5)
+			{
 				board[x][y] = make_pair(t[0], 0);
+				id = t[0];
+				_x = x;
+				_y = y;
+				_flip = 0;
+			}
 			else if (y == 7)
+			{
 				board[x][y] = make_pair(t[1], 0);
+				id = t[1];
+				_x = x;
+				_y = y;
+				_flip = 0;
+			}
 			else
+			{
 				board[x][y] = make_pair(t[2], 0);
+				id = t[2];
+				_x = x;
+				_y = y;
+				_flip = 0;
+			}
 
 			return true;
 		}
