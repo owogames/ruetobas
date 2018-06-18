@@ -52,7 +52,7 @@ namespace Ruetobas
                 {
                     string[] data = msg.Split(' ');
                     for (int i = 1; i < data.Length; i++)
-                        Logic.players.Add(new Player(i, data[i]));
+                        Logic.players.Add(new Player(i, data[i].Trim()));
                     Logic.players.Add(new Player(data.Length, Logic.username));
                     Logic.SortPlayers();
                     tcpThreadStart = new ThreadStart(TCPListening);
