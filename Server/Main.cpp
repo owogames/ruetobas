@@ -16,7 +16,7 @@ static std::set<std::string> usernames;
 static std::map<int, Player> players;
 static std::vector<int> cards;
 static std::map<int, Player>::iterator curr_player_itr;
-
+static bool running = false;
 
 void writeAll(std::string msg) {
 	for(auto p : players)
@@ -45,15 +45,6 @@ void newPlayer(int fd, std::string name) {
 }
 
 
-void removePlayer(int fd) {
-	writeAll("BYE " + players[fd].name);
-	
-	remove(fd);
-	usernames.erase(players[fd].name);
-	players.erase(fd);
-}
-
-
 void readyPlayer(int fd) {
 	players[fd].ready = true;
 				
@@ -64,7 +55,7 @@ void readyPlayer(int fd) {
 
 bool everyoneReady() {
 	if(players.empty()) return false;
-	std::cout << rand() << std::endl;
+
 	for(auto p : players)
 		if(!p.second.ready) return false;
 	return true;
@@ -158,15 +149,32 @@ void endGame(bool who_won) {
 	}
 
 	writeAll(msg);
+	
+	running = false;
 }
 
 
-int main() {
+void removePlayer(int fd) {
+	writeAll("BYE " + players[fd].name);
+	
+	if(running) {
+		if(players[fd].name == curr_player_itr->second.name)
+			nextPlayer();
+			
+		if(players[fd].name == curr_player_itr->second.name)
+			endGame(RUETOBAS);
+	}
+	
+	remove(fd);
+	usernames.erase(players[fd].name);
+	players.erase(fd);
+}
+
+
+int main() {	
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);
-
-	bool running = false;
 	
 	while(true) {
 		int fd;
@@ -244,11 +252,11 @@ int main() {
 			else {
 				writeAll(msg);
 				newCard(fd, v[0]);
-				if(revealCards()) {
+				if(revealCards()) 
 					endGame(REGGID);
-				}
+				
 				else {
-					if(!nextPlayer())
+					if(!nextPlayer()) 
 						endGame(RUETOBAS);
 				}
 			}

@@ -14,11 +14,17 @@ static vector <Tunnel> tunnels;
 
 void initBoard() {
 
+	for(int i = 0; i < 19; i++)
+		for(int j = 0; j < 15; j++)
+			board[i][j] = {0, false};
+
 	tunnels = parseTunnels("../karty_normalne.txt");
 	board[5][7] = make_pair(1, 0);
 	board[13][7] = make_pair(45, 0);
 	board[13][5] = make_pair(45, 0);
 	board[13][9] = make_pair(45, 0);
+	
+	
 
 	t[0] = 42;
 	t[1] = 43;
@@ -52,6 +58,11 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 		for (int j = 0; j < 15; j++)
 			for (int k = 0; k < 4; k++)
 				dis[i][j][k] = 123456789;
+	
+	dis[5][7][1] = 0;
+	dis[5][7][2] = 0;
+	dis[5][7][3] = 0;
+	dis[5][7][0] = 0;
 
 	while (!q.empty())
 	{
