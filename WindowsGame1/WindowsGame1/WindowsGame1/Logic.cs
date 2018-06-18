@@ -65,9 +65,9 @@ namespace Ruetobas
 
             font = game.Content.Load<SpriteFont>("font");
 
-            map = new PlacedCard[40, 40];
-            for (int i = 0; i < 40; i++)
-                for (int j = 0; j < 40; j++)
+            map = new PlacedCard[19, 15];
+            for (int i = 0; i < 19; i++)
+                for (int j = 0; j < 15; j++)
                     map[i, j] = new PlacedCard(0, 0);
 
             // grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
@@ -144,6 +144,9 @@ namespace Ruetobas
                 }
                 if (data[0] == "START")
                 {
+                    for (int i = 0; i < 19; i++)
+                        for (int j = 0; j < 15; j++)
+                            map[i, j] = new PlacedCard(0, 0);
                     map[5, 7] = new PlacedCard(1, 0);
                     map[13, 5] = new PlacedCard(45, 0);
                     map[13, 7] = new PlacedCard(45, 0);
@@ -161,6 +164,8 @@ namespace Ruetobas
                     for (int i = 0; i < 6; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
 
+                    for (int i = 0; i < players.Count; i++)
+                        players[i].playerClass = PlayerClass.Unknown;
                     players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[7]);
                     textBoxes["CHAT"].Append("You Are:");
                     textBoxes["CHAT"].Append(players[yourPlayerId].playerClass.ToString());
