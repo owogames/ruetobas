@@ -4,7 +4,7 @@
 #include "Player.h"
 
 Player::Player() {}
-Player::Player(std::string name): name(name), cards(), ready(false) {}
+Player::Player(std::string name): name(name), ready(false), score(0) {}
 
 bool Player::hasCard(int c) {
 	return std::find(cards.begin(), cards.end(), c) != cards.end();

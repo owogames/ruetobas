@@ -30,11 +30,11 @@
 //#define MANUAL_INPUT
 
 
-int sockfd;
-fd_set fds;
-int maxfd;
+static int sockfd;
+static fd_set fds;
+static int maxfd;
 
-std::queue<std::pair<int, std::string>> msg_queue;
+static std::queue<std::pair<int, std::string>> msg_queue;
 
 
 
@@ -83,7 +83,7 @@ std::string getMsg(int fd) {
         msg_queue.emplace(fd, "QUIT");
 	}
 	else
-		printf("[%i]: %.*s\n", fd, len, buff);
+		printf("[%i] -> %.*s\n", fd, len, buff);
 
 	return buff;
 }
@@ -230,9 +230,10 @@ void write(int fd, std::string msg) {
 	#ifdef MANUAL_INPUT
 	std::cout << fd << ": " << msg << std::endl;
 	#else
-	msg += '\n';
 	
-	std::cout << "[" << fd << "] -> " << msg;
+	std::cout << msg << " -> [" << fd << "]\n";
+	
+	msg += '\n';
 	
 	if(send(fd, msg.data(), msg.size(), 0) == -1)
 		err("send\n");

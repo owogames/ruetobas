@@ -9,27 +9,163 @@
 
 #include "TCP.h"
 #include "StringProcessing.h"
-#include "Tunnel.h"
 #include "Player.h"
 #include "Board.h"
 
-int main() {
+static std::set<std::string> usernames;
+static std::map<int, Player> players;
+static std::vector<int> cards;
+static std::map<int, Player>::iterator curr_player_itr;
+
+
+void writeAll(std::string msg) {
+	for(auto p : players)
+		write(p.first, msg);
+}
+
+
+void writeAllBut(int fd, std::string msg) {
+	for(auto p : players)
+		if(p.first != fd)
+			write(p.first, msg);
+}
+
+
+void newPlayer(int fd, std::string name) {
+	writeAll("JOIN " + name);
 	
-	srand(std::chrono::system_clock::now().time_since_epoch().count());
+	std::string username_list;
+	for(auto u : usernames)
+		username_list += ' ' + u;
+		
+	write(fd, "OK" + username_list);
+	
+	usernames.insert(name);
+	players[fd] = Player(name);
+}
+
+
+void removePlayer(int fd) {
+	writeAll("BYE " + players[fd].name);
+	
+	remove(fd);
+	usernames.erase(players[fd].name);
+	players.erase(fd);
+}
+
+
+void readyPlayer(int fd) {
+	players[fd].ready = true;
+				
+	write(fd, "OK READY");
+	writeAllBut(fd, "READY " + players[fd].name);
+}
+
+
+bool everyoneReady() {
+	if(players.empty()) return false;
+	for(auto p : players)
+		if(!p.second.ready) return false;
+	return true;
+}
+
+
+void newGame() {
+	initBoard();
+		
+	cards.resize(40); //const
+	std::iota(cards.begin(), cards.end(), 2);
+	std::random_shuffle(cards.begin(), cards.end());
+			
+	for(auto& p : players) {
+		std::string card_list = "";
+		p.second.cards.clear();
+		
+		p.second.team = rand() & 1;
+		
+		for(int i = 0; i < 6; i++) {
+			card_list += toStr(cards.back()) + ' ';
+			p.second.addCard(cards.back());
+			cards.pop_back();
+		}
+		write(p.first, "START " + card_list + (p.second.team == REGGID ? '1' : '2'));
+	}
+	
+	curr_player_itr = players.begin();
+	
+	writeAll("TURN " + curr_player_itr->second.name);
+}
+
+
+void newCard(int fd, int old_card) {
+	players[fd].removeCard(old_card);
+					
+	if(cards.empty())	
+		write(fd, "GIB 0");
+	
+	else {
+		write(fd, "GIB " + toStr(cards.back()));
+		players[fd].addCard(cards.back());
+		cards.pop_back();
+	}
+}
+
+
+
+bool revealCards() {
+	bool ret = false;
+	
+	int id, x, y;
+	bool flip;
+	while(revealedCard(id, x, y, flip)) {
+		if(id == 43) //const
+			ret = 1;
+		
+		writeAll("PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
+	}
+	
+	return ret;
+}
+
+
+bool nextPlayer() {
+	++curr_player_itr;
+	if(curr_player_itr == players.end())
+		curr_player_itr = players.begin();
+	
+	for(int i = 0; i < players.size(); i++) {
+	
+		if(!curr_player_itr->second.cards.empty()) {
+			writeAll("TURN " + curr_player_itr->second.name);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+void endGame(bool who_won) {
+	std::string msg = (who_won == REGGID ? "END 1 " : "END 2 ");
+	
+	for(auto& p : players) {
+		if(p.second.team == who_won)
+			p.second.score++; 
+			
+		p.second.ready = false;
+			
+		msg += p.second.name + " " + toStr(p.second.score) + " " + (p.second.team == REGGID ? "1 " : "2 ");
+	}
+
+	writeAll(msg);
+}
+
+
+int main() {
+	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);
-	
-	std::set<std::string> usernames;
-	std::map<int, Player> players;
-	
-	int ready_cnt = 0;
+
 	bool running = false;
-	
-	std::vector<int> cards(41);
-	std::iota(cards.begin(), cards.end(), 1);
-	std::random_shuffle(cards.begin(), cards.end());
-	
-	auto curr_player_itr = players.begin();
 	
 	while(true) {
 		int fd;
@@ -37,11 +173,17 @@ int main() {
 		std::tie(fd, msg) = read();
 		std::tie(command, text) = split(msg);
 
-		
 		if(fd == -1) continue;
 
+		
+		if(!running && everyoneReady()) {		
+			running = true;
+			newGame();
+		}
+
+		
+
 		if(command == "LOGIN") {
-			
 			if(running) 
 				write(fd, "ERROR The game is already running");
 				
@@ -54,19 +196,8 @@ int main() {
 			else if(invalidLogin(text))
 				write(fd, "ERROR Invalid login");
 				
-			else {
-				usernames.insert(text);
-				players[fd] = Player(text);
-				
-				std::string username_list;
-				for(auto u : players)
-					if(u.first != fd) {
-						write(u.first, "JOIN " + text);
-						username_list += ' ' + u.second.name;
-					}
-				
-				write(fd, "OK" + username_list);
-			}
+			else  
+				newPlayer(fd, text);
 		}
 
 		else if(command == "CHAT") {
@@ -76,59 +207,22 @@ int main() {
 			else if(invalidChatMsg(text))
 				write(fd, "ERROR Invalid chat message");
 				
-			else {
-				for(auto u : players)
-					write(u.first, "CHAT " + text);
-			}
+			else 
+				writeAll("CHAT " + text);
 		}
 
-		else if(command == "QUIT") {
-			for(auto p : players)
-				write(p.first, "BYE " + players[fd].name);
-			remove(fd);
-			usernames.erase(players[fd].name);
-			players.erase(fd);
-		}
+		else if(command == "QUIT") 
+			removePlayer(fd);
 		
 		else if(command == "READY") {
-			
 			if(running) 
 				write(fd, "ERROR The game is already running");
 				
 			else if(players[fd].ready)
 				write(fd, "ERROR Already ready");
 				
-			else {
-				players[fd].ready = true;
-				ready_cnt++;
-				
-				write(fd, "OK READY");
-				for(auto p : players)
-					if(p.first != fd)
-						write(p.first, "READY " + players[fd].name);
-				
-				if(ready_cnt == players.size()) {
-					
-					running = true;
-					initBoard();
-					
-					for(auto p : players) {
-						std::string card_list = "START";
-
-						for(int i = 0; i < 6; i++) {
-							card_list += ' ' + toStr(cards.back());
-							players[p.first].addCard(cards.back());
-							cards.pop_back();
-						}
-						write(p.first, card_list);
-					}
-					
-					curr_player_itr = players.begin();
-					
-					for(auto p : players)
-						write(p.first, "TURN " + curr_player_itr->second.name);
-				}
-			}
+			else 
+				readyPlayer(fd);
 		}
 		
 		else if(command == "PLACE") {
@@ -143,45 +237,22 @@ int main() {
 			else if(fd != curr_player_itr->first)
 				write(fd, "ERROR Not your turn");
 				
+			else if(!players[fd].hasCard(v[0]))
+				write(fd, "ERROR You don't have that card");
+				
+			else if(!placeCard(v[0], v[1], v[2], v[3])) 
+				write(fd, "ERROR Invalid move");
+			
 			else {
-				if(!players[fd].hasCard(v[0]))
-					write(fd, "ERROR You don't have that card");
-				
-				else if(!placeCard(v[0], v[1], v[2], v[3])) 
-					write(fd, "ERROR Invalid move");
-				
-				else {
-					for(auto p : players)
-						write(p.first, msg);
-					
-					players[fd].removeCard(v[0]);
-						
-					if(cards.empty()) 	
-						write(fd, "GIB 0");
-					
-					else {
-						write(fd, "GIB " + toStr(cards.back()));
-						players[fd].addCard(cards.back());
-						cards.pop_back();
-					}
-					
-					int id, x, y;
-					bool flip;
-					while(revealedCard(id, x, y, flip)) {	
-						for(auto p : players)
-							write(p.first, "PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
-					}
-					
-					++curr_player_itr;
-					if(curr_player_itr == players.end())
-						curr_player_itr = players.begin();
-					
-					for(auto p : players)
-						write(p.first, "TURN " + curr_player_itr->second.name);
+				writeAll(msg);
+				newCard(fd, v[0]);
+				if(revealCards()) {
+					endGame(REGGID);
 				}
-				
-				
-				
+				else {
+					if(!nextPlayer())
+						endGame(RUETOBAS);
+				}
 			}
 		}
 		
@@ -189,9 +260,8 @@ int main() {
 		
 		else
 			write(fd, "ERROR Unknown command");
-	}
+	} 
 	
 	
 	endMyLife();
-
 }
