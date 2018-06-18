@@ -88,11 +88,7 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 			return true;
 		}
 
-		int pos = z;
-		if (board[x][y].second)
-			pos = (pos + 2) % 4;
-
-		if (pos == 0)
+		if (z == 0)
 		{
 			if (board[x][y - 1].first != 0)
 			{
@@ -100,15 +96,15 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (board[x][y - 1].second)
 					pos2 = (pos2 + 2) % 4;
 
-				if (dis[x][y - 1][pos2] > dis[x][y][z] + 1 && tunnels[board[x][y - 1].first].open[pos2])
+				if (dis[x][y - 1][2] > dis[x][y][z] + 1 && tunnels[board[x][y - 1].first].open[pos2])
 				{
-					dis[x][y - 1][pos2] = dis[x][y][z] + 1;
-					q.push(make_tuple(x, y - 1, pos2));
+					dis[x][y - 1][2] = dis[x][y][z] + 1;
+					q.push(make_tuple(x, y - 1, 2));
 				}
 			}
 		}
 
-		if (pos == 1)
+		if (z == 1)
 		{
 			if (board[x + 1][y].first != 0)
 			{
@@ -116,15 +112,15 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (board[x + 1][y].second)
 					pos2 = (pos2 + 2) % 4;		
 				
-				if (dis[x + 1][y][pos2] > dis[x][y][z] + 1 && tunnels[board[x + 1][y].first].open[pos2])
+				if (dis[x + 1][y][3] > dis[x][y][z] + 1 && tunnels[board[x + 1][y].first].open[pos2])
 				{
-					dis[x + 1][y][pos2] = dis[x][y][z] + 1;
-					q.push(make_tuple(x + 1, y, pos2));
+					dis[x + 1][y][3] = dis[x][y][z] + 1;
+					q.push(make_tuple(x + 1, y, 3));
 				}
 			}
 		}
 
-		if (pos == 2)
+		if (z == 2)
 		{
 			if (board[x][y + 1].first != 0)
 			{
@@ -132,15 +128,15 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (board[x][y + 1].second)
 					pos2 = (pos2 + 2) % 4;		
 
-				if (dis[x][y + 1][pos2] > dis[x][y][z] + 1 && tunnels[board[x][y + 1].first].open[pos2])
+				if (dis[x][y + 1][0] > dis[x][y][z] + 1 && tunnels[board[x][y + 1].first].open[pos2])
 				{
-					dis[x][y + 1][pos2] = dis[x][y][z] + 1;
-					q.push(make_tuple(x, y + 1, pos2));
+					dis[x][y + 1][0] = dis[x][y][z] + 1;
+					q.push(make_tuple(x, y + 1, 0));
 				}
 			}
 		}
 
-		if (pos == 3)
+		if (z == 3)
 		{
 			if (board[x - 1][y].first != 0)
 			{
@@ -148,18 +144,26 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (board[x - 1][y].second)
 					pos2 = (pos2 + 2) % 4;
 
-				if (dis[x - 1][y][pos2] > dis[x][y][z] + 1 && tunnels[board[x - 1][y].first].open[pos2])
+				if (dis[x - 1][y][1] > dis[x][y][z] + 1 && tunnels[board[x - 1][y].first].open[pos2])
 				{
-					dis[x - 1][y][pos2] = dis[x][y][z] + 1;
-					q.push(make_tuple(x - 1, y, pos2));
+					dis[x - 1][y][1] = dis[x][y][z] + 1;
+					q.push(make_tuple(x - 1, y, 1));
 				}
 			}
 		}
 
+		int pos = z;
+		if (board[x][y].second)
+			pos = (pos + 2) % 4;
+
 		for (int i = 0; i < 4; i++)
 		{
-			if (i != z)
-				if (tunnels[board[x][y].first].G[z][i])
+			int a = i;
+			if (board[x][y].second)
+				a = (a + 2) % 4;
+
+			if (a != pos)
+				if (tunnels[board[x][y].first].G[pos][a])
 					if (dis[x][y][i] > dis[x][y][z] + 1)
 					{
 						dis[x][y][i] = dis[x][y][z] + 1;
