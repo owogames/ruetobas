@@ -301,7 +301,7 @@ namespace Ruetobas
                     {
                         return 2;
                     }
-                    else if(center.GetEntrance(i + rot * 2) == false)
+                    else if(center.GetEntrance(i + rot * 2))
                         any_valid_card = true;
                 }
             }
