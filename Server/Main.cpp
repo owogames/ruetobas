@@ -64,6 +64,7 @@ void readyPlayer(int fd) {
 
 bool everyoneReady() {
 	if(players.empty()) return false;
+	std::cout << rand() << std::endl;
 	for(auto p : players)
 		if(!p.second.ready) return false;
 	return true;
@@ -173,15 +174,12 @@ int main() {
 		std::tie(fd, msg) = read();
 		std::tie(command, text) = split(msg);
 
-		if(fd == -1) continue;
-
-		
 		if(!running && everyoneReady()) {		
 			running = true;
 			newGame();
 		}
 
-		
+		if(fd == -1) continue;
 
 		if(command == "LOGIN") {
 			if(running) 
