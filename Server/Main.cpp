@@ -15,8 +15,12 @@
 static std::set<std::string> usernames;
 static std::map<int, Player> players;
 static std::vector<int> cards;
-static std::map<int, Player>::iterator curr_player_itr;
+
+static std::vector<int> player_order;
+static int curr_player;
 static bool running = false;
+
+
 
 void writeAll(std::string msg) {
 	for(auto p : players)
@@ -29,6 +33,8 @@ void writeAllBut(int fd, std::string msg) {
 		if(p.first != fd)
 			write(p.first, msg);
 }
+
+
 
 
 void newPlayer(int fd, std::string name) {
@@ -53,7 +59,7 @@ void readyPlayer(int fd) {
 }
 
 
-bool everyoneReady() {
+bool isEveryoneReady() {
 	if(players.empty()) return false;
 
 	for(auto p : players)
@@ -63,56 +69,46 @@ bool everyoneReady() {
 
 
 void newGame() {
+	int player_cnt = players.size();
+	
+	if(player_cnt > 10) {
+		writeAll("ERROR Too many players (limit is 10)");
+		return;
+	}
+	
+	//inicjalizuje planszę
 	initBoard();
-		
+	
+	//kolejność kart
 	cards.resize(40); //const
 	std::iota(cards.begin(), cards.end(), 2);
 	std::random_shuffle(cards.begin(), cards.end());
 	
-	int tab[12], s = 1, k = 3, siz = players.size();
-
-	if (siz > 3)
-		k = 4;
-	if (siz > 4)
-		s = 2;
-	if (siz > 5)
-		k = 5;
-	if (siz > 6)
-		s = 3;
-	if (siz > 7)
-		k = 6;
-	if (siz > 8)
-		k = 7;
-	if (siz > 9)
-		s = 4;
-
-	int _s = s, _k = k;
-
-	for (int i = 0; i < s + k; i++)
-	{
-		if (_s > 0)
-		{
-			tab[i] = 2;
-			_s--;
-		}
-		else if (_k > 0)
-		{
-			tab[i] = 1;
-			_k--;
-		}
-	}
-
-	std::random_shuffle(tab, tab + k + s);
+	//kolejność graczy (alfabetycznie)
+	player_order.clear();
+	for(auto p : players)
+		player_order.push_back(p.first);
+		
+	std::sort(player_order.begin(), player_order.end(), [](int a, int b) {
+		return players[a].name < players[b].name;
+	});
+	
+	//rozdanie frakcji
+	const int saboteur_cnt[11] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
+	bool team[10];
+	std::fill(team, team+player_cnt, REGGID);
+	std::fill(team, team+saboteur_cnt[player_cnt], RUETOBAS);
+	std::random_shuffle(team, team+player_cnt);
 
 	int nr = 0;
+	for(auto& p : players)
+		p.second.team = team[nr++];
 
+	//rozdanie kart
 	for(auto& p : players) {
-		std::string card_list = "";
 		p.second.cards.clear();
-		
-		p.second.team = tab[nr];
-		nr++;
-		
+
+		std::string card_list = "";
 		for(int i = 0; i < 6; i++) {
 			card_list += toStr(cards.back()) + ' ';
 			p.second.addCard(cards.back());
@@ -121,9 +117,9 @@ void newGame() {
 		write(p.first, "START " + card_list + (p.second.team == REGGID ? '1' : '2'));
 	}
 	
-	curr_player_itr = players.begin();
-	
-	writeAll("TURN " + curr_player_itr->second.name);
+	//ustawienie pierwszego gracza
+	curr_player = rand() % player_cnt;
+	writeAll("TURN " + players[player_order[curr_player]].name);
 }
 
 
@@ -159,14 +155,14 @@ bool revealCards() {
 
 
 bool nextPlayer() {
-	++curr_player_itr;
-	if(curr_player_itr == players.end())
-		curr_player_itr = players.begin();
+	for(int i = 0; i < player_order.size(); i++) {
 	
-	for(int i = 0; i < players.size(); i++) {
-	
-		if(!curr_player_itr->second.cards.empty()) {
-			writeAll("TURN " + curr_player_itr->second.name);
+		curr_player++;
+		if(curr_player >= player_order.size())
+			curr_player = 0;
+		
+		if(!players[player_order[curr_player]].cards.empty()) {
+			writeAll("TURN " + players[player_order[curr_player]].name);
 			return true;
 		}
 	}
@@ -195,18 +191,30 @@ void endGame(bool who_won) {
 void removePlayer(int fd) {
 	writeAll("BYE " + players[fd].name);
 	
+	//sprawdź czy nie jest jego tura
 	if(running) {
-		if(players[fd].name == curr_player_itr->second.name)
+		if(fd == player_order[curr_player])
 			nextPlayer();
 			
-		if(players[fd].name == curr_player_itr->second.name)
+		if(fd == player_order[curr_player])
 			endGame(RUETOBAS);
 	}
+	
+	//zaktualizuj kolejność graczy i wskaźnik na gracza, którego jest tura
+	int p = player_order[curr_player];
+	player_order.erase(std::find(player_order.begin(), player_order.end(), fd));
+	if(p != player_order[curr_player])
+		curr_player--;
 	
 	remove(fd);
 	usernames.erase(players[fd].name);
 	players.erase(fd);
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 int main() {	
@@ -220,7 +228,7 @@ int main() {
 		std::tie(fd, msg) = read();
 		std::tie(command, text) = split(msg);
 
-		if(!running && everyoneReady()) {		
+		if(!running && isEveryoneReady()) {		
 			running = true;
 			newGame();
 		}
@@ -278,7 +286,7 @@ int main() {
 			else if(!intList(text, v) || v.size() != 4) 
 				write(fd, "ERROR Incorrect command syntax");
 				
-			else if(fd != curr_player_itr->first)
+			else if(fd != player_order[curr_player])
 				write(fd, "ERROR Not your turn");
 				
 			else if(!players[fd].hasCard(v[0]))
