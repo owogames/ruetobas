@@ -350,12 +350,12 @@ namespace Ruetobas
             }
 
             //Konwersja klawiszy do inputBoxa
-            if (keyboardState.IsKeyDown(Keys.LeftControl))
+            if (keyboardState.IsKeyDown(Keys.LeftControl) && activeInputBox != null)
             {
                 if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
                     activeInputBox.Append(GetClipboard());
             }
-            else if (keyboardState.IsKeyDown(Keys.Delete))
+            else if (keyboardState.IsKeyDown(Keys.Delete) && activeInputBox != null)
                 activeInputBox.Clear();
             else if (pressedKeys.Length > 0 && activeInputBox != null)
             {
