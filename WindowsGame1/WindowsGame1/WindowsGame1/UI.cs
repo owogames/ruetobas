@@ -139,8 +139,8 @@ namespace Ruetobas
 
         public void Append(string new_text)
         {
-            string enter = "\n";
-            new_text = new_text.Replace(enter , " ");
+            char enter = '\n';
+            new_text = new_text.Replace(enter.ToString(), " ");
             for(int i = 0; text.Length < charLimit && i < new_text.Length; i++)
             {
                 text += new_text[i];
