@@ -40,11 +40,11 @@ void writeAllBut(int fd, std::string msg) {
 void newPlayer(int fd, std::string name) {
 	writeAll("JOIN " + name);
 	
-	std::string username_list;
-	for(auto u : usernames)
-		username_list += ' ' + u;
+	std::string user_list;
+	for(auto p : players)
+		user_list += ' ' + p.second.name + ' ' + toStr(p.second.score);
 		
-	write(fd, "OK" + username_list);
+	write(fd, "OK" + user_list);
 	
 	usernames.insert(name);
 	players[fd] = Player(name);
@@ -94,10 +94,10 @@ void newGame() {
 	});
 	
 	//rozdanie frakcji
-	const int saboteur_cnt[11] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
+	const int ruetobas_cnt[11] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
 	bool team[10];
 	std::fill(team, team+player_cnt, REGGID);
-	std::fill(team, team+saboteur_cnt[player_cnt], RUETOBAS);
+	std::fill(team, team+ruetobas_cnt[player_cnt], RUETOBAS);
 	std::random_shuffle(team, team+player_cnt);
 
 	int nr = 0;
