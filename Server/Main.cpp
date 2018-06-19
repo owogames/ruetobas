@@ -68,12 +68,50 @@ void newGame() {
 	cards.resize(40); //const
 	std::iota(cards.begin(), cards.end(), 2);
 	std::random_shuffle(cards.begin(), cards.end());
-			
+	
+	int tab[12], s = 1, k = 3, siz = players.size();
+
+	if (siz > 3)
+		k = 4;
+	if (siz > 4)
+		s = 2;
+	if (siz > 5)
+		k = 5;
+	if (siz > 6)
+		s = 3;
+	if (siz > 7)
+		k = 6;
+	if (siz > 8)
+		k = 7;
+	if (siz > 9)
+		s = 4;
+
+	int _s = s, _k = k;
+
+	for (int i = 0; i < s + k; i++)
+	{
+		if (_s > 0)
+		{
+			tab[i] = 2;
+			_s--;
+		}
+		else if (_k > 0)
+		{
+			tab[i] = 1;
+			_k--;
+		}
+	}
+
+	std::random_shuffle(tab, tab + k + s);
+
+	int nr = 0;
+
 	for(auto& p : players) {
 		std::string card_list = "";
 		p.second.cards.clear();
 		
-		p.second.team = rand() & 1;
+		p.second.team = tab[nr];
+		nr++;
 		
 		for(int i = 0; i < 6; i++) {
 			card_list += toStr(cards.back()) + ' ';
