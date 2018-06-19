@@ -278,7 +278,7 @@ namespace Ruetobas
                 grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(80, 60), new Rectangle(1680, 0, 240, 60), 1, null);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
-                grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(240, 120), new Rectangle(1680, 60, 240, 1020), 1, null, PlayerListDraw);
+                grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(240, 120), new Rectangle(1680, 60, 240, 1020), 1, PlayerListClick, PlayerListDraw);
                 grids["PLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
                 //textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
@@ -383,11 +383,31 @@ namespace Ruetobas
         {
             if (selectedCard == -1)
                 return;
+
             if (playerTurn != username)
             {
                 textBoxes["CHAT"].AppendAndWrap("You can only play cards during your turn");
                 return;
             }
+            
+            if (players[yourPlayerId].buffs.Contains(Buff.Cart))
+            {
+                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your cart");
+                return;
+            }
+
+            if (players[yourPlayerId].buffs.Contains(Buff.Lantern))
+            {
+                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your lantern");
+                return;
+            }
+
+            if (players[yourPlayerId].buffs.Contains(Buff.Pickaxe))
+            {
+                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your pickaxe");
+                return;
+            }
+
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
             if (result == 0)
             {
@@ -413,6 +433,31 @@ namespace Ruetobas
             else if (result == 4)
             {
                 textBoxes["CHAT"].AppendAndWrap("You can only place tunnel cards");
+            }
+        }
+
+        public static void PlayerListClick(int x, int y)
+        {
+            if (selectedCard == -1)
+                return;
+
+            int id = cardHand[selectedCard];
+            if (cards[id].cardType == CardType.Buff)
+            {
+                if (players[y].buffs.Contains(((BuffCard)cards[id]).buffType))
+                    textBoxes["CHAT"].AppendAndWrap("This player already has this effect applied");
+                else game.TCPSend("-------------------------------------------------------------------------------------------------------------------");
+            }
+
+            if (cards[id].cardType == CardType.Debuff)
+            {
+                Buff buff = ((DebuffCard)cards[id]).buffType;
+                if (selectedRot == 1 && ((DebuffCard)cards[id]).buffType2 != Buff.None)
+                    buff = ((DebuffCard)cards[id]).buffType2;
+
+                if (!players[y].buffs.Contains(buff))
+                    textBoxes["CHAT"].AppendAndWrap("This player doesn't have this effect applied");
+                else game.TCPSend("-------------------------------------------------------------------------------------------------------------------");
             }
         }
 
