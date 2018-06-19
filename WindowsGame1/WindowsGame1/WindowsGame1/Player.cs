@@ -6,6 +6,7 @@ using System.Text;
 namespace Ruetobas
 {
     public enum PlayerClass { Unknown, Reggid, Ruetobas, Boss, Profiteer, Pig }
+    public enum Buff { Pickaxe, Lantern, Cart }
 
     public class Player
     {
