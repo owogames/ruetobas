@@ -99,9 +99,9 @@ namespace Ruetobas
                 grids["PLAYERLIST"].zoom = 1.0f;
             }
 
+            //Żeby karty się nie przesuwały
             if (grids.ContainsKey("CARDS"))
             {
-                //Żeby karty się nie przesuwały
                 grids["CARDS"].zoom = 1.0f;
                 grids["CARDS"].offset = new Vector2(grids["CARDS"].location.Width / 2 - grids["CARDS"].margin, grids["CARDS"].location.Height / 2 - grids["CARDS"].margin);
             }
@@ -118,16 +118,16 @@ namespace Ruetobas
                 Console.WriteLine(sub);
                 string[] data = sub.Split(' ');
                 if (data[0] == "CHAT")
-                    textBoxes["CHAT"].Append(sub.Substring(5).Trim());
+                    textBoxes["CHAT"].AppendAndWrap(sub.Substring(5).Trim());
                 if (data[0] == "JOIN")
                 {
-                    textBoxes["CHAT"].Append(sub.Substring(5).Trim() + " has joined the game.");
+                    textBoxes["CHAT"].AppendAndWrap(sub.Substring(5).Trim() + " has joined the game.");
                     players.Add(new Player(0, sub.Substring(5).Trim()));
                     SortPlayers();
                 }
                 if (data[0] == "BYE")
                 {
-                    textBoxes["CHAT"].Append(sub.Substring(4).Trim() + " has left the game.");
+                    textBoxes["CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.");
                     for (int i = 0; i < players.Count; i++)
                     {
                         if (players[i].username == sub.Substring(4).Trim())
@@ -140,7 +140,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "ERROR")
                 {
-                    textBoxes["CHAT"].Append(sub.Substring(6).Trim());
+                    textBoxes["CHAT"].AppendAndWrap(sub.Substring(6).Trim());
                 }
                 if (data[0] == "PLACE")
                 {
@@ -385,7 +385,7 @@ namespace Ruetobas
                 return;
             if (playerTurn != username)
             {
-                textBoxes["CHAT"].Append("You can only play cards during your turn");
+                textBoxes["CHAT"].AppendAndWrap("You can only play cards during your turn");
                 return;
             }
             int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
@@ -400,19 +400,19 @@ namespace Ruetobas
             }
             else if (result == 1)
             {
-                textBoxes["CHAT"].Append("You can only place card next to other card");
+                textBoxes["CHAT"].AppendAndWrap("You can only place card next to other card");
             }
             else if (result == 2)
             {
-                textBoxes["CHAT"].Append("Played card must match to its neighbours");
+                textBoxes["CHAT"].AppendAndWrap("Played card must match to its neighbours");
             }
             else if (result == 3)
             {
-                textBoxes["CHAT"].Append("You cannot place card on occupied spot");
+                textBoxes["CHAT"].AppendAndWrap("You cannot place card on occupied spot");
             }
             else if (result == 4)
             {
-                textBoxes["CHAT"].Append("You can only place tunnel cards");
+                textBoxes["CHAT"].AppendAndWrap("You can only place tunnel cards");
             }
         }
 

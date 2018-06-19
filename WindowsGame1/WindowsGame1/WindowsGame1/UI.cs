@@ -65,6 +65,38 @@ namespace Ruetobas
                 scroll = lines.Count - lineCount;
         }
 
+        public void AppendAndWrap(string line)
+        {
+            string[] words = line.Split(' ');
+            string actLine = words[0];
+            int lenX = (int)font.MeasureString(actLine).X;
+            for (int i = 1; i < words.Count(); i++)
+            {
+                if (lenX + (int)font.MeasureString(" " + words[i]).X <= location.Width - 2 * margin)
+                {
+                    actLine += " " + words[i];
+                    lenX += (int)font.MeasureString(" " + words[i]).X;
+                }
+                else
+                {
+                    Append(actLine);
+                    i++;
+                    if (i < words.Count())
+                    {
+                        actLine = words[i];
+                        lenX = (int)font.MeasureString(actLine).X;
+                    }
+                    else
+                    {
+                        actLine = "";
+                        lenX = 0;
+                    }
+                }
+            }
+            if (lenX > 0)
+               Append(actLine);
+        }
+
         public int scroll = 0;
         public int lineCount;
     }
