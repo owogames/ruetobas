@@ -350,25 +350,29 @@ namespace Ruetobas
             }
 
             //Konwersja klawiszy do inputBoxa
-            if (keyboardState.IsKeyDown(Keys.LeftControl) && activeInputBox != null)
+            if(activeInputBox != null)
             {
-                if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
-                    activeInputBox.Append(GetClipboard());
-            }
-            else if (keyboardState.IsKeyDown(Keys.Delete) && activeInputBox != null)
-                activeInputBox.Clear();
-            else if (pressedKeys.Length > 0 && activeInputBox != null)
-            {
-                foreach (Keys key in pressedKeys)
+                if (keyboardState.IsKeyDown(Keys.LeftControl))
                 {
-                    char charkey;
-                    if (keyboardBeforeState.IsKeyUp(key) &&
-                        TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
+                    if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
+                        activeInputBox.Append(GetClipboard());
+                }
+                else if (keyboardState.IsKeyDown(Keys.Delete))
+                    activeInputBox.Clear();
+                else if (pressedKeys.Length > 0)
+                {
+                    foreach (Keys key in pressedKeys)
                     {
-                        activeInputBox.Append(charkey);
+                        char charkey;
+                        if (keyboardBeforeState.IsKeyUp(key) &&
+                            TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
+                        {
+                            activeInputBox.Append(charkey);
+                        }
                     }
                 }
             }
+            
 
             //Backspace
             if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null)
