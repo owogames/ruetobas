@@ -406,7 +406,7 @@ namespace Ruetobas
                 for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
                 {
                     TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                    if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled)
+                    if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled && textBox.canScroll)
                     {
                         if (scrollWheelDelta < 0)
                             textBox.scroll++;

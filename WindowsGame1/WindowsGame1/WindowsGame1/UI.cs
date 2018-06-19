@@ -34,6 +34,8 @@ namespace Ruetobas
         public int margin;
         public Alignment align;
 
+        public bool canScroll = true;
+
         public bool enabled = true;
 
         public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location)

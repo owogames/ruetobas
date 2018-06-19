@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Ruetobas
 {
-    public enum CardType { Empty, Tunnel }
+    public enum CardType { Empty, Tunnel, Buff, Debuff, Remove, Map }
     public enum TunnelObject { None, Ladder, Rock, Gem, Gold}
 
     public class Card
@@ -64,6 +64,62 @@ namespace Ruetobas
         {
             entrance_number = (entrance_number % 4) + 4; //dotatnie modulo
             return entrance[entrance_number % 4];
+        }
+    }
+
+    public class BuffCard : Card
+    {
+        public Buff buffType;
+        public BuffCard(Texture2D texture, int ID, Buff buffType)
+        {
+            this.texture = texture;
+            this.ID = ID;
+            this.buffType = buffType;
+            cardType = CardType.Buff;
+        }
+    }
+
+    public class DebuffCard : Card
+    {
+        public Buff buffType;
+        public Buff buffType2;
+
+        public DebuffCard(Texture2D texture, int ID, Buff buffType)
+        {
+            this.texture = texture;
+            this.ID = ID;
+            this.buffType = buffType;
+            buffType2 = Buff.None;
+            cardType = CardType.Debuff;
+        }
+
+        public DebuffCard(Texture2D texture, int ID, Buff buffType, Buff buffType2)
+        {
+            this.texture = texture;
+            this.ID = ID;
+            this.buffType = buffType;
+            this.buffType2 = buffType2;
+            cardType = CardType.Debuff;
+        }
+    }
+
+    public class RemoveCard : Card
+    {
+        public RemoveCard(Texture2D texture, int ID)
+        {
+            this.texture = texture;
+            this.ID = ID;
+            cardType = CardType.Remove;
+        }
+    }
+
+    public class MapCard : Card
+    {
+        public MapCard(Texture2D texture, int ID)
+        {
+            this.texture = texture;
+            this.ID = ID;
+            cardType = CardType.Map;
         }
     }
 
