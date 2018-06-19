@@ -155,6 +155,11 @@ namespace Ruetobas
         {
             Append(new_text.ToString());
         }
+
+        public string GetText()
+        {
+            return text;
+        }
     }
 
     public class Grid

@@ -557,7 +557,7 @@ namespace Ruetobas
                 {
                     InputBox inputBox = Logic.inputBoxes[name];
                     spriteBatch.Draw(inputBox.texture, inputBox.location, inputBox.active ? Color.Gray : Color.White);
-                    string text = inputBox.text;
+                    string text = inputBox.GetText();
                     if (inputBox.active) text += "|";
                     Vector2 position = new Vector2(inputBox.location.X + inputBox.margin, inputBox.location.Y + inputBox.location.Height / 2 - inputBox.font.LineSpacing / 2);
 
