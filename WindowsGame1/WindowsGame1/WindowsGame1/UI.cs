@@ -82,7 +82,6 @@ namespace Ruetobas
                 else
                 {
                     Append(actLine);
-                    i++;
                     if (i < words.Count())
                     {
                         actLine = words[i];
