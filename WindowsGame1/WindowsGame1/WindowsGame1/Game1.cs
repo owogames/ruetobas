@@ -33,6 +33,8 @@ namespace Ruetobas
         public ThreadStart tcpThreadStart;
         public Thread tcpThread;
 
+        RenderTarget2D screen;
+
         public bool TCPConnect(string IP, int port)
         {
             try
@@ -51,8 +53,11 @@ namespace Ruetobas
                 if (msg.Substring(0, 2) == "OK")
                 {
                     string[] data = msg.Split(' ');
-                    for (int i = 1; i < data.Length; i++)
+                    for (int i = 1; i < data.Length; i += 2)
+                    {
                         Logic.players.Add(new Player(i, data[i].Trim()));
+                        Logic.players.Last().score = int.Parse(data[i + 1].Trim());
+                    }
                     Logic.players.Add(new Player(data.Length, Logic.username));
                     Logic.SortPlayers();
                     tcpThreadStart = new ThreadStart(TCPListening);
@@ -76,6 +81,7 @@ namespace Ruetobas
 
         public void TCPSend(string msg)
         {
+            msg += '\n';
             byte[] bytes = asen.GetBytes(msg);
             stream.Write(bytes, 0, bytes.Length);
         }
@@ -98,11 +104,13 @@ namespace Ruetobas
         
         public static Texture2D cursorTexture;
 
+        public static float scale = 1.0f;
+
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = (int)(1920 / scale);
+            graphics.PreferredBackBufferHeight = (int)(1080 / scale);
             Content.RootDirectory = "Content";
         }
 
@@ -117,6 +125,7 @@ namespace Ruetobas
         {
             // TODO: Add your initialization logic here
             asen = new ASCIIEncoding();
+            screen = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             Logic.Init(this);
             base.Initialize();
         }
@@ -261,7 +270,7 @@ namespace Ruetobas
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             pressedKeys = keyboardState.GetPressedKeys();
-            Vector2 mousePos = new Vector2(mouseState.X, mouseState.Y);
+            Vector2 mousePos = new Vector2(mouseState.X * scale, mouseState.Y * scale);
             
             //Left click
             if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
@@ -308,7 +317,7 @@ namespace Ruetobas
                             int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
                             int tileX = pressX / (int)grid.fieldSize.X;
                             int tileY = pressY / (int)grid.fieldSize.Y;
-                            if (grid.clickEvent != null)
+                            if (grid.clickEvent != null && tileX >= 0 && tileX < grid.sizeX && tileY >= 0 && tileY < grid.sizeY)
                                 grid.clickEvent(tileX, tileY);
                             i = -2;
                         }
@@ -331,7 +340,7 @@ namespace Ruetobas
                 {
                     if (draggedGrid != null)
                     {
-                        draggedGrid.offset -= new Vector2(mouseState.X - mouseBeforeState.X, mouseState.Y - mouseBeforeState.Y) / draggedGrid.zoom;
+                        draggedGrid.offset -= new Vector2(mouseState.X * scale - mouseBeforeState.X * scale, mouseState.Y * scale - mouseBeforeState.Y * scale) / draggedGrid.zoom;
                     }
                 }
             }
@@ -480,7 +489,7 @@ namespace Ruetobas
                 }
             }
 
-            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.SetRenderTarget(screen);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -568,8 +577,13 @@ namespace Ruetobas
             }
 
             //Rysowanie kursora
-            spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X * scale) - 16, (int)(Mouse.GetState().Y * scale), 32, 32), Color.White);
 
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin();
+            spriteBatch.Draw(screen, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);

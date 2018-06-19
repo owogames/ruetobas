@@ -77,10 +77,10 @@ namespace Ruetobas
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
-
-        public static int timer = 0;
+        
         public static void Update()
         {
+            //Wychodzenie z gry
             if (game.keyboardState.IsKeyDown(Keys.Escape) && game.keyboardBeforeState.IsKeyUp(Keys.Escape))
             {
                 if (game.tcpThread != null)
@@ -91,10 +91,19 @@ namespace Ruetobas
                 game.Exit();
             }
 
+            //Żeby Playerlist się za bardzo nie przesuwał
             if (grids.ContainsKey("PLAYERLIST"))
             {
                 grids["PLAYERLIST"].offset.Y = Math.Max(grids["PLAYERLIST"].offset.Y, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
                 grids["PLAYERLIST"].offset.X = grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin;
+                grids["PLAYERLIST"].zoom = 1.0f;
+            }
+
+            if (grids.ContainsKey("CARDS"))
+            {
+                //Żeby karty się nie przesuwały
+                grids["CARDS"].zoom = 1.0f;
+                grids["CARDS"].offset = new Vector2(grids["CARDS"].location.Width / 2 - grids["CARDS"].margin, grids["CARDS"].location.Height / 2 - grids["CARDS"].margin);
             }
 
             if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
@@ -161,12 +170,12 @@ namespace Ruetobas
                     grids["BOARD"].fieldTexture[13, 9] = cardTexture[45];
                     grids["BOARD"].enabled = true;
                     buttons["READY"].enabled = false;
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < data.Count() - 2; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
 
                     for (int i = 0; i < players.Count; i++)
                         players[i].playerClass = PlayerClass.Unknown;
-                    players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[7]);
+                    players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[data.Count() - 1]);
                     textBoxes["CHAT"].Append("You Are:");
                     textBoxes["CHAT"].Append(players[yourPlayerId].playerClass.ToString());
                 }
