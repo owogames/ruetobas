@@ -114,10 +114,11 @@ namespace Ruetobas
         public bool active;
         public string text;
         public string emptyText;
+        public int charLimit;
 
         public bool enabled = true;
 
-        public InputBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText)
+        public InputBox(Texture2D texture, int margin, SpriteFont font, Rectangle location, Color color, Color emptyColor, string emptyText, int charLimit = 512)
         {
             this.texture = texture;
             this.margin = margin;
@@ -126,6 +127,7 @@ namespace Ruetobas
             this.color = color;
             this.emptyColor = emptyColor;
             this.emptyText = emptyText;
+            this.charLimit = charLimit;
             text = "";
             active = false;
         }
@@ -137,18 +139,12 @@ namespace Ruetobas
 
         public void Append(string new_text)
         {
-            char enter = '\n';
-            new_text = new_text.Replace(enter.ToString() , " ");
-            int i = 0;
-            for (; i < new_text.Length; i++)
+            string enter = "\n";
+            new_text = new_text.Replace(enter , " ");
+            for(int i = 0; text.Length < charLimit && i < new_text.Length; i++)
             {
-                if (font.MeasureString(text + new_text.Substring(0,i + 1)).X > location.Width - 2 * margin)
-                {
-                    text += new_text.Substring(0, i);
-                    return;
-                }
+                text += new_text[i];
             }
-            text += new_text;
         }
 
         public void Append(char new_text)
@@ -158,7 +154,16 @@ namespace Ruetobas
 
         public string GetText()
         {
-            return text;
+            string new_text = "";
+            
+            for(int i = 1; i <= text.Length; i++)
+            {
+                if (font.MeasureString(text.Substring(text.Length - i, i)).X <= location.Width - 2 * margin)
+                    new_text = text.Substring(text.Length - i, i);
+                else
+                    break;
+            }
+            return new_text;
         }
     }
 
