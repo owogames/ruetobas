@@ -23,12 +23,19 @@ namespace Ruetobas
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
         public static Texture2D skurwielTexture;
+        public static Texture2D errorBackground;
+        public static Texture2D errorWindow;
+        public static Texture2D errorButton;
+        public static Texture2D emptyTextbox;
         public static Texture2D readyTexture;
         public static Texture2D notReadyTexture;
         public static Texture2D semiTransparentTexture;
         public static Texture2D transparentTexture;
         public static Texture2D settingsTexture;
-        public static Texture2D[] cardTexture = new Texture2D[46];
+        public static Texture2D unTickedTexture;
+        public static Texture2D tickedTexture;
+        public static Texture2D[] buffTexture = new Texture2D[3];
+        public static Texture2D[] cardTexture = new Texture2D[73];
         public static SpriteFont font;
 
         public static PlacedCard[,] map;
@@ -57,6 +64,12 @@ namespace Ruetobas
             inputBoxes = new Dictionary<string, InputBox>();
             grids = new Dictionary<string, Grid>();
 
+            errorBackground = game.Content.Load<Texture2D>("errorBackground");
+            errorWindow = game.Content.Load<Texture2D>("tekstura");
+            emptyTextbox = game.Content.Load<Texture2D>("empty");
+            errorButton = game.Content.Load<Texture2D>("errorButton");
+            unTickedTexture = game.Content.Load<Texture2D>("CheckBoxUnTicked");
+            tickedTexture = game.Content.Load<Texture2D>("CheckBoxTicked");
             chatTexture = game.Content.Load<Texture2D>("tekstura");
             chatInputTexture = game.Content.Load<Texture2D>("tekstura2");
             chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
@@ -66,10 +79,13 @@ namespace Ruetobas
             semiTransparentTexture = game.Content.Load<Texture2D>("SemiTransparent");
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
-            for (int i = 0; i <= 45; i++)
+            for (int i = 0; i <= 72; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
+            buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
+            buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
+            buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
 
-            font = game.Content.Load<SpriteFont>("font");
+            font = game.Content.Load<SpriteFont>("comic");
 
             map = new PlacedCard[19, 15];
             for (int i = 0; i < 19; i++)
@@ -82,7 +98,8 @@ namespace Ruetobas
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
-            textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
+            textBoxes["errorbox"] = new TextBox(transparentTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
+
         }
         
         public static void Update()
@@ -218,6 +235,14 @@ namespace Ruetobas
                     buttons["READY"].enabled = true;
                     buttons["READY"].texture = notReadyTexture;
                 }
+                if (data[0] == "BUFF")
+                {
+                    Player.FindByName(data[1].Trim()).AddBuff((Buff)int.Parse(data[2]));
+                }
+                if (data[0] == "DEBUFF")
+                {
+                    Player.FindByName(data[1].Trim()).RemoveBuff((Buff)int.Parse(data[2]));
+                }
                 if (data[0] == "OK")
                 {
                     if (data[1] == "READY")
@@ -278,16 +303,16 @@ namespace Ruetobas
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 0, 300, 705));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 705, 240, 75), Color.White, Color.LightGray, "Enter message...", 120);
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1620, 705, 60, 75), SendChatMessage);
-                buttons["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
+                //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
+                buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(120, 300), new Rectangle(0, 780, 120, 300), 0, null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(210, 300), new Rectangle(120, 780, 1260, 300), 0, HandClick, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(300, 96), new Rectangle(1380, 780, 300, 300), 1, null);
                 grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(80, 60), new Rectangle(1680, 0, 240, 60), 1, null);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
-                grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(240, 120), new Rectangle(1680, 60, 240, 1020), 1, PlayerListClick, PlayerListDraw);
+                grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(240, 140), new Rectangle(1680, 60, 240, 1020), 1, PlayerListClick, PlayerListDraw);
                 grids["PLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
-                //textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
             else
             {
@@ -375,6 +400,13 @@ namespace Ruetobas
             spriteBatch.DrawString(font, players[y].username, new Vector2(location.X + 5, location.Y + 5), Color.White);
             spriteBatch.DrawString(font, "Score: " + players[y].score.ToString(), new Vector2(location.X + 5, location.Y + 5 + font.LineSpacing), Color.White);
             spriteBatch.DrawString(font, "Role: " + players[y].playerClass.ToString(), new Vector2(location.X + 5, location.Y + 5 + 2 * font.LineSpacing), Color.White);
+
+            int buffCount = 0;
+            foreach (Buff buff in players[y].buffs)
+            {
+                spriteBatch.Draw(buffTexture[(int)buff - 1], new Rectangle(location.X + 5 + 48 * buffCount, location.Y + 5 + 3 * font.LineSpacing, 48, 48), Color.White);
+                buffCount++;
+            }
         }
 
 
@@ -482,7 +514,7 @@ namespace Ruetobas
                     textBoxes["CHAT"].AppendAndWrap("This player already has this effect applied");
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username;
+                    string line = "USE " + id.ToString() + " " + players[y].username + " 0";
                     RemoveSelectedCard();
                     game.TCPSend(line);
                 }
@@ -498,13 +530,21 @@ namespace Ruetobas
                     textBoxes["CHAT"].AppendAndWrap("This player doesn't have this effect applied");
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username + selectedRot.ToString();
+                    string line = "USE " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
                     RemoveSelectedCard();
                     game.TCPSend(line);
                 }
             }
         }
 
+
+        public static void AnnounceError(string error)
+        {
+            buttons["ZZZBACKGROUND"] = new Button(errorBackground, new Rectangle(0, 0, 1920, 1080), null);
+            textBoxes["ZZZERRORBOX"] = new TextBox(emptyTextbox, 15, Alignment.Centered, font, new Rectangle(560, 375, 800, 220), error);
+            buttons["ZZZBUTTON"] = new Button(errorWindow, new Rectangle(560, 300, 800, 330), null);
+            buttons["ZZZZBUTTON"] = new Button(errorButton, new Rectangle(885, 550, 150, 50), CloseError);
+        }
 
         public static void RemoveSelectedCard()
         {
@@ -515,10 +555,12 @@ namespace Ruetobas
             selectedRot = 0;
         }
 
-        public static void BuchnijLolka(int x, int y)
+        public static void CloseError()
         {
-            map[x, y].ID = rand.Next(1, 44);
-            grids["BOARD"].fieldTexture[x, y] = cards[map[x, y].ID].texture;
+            buttons.Remove("ZZZBACKGROUND");
+            buttons.Remove("ZZZBUTTON");
+            buttons.Remove("ZZZZBUTTON");
+            textBoxes.Remove("ZZZERRORBOX");
         }
 
         public static void Ready()
@@ -529,10 +571,24 @@ namespace Ruetobas
         public static void OpenGameMenu()
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
-            //buttons["ZZZZfullscreen"] = new Button(notReadyTexture, new Rectangle())
             inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
             inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
+            buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(120, 235, 20, 20), ChangeFullscreen);
+            if (Game.isFullscreen == false)
+                buttons["ZZZZFullscreen"].texture = unTickedTexture;
+            textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
+            textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
+            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 285, 140, 80), CloseGameMenu);
+            buttons["ZZZZQuit"] = new Button(skurwielTexture, new Rectangle(10, 420, 69, 41), game.Exit);
+        }
+
+        public static void ChangeFullscreen()
+        {
+            game.ChangeFullscreen();
+            if (Game.isFullscreen)
+                buttons["ZZZZFullscreen"].texture = tickedTexture;
+            else
+                buttons["ZZZZFullscreen"].texture = unTickedTexture;
         }
 
         public static void CloseGameMenu()
@@ -546,6 +602,9 @@ namespace Ruetobas
             inputBoxes.Remove("ZZZZResolutionY");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
+            buttons.Remove("ZZZZFullscreen");
+            textBoxes.Remove("ZZZZFullscreentext");
+            buttons.Remove("ZZZZQuit");
             return;
         }
     }

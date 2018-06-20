@@ -28,18 +28,38 @@ namespace Ruetobas
         {
             string[] words = line.Split(' ');
             int size = words.Length;
-            if(words[0] == "T")
+            if (words[0] == "T")
             {
                 TunnelObject objekt = (TunnelObject)int.Parse(words[size - 1]);
                 Tunnel output = new Tunnel(Logic.cardTexture[ID], ID, objekt);
-                for(int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     output.entrance[i] = Convert.ToBoolean(int.Parse(words[i + 1]));
                 }
-                for(int i = 0; i < 16; i++)
+                for (int i = 0; i < 16; i++)
                 {
                     output.graph[i / 4, i % 4] = Convert.ToBoolean(int.Parse(words[i + 5]));
                 }
+                return output;
+            }
+            else if (words[0] == "B")
+            {
+                BuffCard output = new BuffCard(Logic.cardTexture[ID], ID, (Buff)int.Parse(words[1]));
+                return output;
+            }
+            else if (words[0] == "D")
+            {
+                DebuffCard output = new DebuffCard(Logic.cardTexture[ID], ID, (Buff)int.Parse(words[1]), (Buff)int.Parse(words[2]));
+                return output;
+            }
+            else if (words[0] == "M")
+            {
+                MapCard output = new MapCard(Logic.cardTexture[ID], ID);
+                return output;
+            }
+            else if (words[0] == "C")
+            {
+                RemoveCard output = new RemoveCard(Logic.cardTexture[ID], ID);
                 return output;
             }
             return null;
@@ -83,15 +103,6 @@ namespace Ruetobas
     {
         public Buff buffType;
         public Buff buffType2;
-
-        public DebuffCard(Texture2D texture, int ID, Buff buffType)
-        {
-            this.texture = texture;
-            this.ID = ID;
-            this.buffType = buffType;
-            buffType2 = Buff.None;
-            cardType = CardType.Debuff;
-        }
 
         public DebuffCard(Texture2D texture, int ID, Buff buffType, Buff buffType2)
         {

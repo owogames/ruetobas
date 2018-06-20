@@ -104,18 +104,25 @@ namespace Ruetobas
         
         public static Texture2D cursorTexture;
 
-        public static float scale = 1280.0f/1920.0f;
+        public static Vector2 scale = Vector2.One * 1280.0f/1920.0f;
         public static Vector2 resolution = new Vector2(1280, 720);
+        public static bool isFullscreen = false;
 
         public void ChangeResolution(float X, float Y)
         {
             int width = (int)X;
             int height = (int)Y;
             resolution = new Vector2(width, height);
-            scale = width / 1920.0f;
+            scale = new Vector2(width / 1920.0f, height / 1080.0f);
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
             graphics.ApplyChanges();
+        }
+        
+        public void ChangeFullscreen()
+        {
+            graphics.ToggleFullScreen();
+            isFullscreen = !isFullscreen;
         }
 
         public Game()
@@ -282,7 +289,7 @@ namespace Ruetobas
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             pressedKeys = keyboardState.GetPressedKeys();
-            Vector2 mousePos = new Vector2(mouseState.X / scale, mouseState.Y / scale);
+            Vector2 mousePos = new Vector2(mouseState.X / scale.X, mouseState.Y / scale.Y);
 
             List<string> UIelements = new List<string>();
 
@@ -384,7 +391,7 @@ namespace Ruetobas
                 {
                     if (draggedGrid != null)
                     {
-                        draggedGrid.offset -= new Vector2(mouseState.X / scale - mouseBeforeState.X / scale, mouseState.Y / scale - mouseBeforeState.Y / scale) / draggedGrid.zoom;
+                        draggedGrid.offset -= new Vector2(mouseState.X / scale.X - mouseBeforeState.X / scale.X, mouseState.Y / scale.Y - mouseBeforeState.Y / scale.Y) / draggedGrid.zoom;
                     }
                 }
             }
@@ -460,6 +467,13 @@ namespace Ruetobas
                             textBox.scroll++;
                         else if (textBox.scroll > 0)
                             textBox.scroll--;
+
+                        if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
+                            textBox.scroll = textBox.lines.Count - textBox.lineCount;
+
+                        if (textBox.scroll < 0)
+                            textBox.scroll = 0;
+
                         i = -2;
                     }
                 }
@@ -625,7 +639,7 @@ namespace Ruetobas
             }
 
             //Rysowanie kursora
-            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X / scale) - 16, (int)(Mouse.GetState().Y / scale), 32, 32), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X / scale.X) - 16, (int)(Mouse.GetState().Y / scale.Y), 32, 32), Color.White);
 
             spriteBatch.End();
 
