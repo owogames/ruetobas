@@ -25,6 +25,9 @@ namespace Ruetobas
         public static Texture2D skurwielTexture;
         public static Texture2D readyTexture;
         public static Texture2D notReadyTexture;
+        public static Texture2D semiTransparentTexture;
+        public static Texture2D transparentTexture;
+        public static Texture2D settingsTexture;
         public static Texture2D[] cardTexture = new Texture2D[46];
         public static SpriteFont font;
 
@@ -60,6 +63,9 @@ namespace Ruetobas
             skurwielTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
             readyTexture = game.Content.Load<Texture2D>("ReadyButton");
             notReadyTexture = game.Content.Load<Texture2D>("NotReadyButton");
+            semiTransparentTexture = game.Content.Load<Texture2D>("SemiTransparent");
+            transparentTexture = game.Content.Load<Texture2D>("Transparent");
+            settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
             for (int i = 0; i <= 45; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
 
@@ -75,7 +81,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
-            buttons["menubutton"] = new Button(skurwielTexture, new Rectangle(10, 10, 20, 20), OpenGameMenu);
+            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 20, 20), OpenGameMenu);
             textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
         
@@ -272,7 +278,7 @@ namespace Ruetobas
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 0, 300, 705));
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 705, 240, 75), Color.White, Color.LightGray, "Enter message...", 120);
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1620, 705, 60, 75), SendChatMessage);
-                buttons["READY"] = new Button(notReadyTexture, new Rectangle(0, 0, 1380, 780), Ready); //sam guzik = Rectangle(280, 190, 360, 140)
+                buttons["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(120, 300), new Rectangle(0, 780, 120, 300), 0, null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(210, 300), new Rectangle(120, 780, 1260, 300), 0, HandClick, HandDraw);
                 grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(300, 96), new Rectangle(1380, 780, 300, 300), 1, null);
@@ -522,22 +528,25 @@ namespace Ruetobas
 
         public static void OpenGameMenu()
         {
-            buttons["ZZZBackground"] = new Button(skurwielTexture, new Rectangle(0, 0, 1920, 1080), null);
-            buttons["ZZZZdone"] = new Button(chatSendTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
+            buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
+            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
+            //buttons["ZZZZfullscreen"] = new Button(notReadyTexture, new Rectangle())
             inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
             inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
         }
 
         public static void CloseGameMenu()
         {
-            int newX = int.Parse(inputBoxes["ZZZZResolutionX"].text);
-            int newY = int.Parse(inputBoxes["ZZZZResolutionY"].text);
+            int newX, newY;
+            if(int.TryParse(inputBoxes["ZZZZResolutionX"].text, out newX) &&
+                int.TryParse(inputBoxes["ZZZZResolutionY"].text, out newY) &&
+                newX>0 && newY>0)
             game.ChangeResolution(newX, newY);
-            
             inputBoxes.Remove("ZZZZResolutionX");
             inputBoxes.Remove("ZZZZResolutionY");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
+            return;
         }
     }
 }
