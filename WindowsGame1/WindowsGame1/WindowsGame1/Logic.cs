@@ -94,8 +94,6 @@ namespace Ruetobas
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
-            textBoxes["errorbox"] = new TextBox(transparentTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
-
         }
         
         public static void Update()
@@ -160,7 +158,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "ERROR")
                 {
-                    textBoxes["CHAT"].AppendAndWrap(sub.Substring(6).Trim());
+                    AnnounceError(sub.Substring(6).Trim());
                 }
                 if (data[0] == "PLACE")
                 {
@@ -291,31 +289,44 @@ namespace Ruetobas
             {
                 inputBoxes.Clear();
                 buttons.Clear();
-                textBoxes["errorbox"].lines.Clear();
-                textBoxes["errorbox"].Append("Successfully connected");
                 textBoxes.Clear();
 
                 ReadCards();
-                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 0, 300, 705));
-                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 705, 240, 75), Color.White, Color.LightGray, "Enter message...", 120);
-                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1620, 705, 60, 75), SendChatMessage);
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 730));
+                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 780, 490, 50), Color.White, Color.LightGray, "Enter message...", 120);
+                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1870, 780, 50, 50), SendChatMessage);
+                textBoxes["HELP"] = new TextBox(errorBackground, 5, Alignment.Centered, font, new Rectangle(0, 720, 1380, 60));
                 //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
-                grids["CHARACTER"] = new Grid(game, chatTexture, chatTexture, 1, 1, new Vector2(120, 300), new Rectangle(0, 780, 120, 300), 0, null);
-                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(210, 300), new Rectangle(120, 780, 1260, 300), 0, HandClick, HandDraw);
-                grids["BUTTONS"] = new Grid(game, chatTexture, chatTexture, 1, 3, new Vector2(300, 96), new Rectangle(1380, 780, 300, 300), 1, null);
-                grids["MENU"] = new Grid(game, chatTexture, chatTexture, 3, 1, new Vector2(80, 60), new Rectangle(1680, 0, 240, 60), 1, null);
-                grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 780), 10, BoardClick, BoardDraw);
+                buttons["CHARACTER"] = new Button(chatTexture, new Rectangle(0, 780, 180, 300), null);
+                textBoxes["ACTUALPLAYER"] = new TextBox(skurwielTexture, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
+                buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
+                buttons["DISCARD"] = new Button(skurwielTexture, new Rectangle(1380, 780, 540, 75), null);
+                buttons["REMOVE"] = new Button(skurwielTexture, new Rectangle(1380, 855, 540, 75), null);
+                buttons["MENU"] = new Button(skurwielTexture, new Rectangle(1380, 930, 540, 75), null);
+                buttons["EXIT"] = new Button(skurwielTexture, new Rectangle(1380, 1005, 540, 75), null);
+                grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
+                grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
-                grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(240, 120), new Rectangle(1680, 60, 240, 1020), 1, PlayerListClick, PlayerListDraw);
-                grids["PLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
                 //textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
             else
             {
-                textBoxes["errorbox"].lines.Clear();
-                textBoxes["errorbox"].Append("Error, try again");
+                AnnounceError("Connection error, try again");
             }
+        }
+
+        public static void ShowPlayerList()
+        {
+            buttons["PLAYERLISTSET"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
+            grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 120), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
+            grids["PLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
+        }
+
+        public static void HidePlayerList()
+        {
+            buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
+            grids.Remove("PLAYERLIST");
         }
 
         public static int CheckCardPlacement(int x, int y, int ID, int rot)
