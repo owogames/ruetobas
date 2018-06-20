@@ -51,10 +51,13 @@ Content\cards\card9.xnb
 Content\cards\card0.xnb
 Content\NotReadyButton.xnb
 Content\ReadyButton.xnb
-Content\font.xnb
 Content\SemiTransparent.xnb
 Content\SettingsButton.xnb
 Content\Transparent.xnb
 Content\CheckBoxTicked.xnb
 Content\CheckBoxUnTicked.xnb
+Content\errorButton.xnb
+Content\empty.xnb
+Content\font.xnb
 Content\comic.xnb
+Content\errorBackground.xnb
