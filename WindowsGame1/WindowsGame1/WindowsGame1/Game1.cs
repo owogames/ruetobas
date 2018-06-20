@@ -106,6 +106,7 @@ namespace Ruetobas
 
         public static float scale = 1280.0f/1920.0f;
         public static Vector2 resolution = new Vector2(1280, 720);
+        public static bool isFullscreen = false;
 
         public void ChangeResolution(float X, float Y)
         {
@@ -116,6 +117,12 @@ namespace Ruetobas
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
             graphics.ApplyChanges();
+        }
+        
+        public void ChangeFullscreen()
+        {
+            graphics.ToggleFullScreen();
+            isFullscreen = !isFullscreen;
         }
 
         public Game()

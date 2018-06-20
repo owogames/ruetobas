@@ -532,6 +532,15 @@
       <Output>C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxUnTicked.xnb</Output>
       <Time>2018-06-20T17:02:15.3693529+02:00</Time>
     </Item>
+    <Item>
+      <Source>comic.spritefont</Source>
+      <Name>comic</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\comic.xnb</Output>
+      <Time>2018-06-20T19:00:35.0727974+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{4BFBD174-EA69-45A6-86EF-F8C9625C563D}</ContentProjectGUID>

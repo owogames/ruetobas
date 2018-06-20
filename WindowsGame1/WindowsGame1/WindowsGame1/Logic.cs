@@ -73,7 +73,7 @@ namespace Ruetobas
             for (int i = 0; i <= 45; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
 
-            font = game.Content.Load<SpriteFont>("font");
+            font = game.Content.Load<SpriteFont>("comic");
 
             map = new PlacedCard[19, 15];
             for (int i = 0; i < 19; i++)
@@ -534,11 +534,25 @@ namespace Ruetobas
         public static void OpenGameMenu()
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
             //buttons["ZZZZfullscreen"] = new Button(notReadyTexture, new Rectangle())
             inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
             inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
-            
+            buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(120, 235, 20, 20), ChangeFullscreen);
+            if (Game.isFullscreen == false)
+                buttons["ZZZZFullscreen"].texture = unTickedTexture;
+            textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
+            textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
+            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 285, 140, 80), CloseGameMenu);
+            buttons["ZZZZQuit"] = new Button(skurwielTexture, new Rectangle(10, 420, 69, 41), game.Exit);
+        }
+
+        public static void ChangeFullscreen()
+        {
+            game.ChangeFullscreen();
+            if (Game.isFullscreen)
+                buttons["ZZZZFullscreen"].texture = tickedTexture;
+            else
+                buttons["ZZZZFullscreen"].texture = unTickedTexture;
         }
 
         public static void CloseGameMenu()
@@ -552,6 +566,8 @@ namespace Ruetobas
             inputBoxes.Remove("ZZZZResolutionY");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
+            buttons.Remove("ZZZZFullscreen");
+            textBoxes.Remove("ZZZZFullscreentext");
             return;
         }
     }

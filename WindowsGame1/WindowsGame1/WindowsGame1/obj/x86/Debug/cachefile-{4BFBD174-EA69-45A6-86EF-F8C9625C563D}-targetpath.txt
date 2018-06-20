@@ -57,3 +57,4 @@ Content\SettingsButton.xnb
 Content\Transparent.xnb
 Content\CheckBoxTicked.xnb
 Content\CheckBoxUnTicked.xnb
+Content\comic.xnb

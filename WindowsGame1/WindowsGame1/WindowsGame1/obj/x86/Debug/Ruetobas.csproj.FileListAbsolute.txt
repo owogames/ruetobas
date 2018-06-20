@@ -146,3 +146,4 @@ C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Transparent.xnb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxTicked.xnb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxUnTicked.xnb
+C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\comic.xnb
