@@ -144,3 +144,5 @@ C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\Windo
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\SemiTransparent.xnb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\SettingsButton.xnb
 C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Transparent.xnb
+C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxTicked.xnb
+C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxUnTicked.xnb

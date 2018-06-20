@@ -514,6 +514,24 @@
       <Output>C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Transparent.xnb</Output>
       <Time>2018-06-20T13:37:33.2129885+02:00</Time>
     </Item>
+    <Item>
+      <Source>CheckBoxTicked.png</Source>
+      <Name>CheckBoxTicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxTicked.xnb</Output>
+      <Time>2018-06-20T17:02:15.3643564+02:00</Time>
+    </Item>
+    <Item>
+      <Source>CheckBoxUnTicked.png</Source>
+      <Name>CheckBoxUnTicked</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\rober\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxUnTicked.xnb</Output>
+      <Time>2018-06-20T17:02:15.3693529+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{4BFBD174-EA69-45A6-86EF-F8C9625C563D}</ContentProjectGUID>
