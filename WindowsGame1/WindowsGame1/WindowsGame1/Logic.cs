@@ -23,6 +23,10 @@ namespace Ruetobas
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
         public static Texture2D skurwielTexture;
+        public static Texture2D errorBackground;
+        public static Texture2D errorWindow;
+        public static Texture2D errorButton;
+        public static Texture2D emptyTextbox;
         public static Texture2D readyTexture;
         public static Texture2D notReadyTexture;
         public static Texture2D semiTransparentTexture;
@@ -59,6 +63,10 @@ namespace Ruetobas
             inputBoxes = new Dictionary<string, InputBox>();
             grids = new Dictionary<string, Grid>();
 
+            errorBackground = game.Content.Load<Texture2D>("errorBackground");
+            errorWindow = game.Content.Load<Texture2D>("tekstura");
+            emptyTextbox = game.Content.Load<Texture2D>("empty");
+            errorButton = game.Content.Load<Texture2D>("errorButton");
             unTickedTexture = game.Content.Load<Texture2D>("CheckBoxUnTicked");
             tickedTexture = game.Content.Load<Texture2D>("CheckBoxTicked");
             chatTexture = game.Content.Load<Texture2D>("tekstura");
@@ -87,6 +95,7 @@ namespace Ruetobas
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
             textBoxes["errorbox"] = new TextBox(transparentTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
+
         }
         
         public static void Update()
@@ -510,6 +519,13 @@ namespace Ruetobas
             }
         }
 
+        public static void AnnounceError(string error)
+        {
+            buttons["ZZZBACKGROUND"] = new Button(errorBackground, new Rectangle(0, 0, 1920, 1080), null);
+            textBoxes["ZZZERRORBOX"] = new TextBox(emptyTextbox, 15, Alignment.Centered, font, new Rectangle(560, 375, 800, 220), error);
+            buttons["ZZZBUTTON"] = new Button(errorWindow, new Rectangle(560, 300, 800, 330), null);
+            buttons["ZZZZBUTTON"] = new Button(errorButton, new Rectangle(885, 550, 150, 50), CloseError);
+        }
 
         public static void RemoveSelectedCard()
         {
@@ -526,7 +542,15 @@ namespace Ruetobas
             grids["BOARD"].fieldTexture[x, y] = cards[map[x, y].ID].texture;
         }
 
-        public static void Ready()
+        public static void CloseError()
+        {
+            buttons.Remove("ZZZBACKGROUND");
+            buttons.Remove("ZZZBUTTON");
+            buttons.Remove("ZZZZBUTTON");
+            textBoxes.Remove("ZZZERRORBOX");
+        }
+
+            public static void Ready()
         {
             game.TCPSend("READY");           
         }
