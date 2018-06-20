@@ -231,6 +231,14 @@ namespace Ruetobas
                     buttons["READY"].enabled = true;
                     buttons["READY"].texture = notReadyTexture;
                 }
+                if (data[0] == "BUFF")
+                {
+                    Player.FindByName(data[1].Trim()).AddBuff((Buff)int.Parse(data[2]));
+                }
+                if (data[0] == "DEBUFF")
+                {
+                    Player.FindByName(data[1].Trim()).RemoveBuff((Buff)int.Parse(data[2]));
+                }
                 if (data[0] == "OK")
                 {
                     if (data[1] == "READY")
@@ -496,7 +504,7 @@ namespace Ruetobas
                     textBoxes["CHAT"].AppendAndWrap("This player already has this effect applied");
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username;
+                    string line = "USE " + id.ToString() + " " + players[y].username + " 0";
                     RemoveSelectedCard();
                     game.TCPSend(line);
                 }
@@ -512,7 +520,7 @@ namespace Ruetobas
                     textBoxes["CHAT"].AppendAndWrap("This player doesn't have this effect applied");
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username + selectedRot.ToString();
+                    string line = "USE " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
                     RemoveSelectedCard();
                     game.TCPSend(line);
                 }
@@ -550,7 +558,7 @@ namespace Ruetobas
             textBoxes.Remove("ZZZERRORBOX");
         }
 
-            public static void Ready()
+        public static void Ready()
         {
             game.TCPSend("READY");           
         }
