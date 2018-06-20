@@ -467,6 +467,10 @@ namespace Ruetobas
                             textBox.scroll++;
                         else if (textBox.scroll > 0)
                             textBox.scroll--;
+
+                        if (textBox.lines.Count - textBox.scroll + 1 < textBox.lineCount)
+                            textBox.scroll = textBox.lines.Count - textBox.lineCount + 1;
+
                         i = -2;
                     }
                 }
