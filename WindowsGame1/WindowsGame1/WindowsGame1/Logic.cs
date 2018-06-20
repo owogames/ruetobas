@@ -592,6 +592,7 @@ namespace Ruetobas
             buttons.Remove("ZZZZdone");
             buttons.Remove("ZZZZFullscreen");
             textBoxes.Remove("ZZZZFullscreentext");
+            buttons.Remove("ZZZZQuit");
             return;
         }
     }
