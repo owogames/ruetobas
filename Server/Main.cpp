@@ -219,8 +219,6 @@ void removePlayer(int fd) {
 
 
 int main() {	
-	std::cout << " ╵ \n╴┌─\n │ \n\n\n ║ \n═╔═\n ║ " << std::endl;
-	
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);
