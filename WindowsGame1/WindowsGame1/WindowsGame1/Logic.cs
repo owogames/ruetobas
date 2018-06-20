@@ -373,8 +373,9 @@ namespace Ruetobas
 
         public static void HandClick(int x, int y)
         {
-            if (x == selectedCard && cards[cardHand[x]].cardType == CardType.Tunnel)
-                selectedRot = 1 - selectedRot;
+            if (x == selectedCard && (cards[cardHand[x]].cardType == CardType.Tunnel || 
+                (cards[cardHand[x]].cardType == CardType.Debuff && ((DebuffCard)cards[cardHand[x]]).buffType2 != Buff.None)))
+                    selectedRot = 1 - selectedRot;
             else selectedRot = 0;
             selectedCard = x;
         }
@@ -384,55 +385,81 @@ namespace Ruetobas
             if (selectedCard == -1)
                 return;
 
-            if (playerTurn != username)
+            if (cards[cardHand[selectedCard]].cardType == CardType.Tunnel)
             {
-                textBoxes["CHAT"].AppendAndWrap("You can only play cards during your turn");
-                return;
-            }
-            
-            if (players[yourPlayerId].buffs.Contains(Buff.Cart))
-            {
-                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your cart");
-                return;
-            }
+                if (playerTurn != username)
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You can only play cards during your turn");
+                    return;
+                }
 
-            if (players[yourPlayerId].buffs.Contains(Buff.Lantern))
-            {
-                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your lantern");
-                return;
-            }
+                if (players[yourPlayerId].buffs.Contains(Buff.Cart))
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your cart");
+                    return;
+                }
 
-            if (players[yourPlayerId].buffs.Contains(Buff.Pickaxe))
-            {
-                textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your pickaxe");
-                return;
-            }
+                if (players[yourPlayerId].buffs.Contains(Buff.Lantern))
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your lantern");
+                    return;
+                }
 
-            int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
-            if (result == 0)
-            {
-                game.TCPSend("PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString());
-                for (int i = selectedCard; i < 5; i++)
-                    cardHand[i] = cardHand[i + 1];
-                selectedCard = -1;
-                cardHand[5] = 0;
-                selectedRot = 0;
+                if (players[yourPlayerId].buffs.Contains(Buff.Pickaxe))
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your pickaxe");
+                    return;
+                }
+
+                int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
+                if (result == 0)
+                {
+                    string line = "PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString();
+                    RemoveSelectedCard();
+                    game.TCPSend(line);
+                }
+                else if (result == 1)
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You can only place card next to other card");
+                }
+                else if (result == 2)
+                {
+                    textBoxes["CHAT"].AppendAndWrap("Played card must match to its neighbours");
+                }
+                else if (result == 3)
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You cannot place card on occupied spot");
+                }
+                else if (result == 4)
+                {
+                    textBoxes["CHAT"].AppendAndWrap("You can only place tunnel cards");
+                }
             }
-            else if (result == 1)
+            else if (cards[cardHand[selectedCard]].cardType == CardType.Remove)
             {
-                textBoxes["CHAT"].AppendAndWrap("You can only place card next to other card");
+                if (cards[map[x, y].ID].cardType == CardType.Tunnel)
+                {
+                    string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
+                    RemoveSelectedCard();
+                    game.TCPSend(line);
+                }
+                else
+                {
+                    textBoxes["CHAT"].AppendAndWrap("This card must be used on placed tunnel");
+                }
             }
-            else if (result == 2)
+            else if (cards[cardHand[selectedCard]].cardType == CardType.Map)
             {
-                textBoxes["CHAT"].AppendAndWrap("Played card must match to its neighbours");
-            }
-            else if (result == 3)
-            {
-                textBoxes["CHAT"].AppendAndWrap("You cannot place card on occupied spot");
-            }
-            else if (result == 4)
-            {
-                textBoxes["CHAT"].AppendAndWrap("You can only place tunnel cards");
+                if (map[x, y].ID == 45)
+                {
+                    string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
+                    RemoveSelectedCard();
+                    game.TCPSend(line);
+                }
+                else
+                {
+                    textBoxes["CHAT"].AppendAndWrap("This card must be used on uncovered treasure card");
+                }
             }
         }
 
@@ -446,7 +473,12 @@ namespace Ruetobas
             {
                 if (players[y].buffs.Contains(((BuffCard)cards[id]).buffType))
                     textBoxes["CHAT"].AppendAndWrap("This player already has this effect applied");
-                else game.TCPSend("-------------------------------------------------------------------------------------------------------------------");
+                else
+                {
+                    string line = "USE " + id.ToString() + " " + players[y].username;
+                    RemoveSelectedCard();
+                    game.TCPSend(line);
+                }
             }
 
             if (cards[id].cardType == CardType.Debuff)
@@ -457,10 +489,24 @@ namespace Ruetobas
 
                 if (!players[y].buffs.Contains(buff))
                     textBoxes["CHAT"].AppendAndWrap("This player doesn't have this effect applied");
-                else game.TCPSend("-------------------------------------------------------------------------------------------------------------------");
+                else
+                {
+                    string line = "USE " + id.ToString() + " " + players[y].username + selectedRot.ToString();
+                    RemoveSelectedCard();
+                    game.TCPSend(line);
+                }
             }
         }
 
+
+        public static void RemoveSelectedCard()
+        {
+            for (int i = selectedCard; i < 5; i++)
+                cardHand[i] = cardHand[i + 1];
+            selectedCard = -1;
+            cardHand[5] = 0;
+            selectedRot = 0;
+        }
 
         public static void BuchnijLolka(int x, int y)
         {
