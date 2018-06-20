@@ -105,12 +105,24 @@ namespace Ruetobas
         public static Texture2D cursorTexture;
 
         public static float scale = 1.0f;
+        public static Vector2 resolution = new Vector2(1920, 1080);
+
+        public void ChangeResolution(float X, float Y)
+        {
+            int width = (int)X;
+            int height = (int)Y;
+            resolution = new Vector2(width, height);
+            scale = width / 1920.0f;
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.ApplyChanges();
+        }
 
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = (int)(1920 / scale);
-            graphics.PreferredBackBufferHeight = (int)(1080 / scale);
+            graphics.PreferredBackBufferWidth = (int)(resolution.X);
+            graphics.PreferredBackBufferHeight = (int)(resolution.Y);
             Content.RootDirectory = "Content";
         }
 
@@ -270,47 +282,69 @@ namespace Ruetobas
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
             pressedKeys = keyboardState.GetPressedKeys();
-            Vector2 mousePos = new Vector2(mouseState.X * scale, mouseState.Y * scale);
-            
+            Vector2 mousePos = new Vector2(mouseState.X / scale, mouseState.Y / scale);
+
+            List<string> UIelements = new List<string>();
+
+            foreach (KeyValuePair<string, Button> pair in Logic.buttons)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, TextBox> pair in Logic.textBoxes)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, InputBox> pair in Logic.inputBoxes)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            foreach (KeyValuePair<string, Grid> pair in Logic.grids)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
+            UIelements.Sort();
+
             //Left click
             if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
             {
                 int i;
-                for (i = Logic.buttons.Count - 1; i >= 0; i--)
+                for (i = UIelements.Count - 1; i >= 0; i--)
                 {
-                    if (Geo.RectContains(Logic.buttons.ElementAt(i).Value.location, mousePos) && Logic.buttons.ElementAt(i).Value.enabled)
+                    string name = UIelements[i];
+                    //Klikanie buttonów
+                    if (Logic.buttons.ContainsKey(name))
                     {
-                        Logic.buttons.ElementAt(i).Value.clickEvent();
-                        i = -2;
-                    }
-                }
-
-                if (i != -2)
-                for (i = Logic.inputBoxes.Count - 1; i >= 0; i--)
-                {
-                    if (Geo.RectContains(Logic.inputBoxes.ElementAt(i).Value.location, mousePos) && Logic.inputBoxes.ElementAt(i).Value.enabled)
-                    {
-                        if (activeInputBox != null)
-                            activeInputBox.active = false;
-                        activeInputBox = Logic.inputBoxes.ElementAt(i).Value;
-                        activeInputBox.active = true;
-                        i = -2;
-                    }
-
-                    if (i == 0)
-                    {
-                        if (activeInputBox != null)
+                        if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled)
                         {
-                            activeInputBox.active = false;
-                            activeInputBox = null;
+                            if (Logic.buttons[name].clickEvent != null)
+                                Logic.buttons[name].clickEvent();
+                            i = -1;
                         }
                     }
-                }
 
-                if (i != -2)
-                    for (i = Logic.grids.Count - 1; i >= 0; i--)
+                    if (Logic.textBoxes.ContainsKey(name))
                     {
-                        Grid grid = Logic.grids.ElementAt(i).Value;
+                        if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled)
+                        {
+                            i = -1;
+                        }
+                    }
+
+                    if (Logic.inputBoxes.ContainsKey(name))
+                    {
+                        if (Geo.RectContains(Logic.inputBoxes[name].location, mousePos) && Logic.inputBoxes[name].enabled)
+                        {
+                            if (activeInputBox != null)
+                                activeInputBox.active = false;
+                            activeInputBox = Logic.inputBoxes[name];
+                            activeInputBox.active = true;
+                            i = -2;
+                        }
+                    }
+
+                    if (Logic.grids.ContainsKey(name))
+                    {
+                        Grid grid = Logic.grids[name];
                         if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
                         {
                             int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
@@ -319,9 +353,19 @@ namespace Ruetobas
                             int tileY = pressY / (int)grid.fieldSize.Y;
                             if (grid.clickEvent != null && tileX >= 0 && tileX < grid.sizeX && tileY >= 0 && tileY < grid.sizeY)
                                 grid.clickEvent(tileX, tileY);
-                            i = -2;
+                            i = -1;
                         }
                     }
+                }
+
+                if (i == -1)
+                {
+                    if (activeInputBox != null)
+                    {
+                        activeInputBox.active = false;
+                        activeInputBox = null;
+                    }
+                }
             }
 
             //Right click
@@ -340,7 +384,7 @@ namespace Ruetobas
                 {
                     if (draggedGrid != null)
                     {
-                        draggedGrid.offset -= new Vector2(mouseState.X * scale - mouseBeforeState.X * scale, mouseState.Y * scale - mouseBeforeState.Y * scale) / draggedGrid.zoom;
+                        draggedGrid.offset -= new Vector2(mouseState.X / scale - mouseBeforeState.X / scale, mouseState.Y / scale - mouseBeforeState.Y / scale) / draggedGrid.zoom;
                     }
                 }
             }
@@ -581,7 +625,7 @@ namespace Ruetobas
             }
 
             //Rysowanie kursora
-            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X * scale) - 16, (int)(Mouse.GetState().Y * scale), 32, 32), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X / scale) - 16, (int)(Mouse.GetState().Y / scale), 32, 32), Color.White);
 
             spriteBatch.End();
 
