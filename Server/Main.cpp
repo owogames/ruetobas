@@ -198,13 +198,14 @@ void removePlayer(int fd) {
 			
 		if(fd == player_order[curr_player])
 			endGame(RUETOBAS);
+		else {
+			//zaktualizuj kolejność graczy i wskaźnik na gracza, którego jest tura
+			int p = player_order[curr_player];
+			player_order.erase(std::find(player_order.begin(), player_order.end(), fd));
+			if(p != player_order[curr_player])
+				curr_player--;
+		}
 	}
-	
-	//zaktualizuj kolejność graczy i wskaźnik na gracza, którego jest tura
-	int p = player_order[curr_player];
-	player_order.erase(std::find(player_order.begin(), player_order.end(), fd));
-	if(p != player_order[curr_player])
-		curr_player--;
 	
 	remove(fd);
 	usernames.erase(players[fd].name);
@@ -218,6 +219,8 @@ void removePlayer(int fd) {
 
 
 int main() {	
+	std::cout << " ╵ \n╴┌─\n │ \n\n\n ║ \n═╔═\n ║ " << std::endl;
+	
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);

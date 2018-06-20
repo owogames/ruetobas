@@ -207,8 +207,22 @@ std::pair<int, std::string> read() {
 					if(newfd != -1)
 						msg_queue.emplace(newfd, "");
 				}
-				else
-					msg_queue.emplace(fd, getMsg(fd));
+				else {
+					//rozdziel po enterach
+					std::string buff = getMsg(fd) + '\n';
+					std::string msg;
+					bool has_content = false;
+					for(auto c : buff) {
+						if(!isspace(c)) has_content = true;
+						if(c == '\n') {
+							if(has_content)
+								msg_queue.emplace(fd, msg);
+							has_content = false;
+							msg = "";
+						}
+						else msg.push_back(c);
+					}
+				}
 			}
 		}
 	}
