@@ -75,6 +75,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
+            buttons["menubutton"] = new Button(skurwielTexture, new Rectangle(10, 10, 20, 20), OpenGameMenu);
             textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
         
@@ -517,6 +518,26 @@ namespace Ruetobas
         public static void Ready()
         {
             game.TCPSend("READY");           
+        }
+
+        public static void OpenGameMenu()
+        {
+            buttons["ZZZBackground"] = new Button(skurwielTexture, new Rectangle(0, 0, 1920, 1080), null);
+            buttons["ZZZZdone"] = new Button(chatSendTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
+            inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
+            inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
+        }
+
+        public static void CloseGameMenu()
+        {
+            int newX = int.Parse(inputBoxes["ZZZZResolutionX"].text);
+            int newY = int.Parse(inputBoxes["ZZZZResolutionY"].text);
+            game.ChangeResolution(newX, newY);
+            
+            inputBoxes.Remove("ZZZZResolutionX");
+            inputBoxes.Remove("ZZZZResolutionY");
+            buttons.Remove("ZZZBackground");
+            buttons.Remove("ZZZZdone");
         }
     }
 }
