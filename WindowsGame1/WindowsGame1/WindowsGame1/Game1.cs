@@ -105,12 +105,24 @@ namespace Ruetobas
         public static Texture2D cursorTexture;
 
         public static float scale = 1.0f;
+        public static Vector2 resolution = new Vector2(1920, 1080);
+
+        public static void ChangeResolution(float X, float Y)
+        {
+            int width = (int)X;
+            int height = (int)Y;
+            resolution = new Vector2(width, height);
+            scale = width / 1920;
+            graphics.PreferredBackBufferWidth = width;
+            graphics.PreferredBackBufferHeight = height;
+            graphics.ApplyChanges();
+        }
 
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = (int)(1920 / scale);
-            graphics.PreferredBackBufferHeight = (int)(1080 / scale);
+            graphics.PreferredBackBufferWidth = (int)(resolution.X);
+            graphics.PreferredBackBufferHeight = (int)(resolution.Y);
             Content.RootDirectory = "Content";
         }
 

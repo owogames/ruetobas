@@ -75,6 +75,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
+            buttons["menubutton"] = new Button(skurwielTexture, new Rectangle(10, 10, 20, 20), OpenGameMenu);
             textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
         
@@ -517,6 +518,31 @@ namespace Ruetobas
         public static void Ready()
         {
             game.TCPSend("READY");           
+        }
+        
+        public static void Papiez()
+        {
+
+        }
+
+        public static void OpenGameMenu()
+        {
+            buttons["ZZZBackground"] = new Button(skurwielTexture, new Rectangle(0, 0, (int)Game.resolution.X, (int)Game.resolution.Y), Papiez);
+            buttons["ZZZZdone"] = new Button(chatSendTexture, new Rectangle((int)(Game.resolution.X / 2 - 160 * Game.scale), (int)(Game.resolution.Y / 2 - 155 * Game.scale), (int)(320 * Game.scale), (int)(210 * Game.scale)), CloseGameMenu);
+            inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
+            inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
+        }
+
+        public static void CloseGameMenu()
+        {
+            int newX = int.Parse(inputBoxes["ZZZZResolutionX"].text);
+            int newY = int.Parse(inputBoxes["ZZZZResolutionY"].text);
+            Game.ChangeResolution(newX, newY);
+            
+            inputBoxes.Remove("ZZZZResolutionX");
+            inputBoxes.Remove("ZZZZResolutionY");
+            buttons.Remove("ZZZBackground");
+            buttons.Remove("ZZZZdone");
         }
     }
 }
