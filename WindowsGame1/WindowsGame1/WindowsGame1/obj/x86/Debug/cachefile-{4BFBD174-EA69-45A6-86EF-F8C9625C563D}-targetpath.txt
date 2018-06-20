@@ -57,7 +57,7 @@ Content\Transparent.xnb
 Content\CheckBoxTicked.xnb
 Content\CheckBoxUnTicked.xnb
 Content\errorButton.xnb
+Content\errorBackground.xnb
 Content\empty.xnb
 Content\font.xnb
 Content\comic.xnb
-Content\errorBackground.xnb
