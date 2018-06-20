@@ -3,11 +3,11 @@
 ///@brief inicjalizuje planszę
 void initBoard();
 
-
-///@brief próbuje połozyć kartę na pozycji (x, y).
-///jeśli się uda, kładzie ją i zwraca true,
-///jeśli nie, nie kładzie jej i zwraca false.
-bool placeCard(int id, int x, int y, bool flip);
+///@brief sprawdza czy można położyć kartę na pozycji (x, y)
+void canPlaceCard(int id, int x, int y, bool flip);
+	
+///@brief kładzie kartę na pozycji (x, y)
+void placeCard(int id, int x, int y, bool flip);
 
 ///@brief sprawdza czy istnieje nieodryky skarb, który powinien być odkryry.
 ///jeśli tak, odkrywa go, ustawia id, x, y, flip, zwraca true
