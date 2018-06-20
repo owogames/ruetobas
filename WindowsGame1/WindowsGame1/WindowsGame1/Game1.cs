@@ -104,8 +104,8 @@ namespace Ruetobas
         
         public static Texture2D cursorTexture;
 
-        public static float scale = 1.0f;
-        public static Vector2 resolution = new Vector2(1920, 1080);
+        public static float scale = 1280.0f/1920.0f;
+        public static Vector2 resolution = new Vector2(1280, 720);
 
         public void ChangeResolution(float X, float Y)
         {

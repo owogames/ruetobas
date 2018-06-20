@@ -81,7 +81,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
-            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 20, 20), OpenGameMenu);
+            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
             textBoxes["errorbox"] = new TextBox(chatTexture, 10, Alignment.Centered, font, new Rectangle(210, 975, 1500, 75));
         }
         
