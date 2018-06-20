@@ -519,16 +519,11 @@ namespace Ruetobas
         {
             game.TCPSend("READY");           
         }
-        
-        public static void Papiez()
-        {
-
-        }
 
         public static void OpenGameMenu()
         {
-            buttons["ZZZBackground"] = new Button(skurwielTexture, new Rectangle(0, 0, (int)Game.resolution.X, (int)Game.resolution.Y), Papiez);
-            buttons["ZZZZdone"] = new Button(chatSendTexture, new Rectangle((int)(Game.resolution.X / 2 - 160 * Game.scale), (int)(Game.resolution.Y / 2 - 155 * Game.scale), (int)(320 * Game.scale), (int)(210 * Game.scale)), CloseGameMenu);
+            buttons["ZZZBackground"] = new Button(skurwielTexture, new Rectangle(0, 0, 1920, 1080), null);
+            buttons["ZZZZdone"] = new Button(chatSendTexture, new Rectangle(800, 385, 320, 210), CloseGameMenu);
             inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
             inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
         }
@@ -537,7 +532,7 @@ namespace Ruetobas
         {
             int newX = int.Parse(inputBoxes["ZZZZResolutionX"].text);
             int newY = int.Parse(inputBoxes["ZZZZResolutionY"].text);
-            Game.ChangeResolution(newX, newY);
+            game.ChangeResolution(newX, newY);
             
             inputBoxes.Remove("ZZZZResolutionX");
             inputBoxes.Remove("ZZZZResolutionY");
