@@ -34,7 +34,8 @@ namespace Ruetobas
         public static Texture2D settingsTexture;
         public static Texture2D unTickedTexture;
         public static Texture2D tickedTexture;
-        public static Texture2D[] cardTexture = new Texture2D[46];
+        public static Texture2D[] buffTexture = new Texture2D[3];
+        public static Texture2D[] cardTexture = new Texture2D[73];
         public static SpriteFont font;
 
         public static PlacedCard[,] map;
@@ -78,8 +79,11 @@ namespace Ruetobas
             semiTransparentTexture = game.Content.Load<Texture2D>("SemiTransparent");
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
-            for (int i = 0; i <= 45; i++)
+            for (int i = 0; i <= 72; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
+            buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
+            buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
+            buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
 
             font = game.Content.Load<SpriteFont>("comic");
 
@@ -308,7 +312,6 @@ namespace Ruetobas
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
-                //textBoxes["PLAYERLIST"] = new TextBox(chatTexture, 1, Alignment.Left, font, new Rectangle(1680, 60, 240, 1020));
             }
             else
             {
@@ -408,6 +411,13 @@ namespace Ruetobas
             spriteBatch.DrawString(font, players[y].username, new Vector2(location.X + 5, location.Y + 5), Color.White);
             spriteBatch.DrawString(font, "Score: " + players[y].score.ToString(), new Vector2(location.X + 5, location.Y + 5 + font.LineSpacing), Color.White);
             spriteBatch.DrawString(font, "Role: " + players[y].playerClass.ToString(), new Vector2(location.X + 5, location.Y + 5 + 2 * font.LineSpacing), Color.White);
+
+            int buffCount = 0;
+            foreach (Buff buff in players[y].buffs)
+            {
+                spriteBatch.Draw(buffTexture[(int)buff - 1], new Rectangle(location.X + 5 + 48 * buffCount, location.Y + 5 + 3 * font.LineSpacing, 48, 48), Color.White);
+                buffCount++;
+            }
         }
 
 
@@ -538,6 +548,7 @@ namespace Ruetobas
             }
         }
 
+
         public static void AnnounceError(string error)
         {
             buttons["ZZZBACKGROUND"] = new Button(errorBackground, new Rectangle(0, 0, 1920, 1080), null);
@@ -553,12 +564,6 @@ namespace Ruetobas
             selectedCard = -1;
             cardHand[5] = 0;
             selectedRot = 0;
-        }
-
-        public static void BuchnijLolka(int x, int y)
-        {
-            map[x, y].ID = rand.Next(1, 44);
-            grids["BOARD"].fieldTexture[x, y] = cards[map[x, y].ID].texture;
         }
 
         public static void CloseError()
@@ -577,7 +582,6 @@ namespace Ruetobas
         public static void OpenGameMenu()
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            //buttons["ZZZZfullscreen"] = new Button(notReadyTexture, new Rectangle())
             inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
             inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
             buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(120, 235, 20, 20), ChangeFullscreen);
