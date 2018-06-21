@@ -5,7 +5,8 @@ add_executable(Main Main.cpp
                     StringProcessing.cpp 
                     Tunnel.cpp
                     Player.cpp
-                    Board.cpp)
+                    Board.cpp
+                    Cards.cpp)
 if(WIN32)
   target_link_libraries(Main wsock32 ws2_32)
 endif()

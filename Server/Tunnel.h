@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 ///karta, która jest tunelem
@@ -9,6 +11,3 @@ struct Tunnel {
 	///rodzaj tunelu
 	enum {NORMAL, LADDER, NOGOLD, CRYSTAL, GOLD} type;
 };
-
-///
-std::vector<Tunnel> parseTunnels(const char* file); 

@@ -22,6 +22,7 @@ namespace Ruetobas
             this.username = username;
             score = 0;
             playerClass = PlayerClass.Unknown;
+            buffs = new List<Buff>();
         }
 
         public bool AddBuff(Buff buff)

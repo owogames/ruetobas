@@ -46,7 +46,7 @@ namespace Ruetobas
             this.font = font;
             this.location = location;
             lines = new List<string>();
-            lineCount = location.Height / font.LineSpacing;
+            lineCount = (location.Height - 2 * margin) / font.LineSpacing;
         }
         public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location, string line)
         {

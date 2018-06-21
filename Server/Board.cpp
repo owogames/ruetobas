@@ -1,5 +1,5 @@
 #include "Board.h"
-#include "Tunnel.h"
+#include "Cards.h"
 #include <algorithm>
 #include <queue>
 #include <tuple>
@@ -18,7 +18,7 @@ void initBoard() {
 		for(int j = 0; j < 15; j++)
 			board[i][j] = {0, false};
 
-	tunnels = parseTunnels("../karty_normalne.txt");
+	tunnels = getTunnels();
 	board[5][7] = make_pair(1, 0);
 	board[13][7] = make_pair(45, 0);
 	board[13][5] = make_pair(45, 0);
@@ -33,16 +33,16 @@ void initBoard() {
 	random_shuffle(t, t + 3);
 }
 
-bool placeCard(int id, int x, int y, bool flip) {
-	
+bool canPlaceCard(int id, int x, int y, bool flip) {
 	if (x < 1 || x > 17 || y < 1 || y > 13)
 		return false;
 	if (board[x][y] != make_pair(0, false))
 		return false;
-
-	board[x][y] = make_pair(id, flip);
-
 	return true;
+}
+
+void placeCard(int id, int x, int y, bool flip) {
+	board[x][y] = make_pair(id, flip);
 }
 
 bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
