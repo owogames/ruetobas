@@ -6,7 +6,11 @@
 #include "Cards.h"
 #include "Tunnel.h"
 
+static int card_type[1000];
 static std::vector<Tunnel> tunnels;
+static int buff_id[1000];
+static int debuff_id[2][1000];
+
 
 bool loadCards(std::string path) {
 	
@@ -17,9 +21,10 @@ bool loadCards(std::string path) {
 	}
 	
 	bool ok = true;
+	int card_id = 0;
 	
 	do {
-		char c;
+		char c = 0;
 		ifs >> c;
 		
 		switch(c) {
@@ -44,19 +49,38 @@ bool loadCards(std::string path) {
 				else if(c == '2') tunnel.type = Tunnel::NOGOLD;
 				else if(c == '3') tunnel.type = Tunnel::CRYSTAL;
 				else if(c == '4') tunnel.type = Tunnel::GOLD;
+			
+				tunnels.push_back(tunnel);
+					
+				card_type[card_id++] = CARD_TUNNEL;
 				
-				
-				if(ifs.good())
-					tunnels.push_back(tunnel);
-				else
-					ok = false;
 				break;
 				
 			case 'B':
-				//TODO
+				int buff;
+				ifs >> buff;
+				buff_id[card_id++] = buff;
+				card_type[card_id++] = CARD_BUFF;
 				break;
 				
-			//TODO...
+			case 'D':
+				int debuff0, debuff1;
+				ifs >> debuff0 >> debuff1;
+				debuff_id[0][card_id  ] = debuff0;
+				debuff_id[1][card_id++] = debuff1;
+				
+				card_type[card_id++] = CARD_DEBUFF;
+				break;
+				
+			case 'M':
+				card_type[card_id++] = CARD_MAP;
+				
+			case 'C':
+				card_type[card_id++] = CARD_CRUSH;
+				
+				
+			default:
+				ok = false;
 		}
 		
 		
@@ -69,19 +93,16 @@ std::vector<Tunnel> getTunnels() {
 	return tunnels;
 }
 
-
 int cardType(int card_id) {
-	
+	return card_type[id];
 }
 
 int buffId(int card_id) {
-	//TODO
-	return 0;
+	return buff_id[id];
 }
 
 int debuffId(int card_id, int flip) {
-	//TODO
-	return 0;
+	return debuff_id[flip][card_id];
 }
 
 
