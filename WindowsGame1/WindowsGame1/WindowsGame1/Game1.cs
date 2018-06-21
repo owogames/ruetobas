@@ -286,165 +286,207 @@ namespace Ruetobas
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
 
-            mouseState = Mouse.GetState();
-            keyboardState = Keyboard.GetState();
-            pressedKeys = keyboardState.GetPressedKeys();
-            Vector2 mousePos = new Vector2(mouseState.X / scale.X, mouseState.Y / scale.Y);
-
-            List<string> UIelements = new List<string>();
-
-            foreach (KeyValuePair<string, Button> pair in Logic.buttons)
-                if (pair.Value.enabled)
-                    UIelements.Add(pair.Key);
-
-            foreach (KeyValuePair<string, TextBox> pair in Logic.textBoxes)
-                if (pair.Value.enabled)
-                    UIelements.Add(pair.Key);
-
-            foreach (KeyValuePair<string, InputBox> pair in Logic.inputBoxes)
-                if (pair.Value.enabled)
-                    UIelements.Add(pair.Key);
-
-            foreach (KeyValuePair<string, Grid> pair in Logic.grids)
-                if (pair.Value.enabled)
-                    UIelements.Add(pair.Key);
-
-            UIelements.Sort();
-
-            //Left click
-            if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
+            if (this.IsActive)
             {
-                int i;
-                for (i = UIelements.Count - 1; i >= 0; i--)
+                mouseState = Mouse.GetState();
+                keyboardState = Keyboard.GetState();
+                pressedKeys = keyboardState.GetPressedKeys();
+                Vector2 mousePos = new Vector2(mouseState.X / scale.X, mouseState.Y / scale.Y);
+
+                List<string> UIelements = new List<string>();
+
+                foreach (KeyValuePair<string, Button> pair in Logic.buttons)
+                    if (pair.Value.enabled)
+                        UIelements.Add(pair.Key);
+
+                foreach (KeyValuePair<string, TextBox> pair in Logic.textBoxes)
+                    if (pair.Value.enabled)
+                        UIelements.Add(pair.Key);
+
+                foreach (KeyValuePair<string, InputBox> pair in Logic.inputBoxes)
+                    if (pair.Value.enabled)
+                        UIelements.Add(pair.Key);
+
+                foreach (KeyValuePair<string, Grid> pair in Logic.grids)
+                    if (pair.Value.enabled)
+                        UIelements.Add(pair.Key);
+
+                UIelements.Sort();
+
+                //Left click
+                if (mouseState.LeftButton == ButtonState.Pressed && mouseBeforeState.LeftButton == ButtonState.Released)
                 {
-                    string name = UIelements[i];
-                    //Klikanie buttonów
-                    if (Logic.buttons.ContainsKey(name))
+                    int i;
+                    for (i = UIelements.Count - 1; i >= 0; i--)
                     {
-                        if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled)
+                        string name = UIelements[i];
+                        //Klikanie buttonów
+                        if (Logic.buttons.ContainsKey(name))
                         {
-                            if (Logic.buttons[name].clickEvent != null)
-                                Logic.buttons[name].clickEvent();
-                            i = -1;
+                            if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled)
+                            {
+                                if (Logic.buttons[name].clickEvent != null)
+                                    Logic.buttons[name].clickEvent();
+                                i = -1;
+                            }
+                        }
+
+                        if (Logic.textBoxes.ContainsKey(name))
+                        {
+                            if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled)
+                            {
+                                i = -1;
+                            }
+                        }
+
+                        if (Logic.inputBoxes.ContainsKey(name))
+                        {
+                            if (Geo.RectContains(Logic.inputBoxes[name].location, mousePos) && Logic.inputBoxes[name].enabled)
+                            {
+                                if (activeInputBox != null)
+                                    activeInputBox.active = false;
+                                activeInputBox = Logic.inputBoxes[name];
+                                activeInputBox.active = true;
+                                i = -2;
+                            }
+                        }
+
+                        if (Logic.grids.ContainsKey(name))
+                        {
+                            Grid grid = Logic.grids[name];
+                            if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
+                            {
+                                int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
+                                int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
+                                int tileX = pressX / (int)grid.fieldSize.X;
+                                int tileY = pressY / (int)grid.fieldSize.Y;
+                                if (grid.clickEvent != null && tileX >= 0 && tileX < grid.sizeX && tileY >= 0 && tileY < grid.sizeY)
+                                    grid.clickEvent(tileX, tileY);
+                                i = -1;
+                            }
                         }
                     }
 
-                    if (Logic.textBoxes.ContainsKey(name))
+                    if (i == -1)
                     {
-                        if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled)
+                        if (activeInputBox != null)
                         {
-                            i = -1;
-                        }
-                    }
-
-                    if (Logic.inputBoxes.ContainsKey(name))
-                    {
-                        if (Geo.RectContains(Logic.inputBoxes[name].location, mousePos) && Logic.inputBoxes[name].enabled)
-                        {
-                            if (activeInputBox != null)
-                                activeInputBox.active = false;
-                            activeInputBox = Logic.inputBoxes[name];
-                            activeInputBox.active = true;
-                            i = -2;
-                        }
-                    }
-
-                    if (Logic.grids.ContainsKey(name))
-                    {
-                        Grid grid = Logic.grids[name];
-                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
-                        {
-                            int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
-                            int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
-                            int tileX = pressX / (int)grid.fieldSize.X;
-                            int tileY = pressY / (int)grid.fieldSize.Y;
-                            if (grid.clickEvent != null && tileX >= 0 && tileX < grid.sizeX && tileY >= 0 && tileY < grid.sizeY)
-                                grid.clickEvent(tileX, tileY);
-                            i = -1;
+                            activeInputBox.active = false;
+                            activeInputBox = null;
                         }
                     }
                 }
 
-                if (i == -1)
+                //Right click
+                if (mouseState.RightButton == ButtonState.Pressed)
                 {
-                    if (activeInputBox != null)
+                    if (mouseBeforeState.RightButton == ButtonState.Released)
                     {
-                        activeInputBox.active = false;
-                        activeInputBox = null;
+                        for (int i = Logic.grids.Count - 1; i >= 0; i--)
+                        {
+                            Grid grid = Logic.grids.ElementAt(i).Value;
+                            if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
+                                draggedGrid = grid;
+                        }
                     }
-                }
-            }
-
-            //Right click
-            if (mouseState.RightButton == ButtonState.Pressed)
-            {
-                if (mouseBeforeState.RightButton == ButtonState.Released)
-                {
-                    for (int i = Logic.grids.Count - 1; i >= 0; i--)
+                    else
                     {
-                        Grid grid = Logic.grids.ElementAt(i).Value;
-                        if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
-                            draggedGrid = grid;
+                        if (draggedGrid != null)
+                        {
+                            draggedGrid.offset -= new Vector2(mouseState.X / scale.X - mouseBeforeState.X / scale.X, mouseState.Y / scale.Y - mouseBeforeState.Y / scale.Y) / draggedGrid.zoom;
+                        }
                     }
                 }
                 else
                 {
-                    if (draggedGrid != null)
-                    {
-                        draggedGrid.offset -= new Vector2(mouseState.X / scale.X - mouseBeforeState.X / scale.X, mouseState.Y / scale.Y - mouseBeforeState.Y / scale.Y) / draggedGrid.zoom;
-                    }
+                    draggedGrid = null;
                 }
-            }
-            else
-            {
-                draggedGrid = null;
-            }
 
-            //Konwersja klawiszy do inputBoxa
-            if(activeInputBox != null)
-            {
-                if (keyboardState.IsKeyDown(Keys.LeftControl))
+                //Konwersja klawiszy do inputBoxa
+                if (activeInputBox != null)
                 {
-                    if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
-                        activeInputBox.Append(GetClipboard());
-                }
-                else if (keyboardState.IsKeyDown(Keys.Delete))
-                    activeInputBox.Clear();
-                else if (pressedKeys.Length > 0)
-                {
-                    foreach (Keys key in pressedKeys)
+                    if (keyboardState.IsKeyDown(Keys.LeftControl))
                     {
-                        char charkey;
-                        if (keyboardBeforeState.IsKeyUp(key) &&
-                            TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
+                        if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
+                            activeInputBox.Append(GetClipboard());
+                    }
+                    else if (keyboardState.IsKeyDown(Keys.Delete))
+                        activeInputBox.Clear();
+                    else if (pressedKeys.Length > 0)
+                    {
+                        foreach (Keys key in pressedKeys)
                         {
-                            activeInputBox.Append(charkey);
+                            char charkey;
+                            if (keyboardBeforeState.IsKeyUp(key) &&
+                                TryConvertKeys(key, out charkey, keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift)))
+                            {
+                                activeInputBox.Append(charkey);
+                            }
                         }
                     }
                 }
-            }
-            
 
-            //Backspace
-            if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null)
-            {
-                if(backspaceHeld == false)
+
+                //Backspace
+                if (keyboardState.IsKeyDown(Keys.Back) && activeInputBox != null)
                 {
-                    if (activeInputBox.text.Length > 0)
-                        activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
-                    backspaceStart = gameTime.TotalGameTime.TotalMilliseconds;
+                    if (backspaceHeld == false)
+                    {
+                        if (activeInputBox.text.Length > 0)
+                            activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                        backspaceStart = gameTime.TotalGameTime.TotalMilliseconds;
+                    }
+                    if (backspaceHeld && gameTime.TotalGameTime.TotalMilliseconds - backspaceStart > 500 && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 25)
+                    {
+                        backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
+                        if (activeInputBox.text.Length > 0)
+                            activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                    }
+                    backspaceHeld = true;
                 }
-                if(backspaceHeld && gameTime.TotalGameTime.TotalMilliseconds - backspaceStart > 500 && gameTime.TotalGameTime.TotalMilliseconds - backspaceTimer > 25)
+                else
                 {
-                    backspaceTimer = gameTime.TotalGameTime.TotalMilliseconds;
-                    if (activeInputBox.text.Length > 0)
-                        activeInputBox.text = activeInputBox.text.Remove(activeInputBox.text.Length - 1);
+                    backspaceHeld = false;
                 }
-                backspaceHeld = true;
-            }
-            else
-            {
-                backspaceHeld = false;
+
+                //Scroll
+                int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
+                if (scrollWheelDelta != 0)
+                {
+                    int i;
+                    for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
+                    {
+                        TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
+                        if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled && textBox.canScroll)
+                        {
+                            if (scrollWheelDelta < 0)
+                                textBox.scroll++;
+                            else if (textBox.scroll > 0)
+                                textBox.scroll--;
+
+                            if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
+                                textBox.scroll = textBox.lines.Count - textBox.lineCount;
+
+                            if (textBox.scroll < 0)
+                                textBox.scroll = 0;
+
+                            i = -2;
+                        }
+                    }
+
+                    if (i != -2)
+                        for (i = Logic.grids.Count - 1; i >= 0; i--)
+                        {
+                            Grid grid = Logic.grids.ElementAt(i).Value;
+                            if (Geo.RectContains(grid.location, mousePos) && grid.enabled)
+                            {
+                                if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
+                                    grid.zoom -= 0.1f;
+                                else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
+                                    grid.zoom += 0.1f;
+                            }
+                        }
+                }
             }
 
             //Wy³¹czanie nieaktywnych obiektów
@@ -452,45 +494,6 @@ namespace Ruetobas
                 activeInputBox = null;
             if (draggedGrid != null && !draggedGrid.enabled)
                 draggedGrid = null;
-
-            //Scroll
-            int scrollWheelDelta = mouseState.ScrollWheelValue - mouseBeforeState.ScrollWheelValue;
-            if (scrollWheelDelta != 0)
-            {
-                int i;
-                for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
-                {
-                    TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                    if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled && textBox.canScroll)
-                    {
-                        if (scrollWheelDelta < 0)
-                            textBox.scroll++;
-                        else if (textBox.scroll > 0)
-                            textBox.scroll--;
-
-                        if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
-                            textBox.scroll = textBox.lines.Count - textBox.lineCount;
-
-                        if (textBox.scroll < 0)
-                            textBox.scroll = 0;
-
-                        i = -2;
-                    }
-                }
-
-                if (i != -2)
-                for (i = Logic.grids.Count - 1; i >= 0; i--)
-                {
-                    Grid grid = Logic.grids.ElementAt(i).Value;
-                    if (Geo.RectContains(grid.location, mousePos) && grid.enabled)
-                    {
-                        if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
-                            grid.zoom -= 0.1f;
-                        else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
-                            grid.zoom += 0.1f;
-                    }
-                }
-            }
 
             //Cofanie gdy przejedziesz grida za bardzo
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)

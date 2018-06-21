@@ -105,7 +105,7 @@ namespace Ruetobas
         public static void Update()
         {
             //Wychodzenie z gry
-            if (game.keyboardState.IsKeyDown(Keys.Escape) && game.keyboardBeforeState.IsKeyUp(Keys.Escape))
+            if (game.keyboardState.IsKeyDown(Keys.Escape) && game.keyboardBeforeState.IsKeyUp(Keys.Escape) && game.IsActive)
             {
                 if (game.tcpThread != null)
                 {
@@ -130,7 +130,7 @@ namespace Ruetobas
                 grids["CARDS"].offset = new Vector2(grids["CARDS"].location.Width / 2 - grids["CARDS"].margin, grids["CARDS"].location.Height / 2 - grids["CARDS"].margin);
             }
 
-            if (game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
+            if (game.IsActive && game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
                 SendChatMessage();
         }
 
