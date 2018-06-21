@@ -116,11 +116,11 @@ namespace Ruetobas
             }
 
             //Żeby Playerlist się za bardzo nie przesuwał
-            if (grids.ContainsKey("PLAYERLIST"))
+            if (grids.ContainsKey("ZPLAYERLIST"))
             {
-                grids["PLAYERLIST"].offset.Y = Math.Max(grids["PLAYERLIST"].offset.Y, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
-                grids["PLAYERLIST"].offset.X = grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin;
-                grids["PLAYERLIST"].zoom = 1.0f;
+                grids["ZPLAYERLIST"].offset.Y = Math.Max(grids["ZPLAYERLIST"].offset.Y, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
+                grids["ZPLAYERLIST"].offset.X = grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin;
+                grids["ZPLAYERLIST"].zoom = 1.0f;
             }
 
             //Żeby karty się nie przesuwały
@@ -252,11 +252,11 @@ namespace Ruetobas
                 }
                 if (data[0] == "BUFF")
                 {
-                    Player.FindByName(data[1].Trim()).AddBuff((Buff)int.Parse(data[2]));
+                    Player.FindByName(data[2].Trim()).AddBuff((Buff)int.Parse(data[3]));
                 }
                 if (data[0] == "DEBUFF")
                 {
-                    Player.FindByName(data[1].Trim()).RemoveBuff((Buff)int.Parse(data[2]));
+                    Player.FindByName(data[2].Trim()).RemoveBuff((Buff)int.Parse(data[3]));
                 }
                 if (data[0] == "OK")
                 {
