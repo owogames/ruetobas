@@ -189,19 +189,21 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 
 
 bool canUseCrush(int x, int y) {
-	
+	return tunnels[board[x][y].first].type == Tunnel::NORMAL || 
+		   tunnels[board[x][y].first].type == Tunnel::CRYSTAL; 
 }
 
 void useCrush(int x, int y) {
-	
+	board[x][y] = {0, false};
 }
 
 
 bool canUseMap(int x, int y) {
-
+	return tunnels[board[x][y].first].type == Tunnel::GOLD || 
+		   tunnels[board[x][y].first].type == Tunnel::NOGOLD;
 }
 
 int useMap(int x, int y) {
-	
+	return board[x][y].first;
 }
 
