@@ -489,14 +489,14 @@ namespace Ruetobas
             if (selectedCard == -1)
                 return;
 
+            if (playerTurn != username)
+            {
+                textBoxes["HELP"].lines[0] = "You can only play cards during your turn";
+                return;
+            }
+
             if (cards[cardHand[selectedCard]].cardType == CardType.Tunnel)
             {
-                if (playerTurn != username)
-                {
-                    textBoxes["HELP"].lines[0] = "You can only play cards during your turn";
-                    return;
-                }
-
                 if (players[yourPlayerId].buffs.Contains(Buff.Cart))
                 {
                     textBoxes["HELP"].lines[0] = "You cannot play tunnel cards unless you repair your cart";
@@ -582,6 +582,12 @@ namespace Ruetobas
         {
             if (selectedCard == -1)
                 return;
+
+            if (playerTurn != username)
+            {
+                textBoxes["HELP"].lines[0] = "You can only play cards during your turn";
+                return;
+            }
 
             int id = cardHand[selectedCard];
             if (cards[id].cardType == CardType.Buff)
