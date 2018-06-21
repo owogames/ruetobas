@@ -268,6 +268,12 @@ void doMap(int fd, int id, int x, int y) {
 		endGame(RUETOBAS);
 }
 
+void doDiscard(int fd, int id) {
+	newCard(fd, id);
+	if(!nextPlayer())
+		endGame(RUETOBAS);
+}
+
 ////////////////////////////////////////////////GŁÓWNA PĘTLA, OBSŁUGA BŁĘDÓW//////////////////////////////////////////////////////////////
 
 
@@ -276,7 +282,7 @@ int main() {
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);
-	loadCards("../karty_normalne,txt");
+	loadCards("../karty_normalne.txt");
 	
 	while(true) {
 		int fd;
@@ -428,6 +434,27 @@ int main() {
 					}
 				}
 			}
+		}
+		
+		else if(command == "DISCARD") {
+			std::stringstream ss(text);
+			int id;
+			ss >> id;
+			
+			//algorytm copiego pasty
+			if(!running)
+				write(fd, "ERROR The game is not yet running");
+			
+			else if(ss.fail())
+				write(fd, "ERROR Incorrect command syntax");
+				
+			else if(fd != player_order[curr_player])
+				write(fd, "ERROR Not your turn");
+				
+			else if(!players[fd].hasCard(id))
+				write(fd, "ERROR You don't have that card");
+			else
+				doDiscard(fd, id);
 		}
 		
 		
