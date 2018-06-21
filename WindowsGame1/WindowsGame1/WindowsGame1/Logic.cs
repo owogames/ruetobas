@@ -26,6 +26,7 @@ namespace Ruetobas
         public static Texture2D errorBackground;
         public static Texture2D errorWindow;
         public static Texture2D errorButton;
+        public static Texture2D discardTexture;
         public static Texture2D emptyTextbox;
         public static Texture2D readyTexture;
         public static Texture2D notReadyTexture;
@@ -84,6 +85,7 @@ namespace Ruetobas
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
             buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
             buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
+            discardTexture = game.Content.Load<Texture2D>("buttondiscard");
 
             font = game.Content.Load<SpriteFont>("comic");
 
@@ -296,16 +298,17 @@ namespace Ruetobas
                 textBoxes.Clear();
 
                 ReadCards();
-                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 670));
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 670), "You joined the game");
                 inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 720, 490, 60), Color.White, Color.LightGray, "Enter message...", 120);
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1870, 720, 50, 60), SendChatMessage);
-                textBoxes["HELP"] = new TextBox(errorBackground, 5, Alignment.Centered, font, new Rectangle(0, 720, 1380, 60));
+                textBoxes["HELP"] = new TextBox(errorBackground, 5, Alignment.Centered, font, new Rectangle(0, 720, 1380, 60), "");
+                textBoxes["HELP"].canScroll = false;
                 //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
                 buttons["CHARACTER"] = new Button(chatTexture, new Rectangle(0, 780, 180, 300), null);
                 textBoxes["ACTUALPLAYER"] = new TextBox(skurwielTexture, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
                 buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
-                buttons["DISCARD"] = new Button(skurwielTexture, new Rectangle(1380, 780, 540, 75), null);
+                buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
                 buttons["REMOVE"] = new Button(skurwielTexture, new Rectangle(1380, 855, 540, 75), null);
                 buttons["MENU"] = new Button(skurwielTexture, new Rectangle(1380, 930, 540, 75), null);
                 buttons["EXIT"] = new Button(skurwielTexture, new Rectangle(1380, 1005, 540, 75), null);
@@ -323,7 +326,7 @@ namespace Ruetobas
         {
             buttons["PLAYERLISTSET"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
             grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 120), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
-            grids["ZPLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
+            grids["ZPLAYERLIST"].offset = new Vector2(grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
         }
 
         public static void HidePlayerList()
@@ -374,6 +377,18 @@ namespace Ruetobas
             //2 - tunele wychodzące z karty muszą pasować do sąsiednich kart
             //3 - karta musi być położona na pustym polu
             //4 - karta musi tunelem
+        }
+
+        public static void DiscardCard()
+        {
+            if (selectedCard == -1 || cardHand[selectedCard] == 0)
+            {
+                textBoxes["HELP"].lines[0] = "Select a card you would like to discard first";
+                return;
+            }
+
+            int id = cardHand[selectedCard];
+            game.TCPSend("DISCARD " + id.ToString());
         }
 
 
@@ -439,25 +454,25 @@ namespace Ruetobas
             {
                 if (playerTurn != username)
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You can only play cards during your turn");
+                    textBoxes["HELP"].lines[0] = "You can only play cards during your turn";
                     return;
                 }
 
                 if (players[yourPlayerId].buffs.Contains(Buff.Cart))
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your cart");
+                    textBoxes["HELP"].lines[0] = "You cannot play tunnel cards unless you repair your cart";
                     return;
                 }
 
                 if (players[yourPlayerId].buffs.Contains(Buff.Lantern))
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your lantern");
+                    textBoxes["HELP"].lines[0] = "You cannot play tunnel cards unless you repair your lantern";
                     return;
                 }
 
                 if (players[yourPlayerId].buffs.Contains(Buff.Pickaxe))
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You cannot play tunnel cards unless you repair your pickaxe");
+                    textBoxes["HELP"].lines[0] = "You cannot play tunnel cards unless you repair your pickaxe";
                     return;
                 }
 
@@ -470,19 +485,19 @@ namespace Ruetobas
                 }
                 else if (result == 1)
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You can only place card next to other card");
+                    textBoxes["HELP"].lines[0] = "You can only place card next to other card";
                 }
                 else if (result == 2)
                 {
-                    textBoxes["CHAT"].AppendAndWrap("Played card must match to its neighbours");
+                    textBoxes["HELP"].lines[0] = "Played card must match to its neighbours";
                 }
                 else if (result == 3)
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You cannot place card on occupied spot");
+                    textBoxes["HELP"].lines[0] = "You cannot place card on occupied spot";
                 }
                 else if (result == 4)
                 {
-                    textBoxes["CHAT"].AppendAndWrap("You can only place tunnel cards");
+                    textBoxes["HELP"].lines[0] = "You can only place tunnel cards";
                 }
             }
             else if (cards[cardHand[selectedCard]].cardType == CardType.Remove)
@@ -495,7 +510,7 @@ namespace Ruetobas
                 }
                 else
                 {
-                    textBoxes["CHAT"].AppendAndWrap("This card must be used on placed tunnel");
+                    textBoxes["HELP"].lines[0] = "This card must be used on placed tunnel";
                 }
             }
             else if (cards[cardHand[selectedCard]].cardType == CardType.Map)
@@ -508,7 +523,7 @@ namespace Ruetobas
                 }
                 else
                 {
-                    textBoxes["CHAT"].AppendAndWrap("This card must be used on uncovered treasure card");
+                    textBoxes["HELP"].lines[0] = "This card must be used on uncovered treasure card";
                 }
             }
         }
@@ -522,7 +537,7 @@ namespace Ruetobas
             if (cards[id].cardType == CardType.Buff)
             {
                 if (players[y].buffs.Contains(((BuffCard)cards[id]).buffType))
-                    textBoxes["CHAT"].AppendAndWrap("This player already has this effect applied");
+                    textBoxes["HELP"].lines[0] = "This player already has this effect applied";
                 else
                 {
                     string line = "USE " + id.ToString() + " " + players[y].username + " 0";
@@ -538,7 +553,7 @@ namespace Ruetobas
                     buff = ((DebuffCard)cards[id]).buffType2;
 
                 if (!players[y].buffs.Contains(buff))
-                    textBoxes["CHAT"].AppendAndWrap("This player doesn't have this effect applied");
+                    textBoxes["HELP"].lines[0] = "This player doesn't have this effect applied";
                 else
                 {
                     string line = "USE " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
@@ -576,7 +591,7 @@ namespace Ruetobas
 
         public static void Ready()
         {
-            game.TCPSend("READY");           
+            game.TCPSend("READY");          
         }
 
         public static void OpenGameMenu()

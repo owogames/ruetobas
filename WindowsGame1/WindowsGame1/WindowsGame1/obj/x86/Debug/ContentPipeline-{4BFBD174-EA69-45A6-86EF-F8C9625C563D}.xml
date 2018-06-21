@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\zoltyskurwiel.xnb</Output>
-      <Time>2018-06-04T13:32:27.6479214+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cursor.png</Source>
@@ -17,7 +17,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cursor.xnb</Output>
-      <Time>2018-06-09T19:32:35.6366862+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>tekstura.png</Source>
@@ -26,7 +26,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura.xnb</Output>
-      <Time>2018-06-11T15:00:36.0203399+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>tekstura2.png</Source>
@@ -35,7 +35,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura2.xnb</Output>
-      <Time>2018-06-11T15:00:36.0515414+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>tekstura3.png</Source>
@@ -44,7 +44,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tekstura3.xnb</Output>
-      <Time>2018-06-11T15:00:36.0515414+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card1.png</Source>
@@ -53,7 +53,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card1.xnb</Output>
-      <Time>2018-06-13T20:39:21.1840893+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card10.png</Source>
@@ -62,7 +62,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card10.xnb</Output>
-      <Time>2018-06-13T20:39:21.2973127+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card11.png</Source>
@@ -71,7 +71,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card11.xnb</Output>
-      <Time>2018-06-13T20:39:21.2993244+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card12.png</Source>
@@ -80,7 +80,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card12.xnb</Output>
-      <Time>2018-06-13T20:39:21.3023144+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card13.png</Source>
@@ -89,7 +89,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card13.xnb</Output>
-      <Time>2018-06-13T20:39:21.3454579+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card14.png</Source>
@@ -98,7 +98,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card14.xnb</Output>
-      <Time>2018-06-13T20:39:21.3484492+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card15.png</Source>
@@ -107,7 +107,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card15.xnb</Output>
-      <Time>2018-06-13T20:39:21.3514499+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card16.png</Source>
@@ -116,7 +116,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card16.xnb</Output>
-      <Time>2018-06-13T20:39:21.3534513+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card17.png</Source>
@@ -125,7 +125,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card17.xnb</Output>
-      <Time>2018-06-13T20:39:21.3554634+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card18.png</Source>
@@ -134,7 +134,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card18.xnb</Output>
-      <Time>2018-06-13T20:39:21.358455+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card19.png</Source>
@@ -143,7 +143,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card19.xnb</Output>
-      <Time>2018-06-13T20:39:21.3614578+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card2.png</Source>
@@ -152,7 +152,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card2.xnb</Output>
-      <Time>2018-06-13T20:39:21.2732941+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card20.png</Source>
@@ -161,7 +161,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card20.xnb</Output>
-      <Time>2018-06-13T20:39:21.3634731+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card21.png</Source>
@@ -170,7 +170,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card21.xnb</Output>
-      <Time>2018-06-13T20:39:21.3664619+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card22.png</Source>
@@ -179,7 +179,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card22.xnb</Output>
-      <Time>2018-06-13T20:39:21.3694642+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card23.png</Source>
@@ -188,7 +188,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card23.xnb</Output>
-      <Time>2018-06-13T20:39:21.371464+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card24.png</Source>
@@ -197,7 +197,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card24.xnb</Output>
-      <Time>2018-06-13T20:39:21.3734773+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card25.png</Source>
@@ -206,7 +206,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card25.xnb</Output>
-      <Time>2018-06-13T20:39:21.3764801+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card26.png</Source>
@@ -215,7 +215,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card26.xnb</Output>
-      <Time>2018-06-13T20:39:21.37847+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card27.png</Source>
@@ -224,7 +224,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card27.xnb</Output>
-      <Time>2018-06-13T20:39:21.3814719+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card28.png</Source>
@@ -233,7 +233,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card28.xnb</Output>
-      <Time>2018-06-13T20:39:21.3834733+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card29.png</Source>
@@ -242,7 +242,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card29.xnb</Output>
-      <Time>2018-06-13T20:39:21.3864765+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card3.png</Source>
@@ -251,7 +251,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card3.xnb</Output>
-      <Time>2018-06-13T20:39:21.2772969+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card30.png</Source>
@@ -260,7 +260,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card30.xnb</Output>
-      <Time>2018-06-13T20:39:21.389478+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card31.png</Source>
@@ -269,7 +269,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card31.xnb</Output>
-      <Time>2018-06-13T20:39:21.3924799+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card32.png</Source>
@@ -278,7 +278,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card32.xnb</Output>
-      <Time>2018-06-13T20:39:21.3944813+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card33.png</Source>
@@ -287,7 +287,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card33.xnb</Output>
-      <Time>2018-06-13T20:39:21.3964823+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card34.png</Source>
@@ -296,7 +296,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card34.xnb</Output>
-      <Time>2018-06-13T20:39:21.399485+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card35.png</Source>
@@ -305,7 +305,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card35.xnb</Output>
-      <Time>2018-06-13T20:39:21.4014869+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card36.png</Source>
@@ -314,7 +314,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card36.xnb</Output>
-      <Time>2018-06-13T20:39:21.4044884+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card37.png</Source>
@@ -323,7 +323,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card37.xnb</Output>
-      <Time>2018-06-13T20:39:21.4064898+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card38.png</Source>
@@ -332,7 +332,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card38.xnb</Output>
-      <Time>2018-06-13T20:39:21.4104922+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card39.png</Source>
@@ -341,7 +341,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card39.xnb</Output>
-      <Time>2018-06-13T20:39:21.4275824+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card4.png</Source>
@@ -350,7 +350,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card4.xnb</Output>
-      <Time>2018-06-13T20:39:21.2802993+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card40.png</Source>
@@ -359,7 +359,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card40.xnb</Output>
-      <Time>2018-06-13T20:39:21.4305852+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card41.png</Source>
@@ -368,7 +368,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card41.xnb</Output>
-      <Time>2018-06-13T20:39:21.4346036+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card42.png</Source>
@@ -377,7 +377,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card42.xnb</Output>
-      <Time>2018-06-13T20:39:21.4365915+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card43.png</Source>
@@ -386,7 +386,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card43.xnb</Output>
-      <Time>2018-06-13T20:39:21.4395913+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card44.png</Source>
@@ -395,7 +395,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card44.xnb</Output>
-      <Time>2018-06-13T20:39:21.4425933+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card45.png</Source>
@@ -404,7 +404,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card45.xnb</Output>
-      <Time>2018-06-13T20:39:21.4455952+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card5.png</Source>
@@ -413,7 +413,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card5.xnb</Output>
-      <Time>2018-06-13T20:39:21.2843025+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card6.png</Source>
@@ -422,7 +422,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card6.xnb</Output>
-      <Time>2018-06-13T20:39:21.2873044+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card7.png</Source>
@@ -431,7 +431,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card7.xnb</Output>
-      <Time>2018-06-13T20:39:21.2893058+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card8.png</Source>
@@ -440,7 +440,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card8.xnb</Output>
-      <Time>2018-06-13T20:39:21.2923225+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card9.png</Source>
@@ -449,7 +449,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card9.xnb</Output>
-      <Time>2018-06-13T20:39:21.2943215+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card0.png</Source>
@@ -458,7 +458,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card0.xnb</Output>
-      <Time>2018-06-13T21:01:29.8711751+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>NotReadyButton.png</Source>
@@ -467,7 +467,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\NotReadyButton.xnb</Output>
-      <Time>2018-06-20T20:23:43.5600642+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>ReadyButton.png</Source>
@@ -476,7 +476,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\ReadyButton.xnb</Output>
-      <Time>2018-06-20T20:23:43.5610647+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>SemiTransparent.png</Source>
@@ -485,7 +485,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\SemiTransparent.xnb</Output>
-      <Time>2018-06-20T20:23:43.5640666+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>SettingsButton.jpg</Source>
@@ -494,7 +494,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\SettingsButton.xnb</Output>
-      <Time>2018-06-20T20:23:43.5650675+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>Transparent.png</Source>
@@ -503,7 +503,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\Transparent.xnb</Output>
-      <Time>2018-06-20T20:23:43.5650675+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>CheckBoxTicked.png</Source>
@@ -512,7 +512,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxTicked.xnb</Output>
-      <Time>2018-06-20T20:23:43.5590641+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>CheckBoxUnTicked.png</Source>
@@ -521,7 +521,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\CheckBoxUnTicked.xnb</Output>
-      <Time>2018-06-20T20:23:43.5590641+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>errorButton.png</Source>
@@ -530,7 +530,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\errorButton.xnb</Output>
-      <Time>2018-06-20T20:23:43.6491278+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>errorBackground.png</Source>
@@ -539,7 +539,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\errorBackground.xnb</Output>
-      <Time>2018-06-20T20:23:43.5670693+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>empty.png</Source>
@@ -548,7 +548,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\empty.xnb</Output>
-      <Time>2018-06-20T20:23:43.5660684+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>font.spritefont</Source>
@@ -557,7 +557,7 @@
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\font.xnb</Output>
-      <Time>2018-06-04T22:39:01.065253+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>comic.spritefont</Source>
@@ -566,7 +566,7 @@
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\comic.xnb</Output>
-      <Time>2018-06-20T20:23:43.5660684+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card46.png</Source>
@@ -575,7 +575,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card46.xnb</Output>
-      <Time>2018-06-20T20:57:42.2360543+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card47.png</Source>
@@ -584,7 +584,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card47.xnb</Output>
-      <Time>2018-06-20T20:57:42.246061+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card48.png</Source>
@@ -593,7 +593,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card48.xnb</Output>
-      <Time>2018-06-20T20:57:42.2490645+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card49.png</Source>
@@ -602,7 +602,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card49.xnb</Output>
-      <Time>2018-06-20T20:57:42.253067+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card50.png</Source>
@@ -611,7 +611,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card50.xnb</Output>
-      <Time>2018-06-20T20:57:42.257069+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card51.png</Source>
@@ -620,7 +620,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card51.xnb</Output>
-      <Time>2018-06-20T20:57:42.2610722+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card52.png</Source>
@@ -629,7 +629,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card52.xnb</Output>
-      <Time>2018-06-20T20:57:42.2650746+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card53.png</Source>
@@ -638,7 +638,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card53.xnb</Output>
-      <Time>2018-06-20T20:57:42.2680765+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card54.png</Source>
@@ -647,7 +647,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card54.xnb</Output>
-      <Time>2018-06-20T20:57:42.272081+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card55.png</Source>
@@ -656,7 +656,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card55.xnb</Output>
-      <Time>2018-06-20T20:57:42.2760822+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card56.png</Source>
@@ -665,7 +665,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card56.xnb</Output>
-      <Time>2018-06-20T20:57:42.2800875+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card57.png</Source>
@@ -674,7 +674,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card57.xnb</Output>
-      <Time>2018-06-20T20:57:42.2840899+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card58.png</Source>
@@ -683,7 +683,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card58.xnb</Output>
-      <Time>2018-06-20T20:57:42.2890912+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card59.png</Source>
@@ -692,7 +692,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card59.xnb</Output>
-      <Time>2018-06-20T20:57:42.292094+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card60.png</Source>
@@ -701,7 +701,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card60.xnb</Output>
-      <Time>2018-06-20T20:57:42.2950955+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card61.png</Source>
@@ -710,7 +710,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card61.xnb</Output>
-      <Time>2018-06-20T20:57:42.2990983+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card62.png</Source>
@@ -719,7 +719,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card62.xnb</Output>
-      <Time>2018-06-20T20:57:42.3021006+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card63.png</Source>
@@ -728,7 +728,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card63.xnb</Output>
-      <Time>2018-06-20T20:57:42.3051034+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card64.png</Source>
@@ -737,7 +737,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card64.xnb</Output>
-      <Time>2018-06-20T20:57:42.3081053+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card65.png</Source>
@@ -746,7 +746,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card65.xnb</Output>
-      <Time>2018-06-20T20:57:42.3121089+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card66.png</Source>
@@ -755,7 +755,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card66.xnb</Output>
-      <Time>2018-06-20T20:57:42.3151104+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card67.png</Source>
@@ -764,7 +764,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card67.xnb</Output>
-      <Time>2018-06-20T20:57:42.3191125+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card68.png</Source>
@@ -773,7 +773,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card68.xnb</Output>
-      <Time>2018-06-20T20:57:42.3221152+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card69.png</Source>
@@ -782,7 +782,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card69.xnb</Output>
-      <Time>2018-06-20T20:57:42.3251167+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card70.png</Source>
@@ -791,7 +791,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card70.xnb</Output>
-      <Time>2018-06-20T20:57:42.3531365+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card71.png</Source>
@@ -800,7 +800,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card71.xnb</Output>
-      <Time>2018-06-20T20:57:42.3561393+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>cards\card72.png</Source>
@@ -809,7 +809,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\card72.xnb</Output>
-      <Time>2018-06-20T20:57:42.3601417+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>buffcart.png</Source>
@@ -818,7 +818,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\buffcart.xnb</Output>
-      <Time>2018-06-20T21:15:58.653927+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>bufflantern.png</Source>
@@ -827,7 +827,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\bufflantern.xnb</Output>
-      <Time>2018-06-20T21:15:58.6579303+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
     </Item>
     <Item>
       <Source>buffpickaxe.png</Source>
@@ -836,7 +836,16 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\buffpickaxe.xnb</Output>
-      <Time>2018-06-20T21:15:58.6619335+02:00</Time>
+      <Time>2018-06-20T22:29:03+02:00</Time>
+    </Item>
+    <Item>
+      <Source>buttondiscard.png</Source>
+      <Name>buttondiscard</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\buttondiscard.xnb</Output>
+      <Time>2018-06-21T17:37:04.381221+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
