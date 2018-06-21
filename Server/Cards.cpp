@@ -59,24 +59,26 @@ bool loadCards(std::string path) {
 			case 'B':
 				int buff;
 				ifs >> buff;
-				buff_id[card_id++] = buff;
+				buff_id[card_id] = buff;
 				card_type[card_id++] = CARD_BUFF;
 				break;
 				
 			case 'D':
 				int debuff0, debuff1;
 				ifs >> debuff0 >> debuff1;
-				debuff_id[0][card_id  ] = debuff0;
-				debuff_id[1][card_id++] = debuff1;
+				debuff_id[0][card_id] = debuff0;
+				debuff_id[1][card_id] = debuff1;
 				
 				card_type[card_id++] = CARD_DEBUFF;
 				break;
 				
 			case 'M':
 				card_type[card_id++] = CARD_MAP;
+				break;
 				
 			case 'C':
 				card_type[card_id++] = CARD_CRUSH;
+				break;
 				
 				
 			default:

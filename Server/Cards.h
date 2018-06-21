@@ -5,6 +5,8 @@
 
 #include "Tunnel.h"
 
+const int NCARDS = 72;
+
 enum {
 	CARD_TUNNEL,
 	CARD_BUFF,

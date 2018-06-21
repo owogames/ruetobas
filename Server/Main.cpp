@@ -82,8 +82,22 @@ void newGame() {
 	initBoard();
 	
 	//kolejność kart
-	cards.resize(40); //const
-	std::iota(cards.begin(), cards.end(), 2);
+	cards.clear();
+	/*
+	for(int i = 1; i <= NCARDS; i++)
+		if(cardType(i) == CARD_BUFF || 
+		   cardType(i) == CARD_DEBUFF || 
+		   cardType(i) == CARD_TUNNEL || 
+		   cardType(i) == CARD_MAP || 
+		   cardType(i) == CARD_CRUSH) 
+			cards.push_back(i);
+			*/
+	//potem zrobie to lepiej xdd
+	for(int i = 2; i <= 42; i++)
+		cards.push_back(i);
+	for(int i = 46; i <= 72; i++)
+		cards.push_back(i);	
+		
 	std::random_shuffle(cards.begin(), cards.end());
 	
 	//kolejność graczy (alfabetycznie)
@@ -252,7 +266,7 @@ void doDebuff(int fd, int id, int fd2, int b) {
 
 void doCrush(int fd, int id, int x, int y) {
 	useCrush(x, y);
-	writeAll("CRUSH " + toStr(x) + " " + toStr(y));
+	writeAll("PLACE 0 " + toStr(x) + " " + toStr(y));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -261,7 +275,7 @@ void doCrush(int fd, int id, int x, int y) {
 
 
 void doMap(int fd, int id, int x, int y) {
-	write(fd, "MAP " + toStr(useMap(x, y)));
+	write(fd, "PLACE " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -283,6 +297,8 @@ int main() {
 	
 	wakeMeUp(2137);
 	loadCards("../karty_normalne.txt");
+	//for(int i = 0; i <= NCARDS; i++)
+	//	std::cout << i << " " << cardType(i) << std::endl;
 	
 	while(true) {
 		int fd;
@@ -353,7 +369,7 @@ int main() {
 				write(fd, "ERROR The game is not yet running");
 			
 			else if(ss.fail())
-				write(fd, "ERROR Incorrect command syntax");
+				write(fd, "ERROR Incorrect command syntax0");
 				
 			else if(fd != player_order[curr_player])
 				write(fd, "ERROR Not your turn");
@@ -368,7 +384,7 @@ int main() {
 						ss >> x >> y >> flip;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax");
+							write(fd, "ERROR Incorrect command syntax1");
 						else if(!canPlaceCard(id, x, y, flip))
 							write(fd, "ERROR Invalid move");
 						else
@@ -381,7 +397,7 @@ int main() {
 						ss >> usr;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax");
+							write(fd, "ERROR Incorrect command syntax2");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
 						else if(players[usernames[usr]].hasBuff(buffId(id)))
@@ -397,7 +413,7 @@ int main() {
 						ss >> usr >> flip;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax");
+							write(fd, "ERROR Incorrect command syntax3");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
 						else if(!players[usernames[usr]].hasBuff(debuffId(id, flip))) 
@@ -412,7 +428,7 @@ int main() {
 						ss >> x >> y;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax");
+							write(fd, "ERROR Incorrect command syntax4");
 						else if(!canUseCrush(x, y))
 							write(fd, "ERROR Can't touch that");
 						else
@@ -425,7 +441,7 @@ int main() {
 						ss >> x >> y;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax");
+							write(fd, "ERROR Incorrect command syntax5");
 						else if(!canUseMap(x, y))
 							write(fd, "ERROR Can't look there");
 						else
