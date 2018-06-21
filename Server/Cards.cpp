@@ -94,11 +94,11 @@ std::vector<Tunnel> getTunnels() {
 }
 
 int cardType(int card_id) {
-	return card_type[id];
+	return card_type[card_id];
 }
 
 int buffId(int card_id) {
-	return buff_id[id];
+	return buff_id[card_id];
 }
 
 int debuffId(int card_id, int flip) {
