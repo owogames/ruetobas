@@ -323,7 +323,7 @@ namespace Ruetobas
                         //Klikanie buttonów
                         if (Logic.buttons.ContainsKey(name))
                         {
-                            if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled)
+                            if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled && Logic.buttons[name].registerClicks)
                             {
                                 if (Logic.buttons[name].clickEvent != null)
                                     Logic.buttons[name].clickEvent();

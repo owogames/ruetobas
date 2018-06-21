@@ -53,7 +53,7 @@ namespace Ruetobas
 
         public static string IP = "192.168.0.157";
         public static string username = "No Elo";
-        public static int yourPlayerId = 0;
+        public static int yourPlayerId = -1;
 
         public static List<Player> players = new List<Player>();
 
@@ -128,6 +128,19 @@ namespace Ruetobas
             {
                 grids["CARDS"].zoom = 1.0f;
                 grids["CARDS"].offset = new Vector2(grids["CARDS"].location.Width / 2 - grids["CARDS"].margin, grids["CARDS"].location.Height / 2 - grids["CARDS"].margin);
+            }
+
+            //Ikonki buffów
+            if (yourPlayerId >= 0)
+            {
+                for (int i = 0; i < 8; i++)
+                    if (buttons.ContainsKey("ZBUFFICON" + i.ToString()))
+                        buttons.Remove("ZBUFFICON" + i.ToString());
+                for (int i = 0; i < players[yourPlayerId].buffs.Count; i++)
+                {
+                    buttons["ZBUFFICON" + i.ToString()] = new Button(buffTexture[(int)players[yourPlayerId].buffs[i] - 1], new Rectangle(0, 78 * i, 72, 72), null);
+                    buttons["ZBUFFICON" + i.ToString()].registerClicks = false;
+                }
             }
 
             if (game.IsActive && game.keyboardState.IsKeyDown(Keys.Enter) && game.keyboardBeforeState.IsKeyUp(Keys.Enter) && inputBoxes.ContainsKey("CHATINPUT") && inputBoxes["CHATINPUT"].active)
@@ -325,7 +338,7 @@ namespace Ruetobas
         public static void ShowPlayerList()
         {
             buttons["PLAYERLISTSET"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
-            grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 120), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
+            grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 150), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
             grids["ZPLAYERLIST"].offset = new Vector2(grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
         }
 
@@ -430,7 +443,7 @@ namespace Ruetobas
             int buffCount = 0;
             foreach (Buff buff in players[y].buffs)
             {
-                spriteBatch.Draw(buffTexture[(int)buff - 1], new Rectangle(location.X + 5 + 48 * buffCount, location.Y + 5 + 3 * font.LineSpacing, 48, 48), Color.White);
+                spriteBatch.Draw(buffTexture[(int)buff - 1], new Rectangle(location.X + 10 + 48 * buffCount, location.Y + 5 + 3 * font.LineSpacing, 48, 48), Color.White);
                 buffCount++;
             }
         }

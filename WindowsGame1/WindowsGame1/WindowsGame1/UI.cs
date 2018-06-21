@@ -16,6 +16,7 @@ namespace Ruetobas
         public Action clickEvent;
         
         public bool enabled = true;
+        public bool registerClicks = true;
 
         public Button(Texture2D texture, Rectangle location, Action clickEvent)
         {
