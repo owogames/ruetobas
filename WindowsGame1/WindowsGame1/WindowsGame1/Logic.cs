@@ -296,9 +296,9 @@ namespace Ruetobas
                 textBoxes.Clear();
 
                 ReadCards();
-                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 730));
-                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 780, 490, 50), Color.White, Color.LightGray, "Enter message...", 120);
-                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1870, 780, 50, 50), SendChatMessage);
+                textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 670));
+                inputBoxes["CHATINPUT"] = new InputBox(chatInputTexture, 10, font, new Rectangle(1380, 720, 490, 60), Color.White, Color.LightGray, "Enter message...", 120);
+                buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1870, 720, 50, 60), SendChatMessage);
                 textBoxes["HELP"] = new TextBox(errorBackground, 5, Alignment.Centered, font, new Rectangle(0, 720, 1380, 60));
                 //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
@@ -322,14 +322,14 @@ namespace Ruetobas
         public static void ShowPlayerList()
         {
             buttons["PLAYERLISTSET"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
-            grids["PLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 120), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
-            grids["PLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
+            grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 120), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
+            grids["ZPLAYERLIST"].offset = new Vector2(grids["PLAYERLIST"].location.Width / 2 - grids["PLAYERLIST"].margin, grids["PLAYERLIST"].location.Height / 2 - grids["PLAYERLIST"].margin);
         }
 
         public static void HidePlayerList()
         {
             buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
-            grids.Remove("PLAYERLIST");
+            grids.Remove("ZPLAYERLIST");
         }
 
         public static int CheckCardPlacement(int x, int y, int ID, int rot)
