@@ -230,6 +230,8 @@ namespace Ruetobas
                 if (data[0] == "TURN")
                 {
                     playerTurn = data[1].Trim();
+                    if (playerTurn == username)
+                        textBoxes["HELP"].lines[0] = "Select card from your hand";
                 }
                 if (data[0] == "END")
                 {
@@ -401,6 +403,7 @@ namespace Ruetobas
             }
 
             int id = cardHand[selectedCard];
+            RemoveSelectedCard();
             game.TCPSend("DISCARD " + id.ToString());
         }
 
@@ -451,11 +454,28 @@ namespace Ruetobas
 
         public static void HandClick(int x, int y)
         {
-            if (x == selectedCard && (cards[cardHand[x]].cardType == CardType.Tunnel || 
+            if (x == selectedCard && (cards[cardHand[x]].cardType == CardType.Tunnel ||
                 (cards[cardHand[x]].cardType == CardType.Debuff && ((DebuffCard)cards[cardHand[x]]).buffType2 != Buff.None)))
-                    selectedRot = 1 - selectedRot;
-            else selectedRot = 0;
-            selectedCard = x;
+            {
+                selectedRot = 1 - selectedRot;
+            }
+            else
+            {
+                selectedRot = 0;
+                selectedCard = x;
+
+                CardType cardType = cards[cardHand[selectedCard]].cardType;
+                if (cardType == CardType.Tunnel)
+                    textBoxes["HELP"].lines[0] = "Place card on board or rotate it by clicking on it again";
+                else if (cardType == CardType.Map)
+                    textBoxes["HELP"].lines[0] = "Select treasure card you would like to uncover";
+                else if (cardType == CardType.Remove)
+                    textBoxes["HELP"].lines[0] = "Select placed tunnel you would like to demolish";
+                else if (cardType == CardType.Buff)
+                    textBoxes["HELP"].lines[0] = "Select player from player list to inflict this effect on him";
+                else if (cardType == CardType.Debuff)
+                    textBoxes["HELP"].lines[0] = "Select player from player list to remove this effect from him";
+            }
         }
 
         public static void BoardClick(int x, int y)
