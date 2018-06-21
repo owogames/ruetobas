@@ -396,6 +396,12 @@ namespace Ruetobas
 
         public static void DiscardCard()
         {
+            if (playerTurn != username)
+            {
+                textBoxes["HELP"].lines[0] = "You can only play cards during your turn";
+                return;
+            }
+
             if (selectedCard == -1 || cardHand[selectedCard] == 0)
             {
                 textBoxes["HELP"].lines[0] = "Select a card you would like to discard first";
@@ -537,9 +543,20 @@ namespace Ruetobas
             {
                 if (cards[map[x, y].ID].cardType == CardType.Tunnel)
                 {
-                    string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
-                    RemoveSelectedCard();
-                    game.TCPSend(line);
+                    if (map[x, y].ID == 1)
+                    {
+                        textBoxes["HELP"].lines[0] = "You can't demolish starting point";
+                    }
+                    else if (map[x, y].ID == 42 || map[x, y].ID == 43 || map[x, y] == 44 || map[x, y] == 45)
+                    {
+                        textBoxes["HELP"].lines[0] = "You can't demolish treasure card";
+                    }
+                    else
+                    {
+                        string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
+                        RemoveSelectedCard();
+                        game.TCPSend(line);
+                    }
                 }
                 else
                 {
