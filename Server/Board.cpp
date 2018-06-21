@@ -186,3 +186,22 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 
 	return false;
 }
+
+
+bool canUseCrush(int x, int y) {
+	
+}
+
+void useCrush(int x, int y) {
+	
+}
+
+
+bool canUseMap(int x, int y) {
+
+}
+
+int useMap(int x, int y) {
+	
+}
+

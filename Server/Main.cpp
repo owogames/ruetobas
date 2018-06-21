@@ -22,7 +22,7 @@ static std::vector<int> player_order;
 static int curr_player;
 static bool running = false;
 
-
+///////////////////////////////////////////////PRZYDATNE FUNKCJE/////////////////////////////////////////////////
 
 void writeAll(std::string msg) {
 	for(auto p : players)
@@ -214,8 +214,10 @@ void removePlayer(int fd) {
 	players.erase(fd);
 }
 
+////////////////////////////////////////////////AKCJE//////////////////////////////////////////////////////////////
 
-void useTunnel(int fd, int id, int x, int y, int flip) {
+
+void doTunnel(int fd, int id, int x, int y, int flip) {
 	placeCard(id, x, y, flip);
 	writeAll("PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip) + " ");
 							
@@ -228,9 +230,9 @@ void useTunnel(int fd, int id, int x, int y, int flip) {
 }
 
 
-void useBuff(int fd, int id, int fd2, int b) {
+void doBuff(int fd, int id, int fd2, int b) {
 	players[fd2].addBuff(b);
-	writeAll("BUFF " + users[fd].name + " " + users[fd2].name + " " + toStr(b));
+	writeAll("BUFF " + players[fd].name + " " + players[fd2].name + " " + toStr(b));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -238,9 +240,9 @@ void useBuff(int fd, int id, int fd2, int b) {
 }
 
 
-void useDebuff(int fd, int id, int fd2, int b) {
+void doDebuff(int fd, int id, int fd2, int b) {
 	players[fd2].removeBuff(b);
-	writeAll("DEBUFF " + users[fd].name + " " + users[fd2].name + " " + toStr(b));
+	writeAll("DEBUFF " + players[fd].name + " " + players[fd2].name + " " + toStr(b));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -248,8 +250,8 @@ void useDebuff(int fd, int id, int fd2, int b) {
 }
 
 
-void useCrush(int fd, int id, int x, int y) {
-	crush(x, y);
+void doCrush(int fd, int id, int x, int y) {
+	useCrush(x, y);
 	writeAll("CRUSH " + toStr(x) + " " + toStr(y));
 	
 	newCard(fd, id);
@@ -258,15 +260,15 @@ void useCrush(int fd, int id, int x, int y) {
 }
 
 
-void useMap(int fd, int id, int x, int y) {
-	write(fd, "MAP " + toStr(map(x, y)));
+void doMap(int fd, int id, int x, int y) {
+	write(fd, "MAP " + toStr(useMap(x, y)));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
 		endGame(RUETOBAS);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////GŁÓWNA PĘTLA, OBSŁUGA BŁĘDÓW//////////////////////////////////////////////////////////////
 
 
 
@@ -274,7 +276,7 @@ int main() {
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
 	wakeMeUp(2137);
-	loadCards();
+	loadCards("../karty_normalne,txt");
 	
 	while(true) {
 		int fd;
@@ -355,19 +357,20 @@ int main() {
 				
 			else {
 				switch(cardType(id)) {
-					case CARD_TUNNEL:
+					case CARD_TUNNEL: {
 						int x, y, flip;
 						ss >> x >> y >> flip;
 						
 						if(ss.fail())
 							write(fd, "ERROR Incorrect command syntax");
-						else if(!canPlaceTunnel(id, x, y, flip))
+						else if(!canPlaceCard(id, x, y, flip))
 							write(fd, "ERROR Invalid move");
 						else
-							useTunnel(fd, id, x, y, flip);
+							doTunnel(fd, id, x, y, flip);
 						break;
+					}
 					
-					case CARD_BUFF:
+					case CARD_BUFF: {
 						std::string usr;
 						ss >> usr;
 						
@@ -375,13 +378,14 @@ int main() {
 							write(fd, "ERROR Incorrect command syntax");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
-						else if(players[usernames[usr]].hasBuff(buff(id)))
+						else if(players[usernames[usr]].hasBuff(buffId(id)))
 							write(fd, "ERROR Player already has that buff");
 						else
-							useBuff(fd, id, fd2, buff(id));
+							doBuff(fd, id, usernames[usr], buffId(id));
 						break;
-					
-					case CARD_DEBUFF:
+					}
+										
+					case CARD_DEBUFF: {
 						std::string usr;
 						int flip;
 						ss >> usr >> flip;
@@ -390,35 +394,38 @@ int main() {
 							write(fd, "ERROR Incorrect command syntax");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
-						else if(!players[usernames[usr]].hasBuff(buff(id))) 
+						else if(!players[usernames[usr]].hasBuff(debuffId(id, flip))) 
 							write(fd, "ERROR Player doesn't have that buff");
 						else
-							useDebuff(fd, id, usernames[usr], debuff(id, flip));
+							doDebuff(fd, id, usernames[usr], debuffId(id, flip));
 						break;
+					}
 						
-					case CARD_CRUSH:
+					case CARD_CRUSH: {
 						int x, y;
 						ss >> x >> y;
 						
 						if(ss.fail())
 							write(fd, "ERROR Incorrect command syntax");
-						else if(!canCrush(x, y))
+						else if(!canUseCrush(x, y))
 							write(fd, "ERROR Can't touch that");
 						else
-							useCrush(fd, id, x, y);
+							doCrush(fd, id, x, y);
 						break;
+					}
 						
-					case CARD_MAP:
+					case CARD_MAP: {
 						int x, y;
 						ss >> x >> y;
 						
 						if(ss.fail())
 							write(fd, "ERROR Incorrect command syntax");
-						else if(!canPeak(x, y))
+						else if(!canUseMap(x, y))
 							write(fd, "ERROR Can't look there");
 						else
-							useMap(fd, id, x, y);
+							doMap(fd, id, x, y);
 						break;
+					}
 				}
 			}
 		}

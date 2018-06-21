@@ -4,8 +4,7 @@
 void initBoard();
 
 ///@brief sprawdza czy można położyć kartę na pozycji (x, y)
-void canPlaceCard(int id, int x, int y, bool flip);
-	
+bool canPlaceCard(int id, int x, int y, bool flip);
 ///@brief kładzie kartę na pozycji (x, y)
 void placeCard(int id, int x, int y, bool flip);
 
@@ -14,3 +13,14 @@ void placeCard(int id, int x, int y, bool flip);
 ///jeśli nie, zwraca false
 ///jeśli jest więcej niż jeden, odkrywa DOKŁADNIE JEDEN z nich
 bool revealedCard(int& id, int& x, int& y, bool& flip);
+
+///@brief sprawdza czy można użyć wyburzenia
+bool canUseCrush(int x, int y);
+///@brief wyburz
+void useCrush(int x, int y);
+
+///@brief sprawdza czy można użyć mapy
+bool canUseMap(int x, int y);
+///@brief używa mapy
+int useMap(int x, int y);
+

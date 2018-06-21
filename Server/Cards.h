@@ -20,9 +20,11 @@ enum {
 	BUFF_CART,
 };
 
-void loadCards(std::string path);
+bool loadCards(std::string path);
 
 std::vector<Tunnel> getTunnels();
 
-int buff(int id);
-int debuff(int id, int flip);
+int cardType(int card_id);
+
+int buffId(int card_id);
+int debuffId(int card_id, int flip);

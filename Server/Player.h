@@ -12,6 +12,7 @@ struct Player {
 	bool ready;
 	bool team;
 	int score;
+	int buff_mask;
 	
 	Player();
 	Player(std::string name);
@@ -19,4 +20,8 @@ struct Player {
 	bool hasCard(int c);
 	void addCard(int c);
 	void removeCard(int c);
+	
+	bool hasBuff(int buff_id);
+	void addBuff(int buff_id);
+	void removeBuff(int buff_id);
 };

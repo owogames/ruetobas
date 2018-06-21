@@ -17,3 +17,15 @@ void Player::addCard(int c) {
 void Player::removeCard(int c) {
 	cards.erase(std::find(cards.begin(), cards.end(), c));
 }
+
+bool Player::hasBuff(int buff_id) {
+	
+}
+
+void Player::addBuff(int buff_id) {
+	
+}
+
+void Player::removeBuff(int buff_id) {
+	
+}

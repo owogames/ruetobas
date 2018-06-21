@@ -1,17 +1,19 @@
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 #include "Cards.h"
 #include "Tunnel.h"
 
 static std::vector<Tunnel> tunnels;
 
-void loadCards(std::string path) {
+bool loadCards(std::string path) {
 	
 	std::ifstream ifs(path);
 	if(!ifs.is_open()) {
-		std::cerr << "Couldn't open file " << file << std::endl;
-		return;
+		std::cerr << "Couldn't open file " << path << std::endl;
+		return false;
 	}
 	
 	bool ok = true;
@@ -60,19 +62,25 @@ void loadCards(std::string path) {
 		
 	} while(ok);
 	
-	return out;
+	return true;
 }
 
-int buff(int id) {
+std::vector<Tunnel> getTunnels() {
+	return tunnels;
+}
+
+
+int cardType(int card_id) {
+	
+}
+
+int buffId(int card_id) {
 	//TODO
-	void(id);
 	return 0;
 }
 
-int debuff(int id, int flip) {
+int debuffId(int card_id, int flip) {
 	//TODO
-	void(id);
-	void(flip);
 	return 0;
 }
 
