@@ -547,7 +547,7 @@ namespace Ruetobas
                     {
                         textBoxes["HELP"].lines[0] = "You can't demolish starting point";
                     }
-                    else if (map[x, y].ID == 42 || map[x, y].ID == 43 || map[x, y] == 44 || map[x, y] == 45)
+                    else if (map[x, y].ID == 42 || map[x, y].ID == 43 || map[x, y].ID == 44 || map[x, y].ID == 45)
                     {
                         textBoxes["HELP"].lines[0] = "You can't demolish treasure card";
                     }
