@@ -37,6 +37,7 @@ namespace Ruetobas
         public static Texture2D tickedTexture;
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
+        public static Texture2D[] mapCardTexture = new Texture2D[3];
         public static SpriteFont font;
 
         public static PlacedCard[,] map;
@@ -85,6 +86,8 @@ namespace Ruetobas
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
             buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
             buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
+            for (int i = 0; i < 3; i++)
+                mapCardTexture[i] = game.Content.Load<Texture2D>("cards\\mapcard" + (i + 42).ToString());
             discardTexture = game.Content.Load<Texture2D>("buttondiscard");
 
             font = game.Content.Load<SpriteFont>("comic");
@@ -187,6 +190,13 @@ namespace Ruetobas
                     int orientation = int.Parse(data[4]);
                     map[x, y] = new PlacedCard(ID, orientation);
                     grids["BOARD"].fieldTexture[x, y] = cardTexture[ID];
+                }
+                if (data[0] == "MAP")
+                {
+                    int ID = int.Parse(data[1]) - 42;
+                    int x = int.Parse(data[2]);
+                    int y = int.Parse(data[3]);
+                    grids["BOARD"].fieldTexture[x, y] = mapCardTexture[ID];
                 }
                 if (data[0] == "START")
                 {

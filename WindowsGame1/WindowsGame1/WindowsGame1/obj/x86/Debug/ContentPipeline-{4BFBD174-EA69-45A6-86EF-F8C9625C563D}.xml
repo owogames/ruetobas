@@ -847,6 +847,33 @@
       <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\buttondiscard.xnb</Output>
       <Time>2018-06-21T17:37:04.381221+02:00</Time>
     </Item>
+    <Item>
+      <Source>cards\mapcard42.png</Source>
+      <Name>cards\mapcard42</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\mapcard42.xnb</Output>
+      <Time>2018-06-22T19:45:54.8052342+02:00</Time>
+    </Item>
+    <Item>
+      <Source>cards\mapcard43.png</Source>
+      <Name>cards\mapcard43</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\mapcard43.xnb</Output>
+      <Time>2018-06-22T19:45:54.8756689+02:00</Time>
+    </Item>
+    <Item>
+      <Source>cards\mapcard44.png</Source>
+      <Name>cards\mapcard44</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\cards\mapcard44.xnb</Output>
+      <Time>2018-06-22T19:45:54.87867+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{4BFBD174-EA69-45A6-86EF-F8C9625C563D}</ContentProjectGUID>

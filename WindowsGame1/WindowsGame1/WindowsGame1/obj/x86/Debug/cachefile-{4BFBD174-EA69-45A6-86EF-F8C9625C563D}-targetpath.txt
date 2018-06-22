@@ -92,3 +92,6 @@ Content\buffcart.xnb
 Content\bufflantern.xnb
 Content\buffpickaxe.xnb
 Content\buttondiscard.xnb
+Content\cards\mapcard42.xnb
+Content\cards\mapcard43.xnb
+Content\cards\mapcard44.xnb
