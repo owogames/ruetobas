@@ -59,8 +59,6 @@ Content\CheckBoxUnTicked.xnb
 Content\errorButton.xnb
 Content\errorBackground.xnb
 Content\empty.xnb
-Content\font.xnb
-Content\comic.xnb
 Content\cards\card46.xnb
 Content\cards\card47.xnb
 Content\cards\card48.xnb
@@ -95,3 +93,14 @@ Content\buttondiscard.xnb
 Content\cards\mapcard42.xnb
 Content\cards\mapcard43.xnb
 Content\cards\mapcard44.xnb
+Content\font.xnb
+Content\comic.xnb
+Content\SoundFX\best ost.xnb
+Content\SoundFX\best ost.wma
+Content\SoundFX\menuback2.xnb
+Content\SoundFX\menuclick.xnb
+Content\SoundFX\menuhit.xnb
+Content\SoundFX\normal-hitwhistle.xnb
+Content\SoundFX\normal-hitwhistle2.xnb
+Content\SoundFX\seeya.xnb
+Content\SoundFX\soft-hitfinish.xnb

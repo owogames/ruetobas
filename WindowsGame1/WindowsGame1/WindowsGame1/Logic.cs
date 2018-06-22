@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -39,6 +40,12 @@ namespace Ruetobas
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
         public static SpriteFont font;
+
+        public static float volume = 1.0f;
+        public static SoundEffect bubbles;
+        public static SoundEffect boop;
+        public static SoundEffect bye;
+        public static SoundEffect stal;
 
         public static PlacedCard[,] map;
 
@@ -81,6 +88,9 @@ namespace Ruetobas
             semiTransparentTexture = game.Content.Load<Texture2D>("SemiTransparent");
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
+            bubbles = game.Content.Load<SoundEffect>("SoundFX/menuback2");
+            boop = game.Content.Load<SoundEffect>("SoundFX/normal-hitwhistle");
+            bye = game.Content.Load<SoundEffect>("SoundFX/seeya");
             for (int i = 0; i <= 72; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
@@ -167,6 +177,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "BYE")
                 {
+                    PlaySound(bye, volume);
                     textBoxes["CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.");
                     for (int i = 0; i < players.Count; i++)
                     {
@@ -241,7 +252,15 @@ namespace Ruetobas
                 {
                     playerTurn = data[1].Trim();
                     if (playerTurn == username)
+                    {
                         textBoxes["HELP"].lines[0] = "Select card from your hand";
+                        PlaySound(bubbles, volume);
+                    }
+                    else
+                    {
+                        PlaySound(boop, volume * 0.3f);
+                    }
+                        
                 }
                 if (data[0] == "END")
                 {
@@ -663,15 +682,17 @@ namespace Ruetobas
         public static void OpenGameMenu()
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Chartreuse, Color.DarkGoldenrod, "Width", 8);
-            inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Chartreuse, Color.DarkKhaki, "Height", 8);
-            buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(120, 235, 20, 20), ChangeFullscreen);
+            inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Aquamarine, Color.BlueViolet, "Width", 8);
+            inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Aquamarine, Color.BlueViolet, "Height", 8);
+            buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
             if (Game.isFullscreen == false)
                 buttons["ZZZZFullscreen"].texture = unTickedTexture;
-            textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
-            textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
-            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 285, 140, 80), CloseGameMenu);
-            buttons["ZZZZQuit"] = new Button(skurwielTexture, new Rectangle(10, 420, 69, 41), game.Exit);
+            //textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
+            //textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
+            inputBoxes["ZZZZVolume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
+            buttons["ZZZZTestSound"] = new Button(skurwielTexture, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
+            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), CloseGameMenu);
+            buttons["ZZZZQuit"] = new Button(skurwielTexture, new Rectangle(1700, 940, 140, 80), game.Exit);
         }
 
         public static void ChangeFullscreen()
@@ -686,18 +707,32 @@ namespace Ruetobas
         public static void CloseGameMenu()
         {
             int newX, newY;
-            if(int.TryParse(inputBoxes["ZZZZResolutionX"].text, out newX) &&
+            float new_volume;
+            if (int.TryParse(inputBoxes["ZZZZResolutionX"].text, out newX) &&
                 int.TryParse(inputBoxes["ZZZZResolutionY"].text, out newY) &&
-                newX>0 && newY>0)
-            game.ChangeResolution(newX, newY);
+                newX > 0 && newY > 0)
+                game.ChangeResolution(newX, newY);
+
+            if (float.TryParse(inputBoxes["ZZZZVolume"].text, out new_volume) &&
+                new_volume < 100 && new_volume >= 0)
+                volume = new_volume * 0.01f;
             inputBoxes.Remove("ZZZZResolutionX");
             inputBoxes.Remove("ZZZZResolutionY");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
             buttons.Remove("ZZZZFullscreen");
-            textBoxes.Remove("ZZZZFullscreentext");
+            inputBoxes.Remove("ZZZZVolume");
+            buttons.Remove("ZZZZTestSound");
+            //textBoxes.Remove("ZZZZFullscreentext");
             buttons.Remove("ZZZZQuit");
             return;
+        }
+
+        public static void PlaySound(SoundEffect sound_effect, float playVolume)
+        {
+            SoundEffectInstance instance = sound_effect.CreateInstance();
+            instance.Volume = playVolume;
+            instance.Play();
         }
     }
 }
