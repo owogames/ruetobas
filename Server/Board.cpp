@@ -199,11 +199,11 @@ void useCrush(int x, int y) {
 
 
 bool canUseMap(int x, int y) {
-	return tunnels[board[x][y].first].type == Tunnel::GOLD || 
-		   tunnels[board[x][y].first].type == Tunnel::NOGOLD;
+	return board[x][y].first == 45;
+		   
 }
 
 int useMap(int x, int y) {
-	return board[x][y].first;
+	return y == 5 ? t[0] : y == 7 ? t[1] : t[2];
 }
 

@@ -93,7 +93,7 @@ void newGame() {
 			cards.push_back(i);
 			*/
 	//potem zrobie to lepiej xdd
-	for(int i = 2; i <= 42; i++)
+	for(int i = 2; i <= 41; i++)
 		cards.push_back(i);
 	for(int i = 46; i <= 72; i++)
 		cards.push_back(i);	
@@ -266,7 +266,7 @@ void doDebuff(int fd, int id, int fd2, int b) {
 
 void doCrush(int fd, int id, int x, int y) {
 	useCrush(x, y);
-	writeAll("PLACE 0 " + toStr(x) + " " + toStr(y));
+	writeAll("PLACE 0 " + toStr(x) + " " + toStr(y) + " 0");
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -275,7 +275,7 @@ void doCrush(int fd, int id, int x, int y) {
 
 
 void doMap(int fd, int id, int x, int y) {
-	write(fd, "PLACE " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y));
+	write(fd, "PLACE " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y) + " 0");
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -402,8 +402,9 @@ int main() {
 							write(fd, "ERROR Player doensn't exist");
 						else if(players[usernames[usr]].hasBuff(buffId(id)))
 							write(fd, "ERROR Player already has that buff");
-						else
+						else 
 							doBuff(fd, id, usernames[usr], buffId(id));
+						
 						break;
 					}
 										

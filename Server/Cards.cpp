@@ -52,15 +52,17 @@ bool loadCards(std::string path) {
 			
 				tunnels.push_back(tunnel);
 					
-				card_type[card_id++] = CARD_TUNNEL;
+				card_type[card_id] = CARD_TUNNEL;
 				
 				break;
 				
 			case 'B':
+				
 				int buff;
 				ifs >> buff;
+				
 				buff_id[card_id] = buff;
-				card_type[card_id++] = CARD_BUFF;
+				card_type[card_id] = CARD_BUFF;
 				break;
 				
 			case 'D':
@@ -69,22 +71,23 @@ bool loadCards(std::string path) {
 				debuff_id[0][card_id] = debuff0;
 				debuff_id[1][card_id] = debuff1;
 				
-				card_type[card_id++] = CARD_DEBUFF;
+				card_type[card_id] = CARD_DEBUFF;
 				break;
 				
 			case 'M':
-				card_type[card_id++] = CARD_MAP;
+				card_type[card_id] = CARD_MAP;
 				break;
 				
 			case 'C':
-				card_type[card_id++] = CARD_CRUSH;
+				card_type[card_id] = CARD_CRUSH;
 				break;
-				
 				
 			default:
 				ok = false;
+				
+			
 		}
-		
+		card_id++;
 		
 	} while(ok);
 	
