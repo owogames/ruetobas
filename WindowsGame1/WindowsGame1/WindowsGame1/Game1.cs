@@ -653,5 +653,11 @@ namespace Ruetobas
 
             base.Draw(gameTime);
         }
+
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+            Exit();
+        }
     }
 }
