@@ -110,31 +110,71 @@ void newGame() {
 	});
 	
 	//rozdanie frakcji
-	const int ruetobas_cnt[11] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4};
-	bool team[10];
-	std::fill(team, team+player_cnt, REGGID);
-	std::fill(team, team+ruetobas_cnt[player_cnt], RUETOBAS);
-	std::random_shuffle(team, team+player_cnt);
+	bool tab[12], s = 1, k = 3, siz = players.size();
+
+	if (siz > 3)
+		k = 4;
+	if (siz > 4)
+		s = 2;
+	if (siz > 5)
+		k = 5;
+	if (siz > 6)
+		s = 3;
+	if (siz > 7)
+		k = 6;
+	if (siz > 8)
+		k = 7;
+	if (siz > 9)
+		s = 4;
+	int _s = s, _k = k;
+
+	for (int i = 0; i < s + k; i++)
+	{
+		if (_s > 0)
+		{
+			tab[i] = 1;
+			_s--;
+		}
+		else if (_k > 0)
+		{
+			tab[i] = 0;
+			_k--;
+		}
+	}
+
+	std::random_shuffle(tab, tab + k + s);
 
 	int nr = 0;
 	for(auto& p : players)
-		p.second.team = team[nr++];
+		p.second.team = tab[nr++];
 
-	//rozdanie kart
-	for(auto& p : players) {
+	//ustawienie pierwszego gracza
+	curr_player = rand() % player_cnt;
+	
+	//clearowanie kart
+	for(auto& p : players)
 		p.second.cards.clear();
-
+		
+	//clearowanie buffów
+	for(auto& p : players)
+		p.second.buff_mask = 0;
+	
+	//rozdanie kart
+	int cards_per_player = player_cnt <= 5 ? 6 :
+						   player_cnt <= 7 ? 5 :
+						   4;
+	
+	for(auto& p : players) {
 		std::string card_list = "";
-		for(int i = 0; i < 6; i++) {
-			card_list += toStr(cards.back()) + ' ';
+		for(int i = 0; i < cards_per_player; i++) {
 			p.second.addCard(cards.back());
+			card_list += toStr(cards.back()) + ' ';
 			cards.pop_back();
 		}
+
 		write(p.first, "START " + card_list + (p.second.team == REGGID ? '1' : '2'));
 	}
 	
-	//ustawienie pierwszego gracza
-	curr_player = rand() % player_cnt;
 	writeAll("TURN " + players[player_order[curr_player]].name);
 }
 
@@ -205,6 +245,10 @@ void endGame(bool who_won) {
 
 
 void removePlayer(int fd) {
+	//jesli gracz nie jest zalogowany to nic nie rób
+	if(players.find(fd) == players.end())
+		return;
+	
 	writeAll("BYE " + players[fd].name);
 	
 	//sprawdź czy nie jest jego tura
@@ -275,7 +319,7 @@ void doCrush(int fd, int id, int x, int y) {
 
 
 void doMap(int fd, int id, int x, int y) {
-	write(fd, "PLACE " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y) + " 0");
+	write(fd, "MAP " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y));
 	
 	newCard(fd, id);
 	if(!nextPlayer())
