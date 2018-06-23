@@ -233,6 +233,9 @@ namespace Ruetobas
 
                     for (int i = 0; i < players.Count; i++)
                         players[i].playerClass = PlayerClass.Unknown;
+                    for (int i = 0; i < players.Count; i++)
+                        players[i].buffs.Clear();
+
                     players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[data.Count() - 1]);
                     textBoxes["CHAT"].Append("You Are:");
                     textBoxes["CHAT"].Append(players[yourPlayerId].playerClass.ToString());
@@ -265,6 +268,7 @@ namespace Ruetobas
                 if (data[0] == "END")
                 {
                     textBoxes["CHAT"].Append("Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!");
+                    textBoxes["HELP"].lines[0] = "Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!";
                     for (int i = 0; i < players.Count; i++)
                     {
                         string playername = data[3 * i + 2];
@@ -350,12 +354,12 @@ namespace Ruetobas
                 //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
                 buttons["CHARACTER"] = new Button(chatTexture, new Rectangle(0, 780, 180, 300), null);
-                textBoxes["ACTUALPLAYER"] = new TextBox(skurwielTexture, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
+                textBoxes["ACTUALPLAYER"] = new TextBox(errorButton, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
                 buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
                 buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
-                buttons["REMOVE"] = new Button(skurwielTexture, new Rectangle(1380, 855, 540, 75), null);
-                buttons["MENU"] = new Button(skurwielTexture, new Rectangle(1380, 930, 540, 75), null);
-                buttons["EXIT"] = new Button(skurwielTexture, new Rectangle(1380, 1005, 540, 75), null);
+                buttons["REMOVE"] = new Button(errorButton, new Rectangle(1380, 855, 540, 75), null);
+                buttons["MENU"] = new Button(errorButton, new Rectangle(1380, 930, 540, 75), null);
+                buttons["EXIT"] = new Button(errorButton, new Rectangle(1380, 1005, 540, 75), null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
@@ -690,9 +694,9 @@ namespace Ruetobas
             //textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
             //textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
             inputBoxes["ZZZZVolume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
-            buttons["ZZZZTestSound"] = new Button(skurwielTexture, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
+            buttons["ZZZZTestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
             buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), CloseGameMenu);
-            buttons["ZZZZQuit"] = new Button(skurwielTexture, new Rectangle(1700, 940, 140, 80), game.Exit);
+            buttons["ZZZZQuit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
         }
 
         public static void ChangeFullscreen()
@@ -728,11 +732,9 @@ namespace Ruetobas
             return;
         }
 
-        public static void PlaySound(SoundEffect sound_effect, float playVolume)
+        public static void PlaySound(SoundEffect soundEffect, float playVolume)
         {
-            SoundEffectInstance instance = sound_effect.CreateInstance();
-            instance.Volume = playVolume;
-            instance.Play();
+            soundEffect.Play(playVolume, 0.0f, 0.0f);
         }
     }
 }
