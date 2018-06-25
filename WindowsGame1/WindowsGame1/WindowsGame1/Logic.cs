@@ -78,10 +78,6 @@ namespace Ruetobas
             maxResDefault = game.GetCurrentDeviceResolution();
             displayModes = game.GetDisplayModes();
             Array.Sort(displayModes, SortDisplay);
-            foreach(DisplayMode dp in displayModes)
-            {
-                Console.WriteLine("Dp = {0} : {1}, aspekt = {2}", dp.Width, dp.Height, dp.AspectRatio);
-            }
             
             buttons = new Dictionary<string, Button>();
             textBoxes = new Dictionary<string, TextBox>();
