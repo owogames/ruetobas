@@ -101,13 +101,12 @@ namespace Ruetobas
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
         public static Texture2D cursorTexture;
 
         public static Vector2 scale = Vector2.One * 1280.0f/1920.0f;
         public static Vector2 resolution = new Vector2(1280, 720);
         public static bool isFullscreen = false;
-
+        
         public void ChangeResolution(float X, float Y)
         {
             int width = (int)X;
@@ -118,11 +117,26 @@ namespace Ruetobas
             graphics.PreferredBackBufferHeight = height;
             graphics.ApplyChanges();
         }
-        
+
+        public void ChangeResolution(Point res) => ChangeResolution(res.X, res.Y);
+
         public void ChangeFullscreen()
         {
             graphics.ToggleFullScreen();
             isFullscreen = !isFullscreen;
+        }
+
+        public Point GetCurrentDeviceResolution()
+        {
+            Point resolution;
+            resolution.X = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            resolution.Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            return resolution;
+        }
+
+        public DisplayMode[] GetDisplayModes()
+        {
+            return GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.ToArray();
         }
 
         public Game()

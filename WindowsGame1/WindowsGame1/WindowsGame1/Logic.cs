@@ -47,10 +47,15 @@ namespace Ruetobas
         public static SoundEffect bye;
         public static SoundEffect stal;
 
+        public static DisplayMode[] displayModes;
+        public static Point maxResDefault;
+        public static bool only16to9 = true;
+
         public static PlacedCard[,] map;
 
         public static List<Card> cards;
 
+        public static string[] windowNames = { "A tunnel placing card game.", "Boi I love this game.", "Let us all block Paweł.", "Just please don't destroy this tunnel!", "Made with love.", "Gosh I hate geologists!", "", "Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas...", "Now with Battle Royale!!" };
         public static int selectedCard = -1;
         public static int selectedRot = 0;
         public static int[] cardHand = new int[6];
@@ -68,6 +73,16 @@ namespace Ruetobas
         public static void Init(Game game)
         {
             Logic.game = game;
+
+            game.Window.Title = "Ruetobas: " + windowNames[rand.Next(windowNames.Length)];
+            maxResDefault = game.GetCurrentDeviceResolution();
+            displayModes = game.GetDisplayModes();
+            Array.Sort(displayModes, SortDisplay);
+            foreach(DisplayMode dp in displayModes)
+            {
+                Console.WriteLine("Dp = {0} : {1}, aspekt = {2}", dp.Width, dp.Height, dp.AspectRatio);
+            }
+            
             buttons = new Dictionary<string, Button>();
             textBoxes = new Dictionary<string, TextBox>();
             inputBoxes = new Dictionary<string, InputBox>();
@@ -358,7 +373,7 @@ namespace Ruetobas
                 buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
                 buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
                 buttons["REMOVE"] = new Button(errorButton, new Rectangle(1380, 855, 540, 75), null);
-                buttons["MENU"] = new Button(errorButton, new Rectangle(1380, 930, 540, 75), null);
+                buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), OpenGameMenu);
                 buttons["EXIT"] = new Button(errorButton, new Rectangle(1380, 1005, 540, 75), null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
@@ -686,9 +701,10 @@ namespace Ruetobas
         public static void OpenGameMenu()
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            inputBoxes["ZZZZResolutionX"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 10, 200, 100), Color.Aquamarine, Color.BlueViolet, "Width", 8);
-            inputBoxes["ZZZZResolutionY"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 120, 200, 100), Color.Aquamarine, Color.BlueViolet, "Height", 8);
+            textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
+            textBoxes["ZZZZ16to9text"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Allow only 16:9 res");
             buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
+            buttons["ZZZZ16to9"] = new Button(tickedTexture, new Rectangle(220, 120, 50, 50), Change16to9Mode);
             if (Game.isFullscreen == false)
                 buttons["ZZZZFullscreen"].texture = unTickedTexture;
             //textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
@@ -697,6 +713,18 @@ namespace Ruetobas
             buttons["ZZZZTestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
             buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), CloseGameMenu);
             buttons["ZZZZQuit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
+            int height = 20;
+            foreach (DisplayMode dp in displayModes)
+            {
+                if (only16to9 == false || dp.AspectRatio == (16.0f / 9.0f))
+                {
+                    string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
+                    buttons["Z" + name] = new Button(transparentTexture, new Rectangle(1000, height, 200, 50), () => game.ChangeResolution(dp.Width, dp.Height));
+                    textBoxes[name] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(1000, height, 200, 50));
+                    textBoxes[name].Append(dp.Width.ToString() + ":" + dp.Height.ToString());
+                    height += 60;
+                }
+            }
         }
 
         public static void ChangeFullscreen()
@@ -710,23 +738,35 @@ namespace Ruetobas
 
         public static void CloseGameMenu()
         {
-            int newX, newY;
+            //int newX, newY;
             float new_volume;
+            /*
             if (int.TryParse(inputBoxes["ZZZZResolutionX"].text, out newX) &&
-                int.TryParse(inputBoxes["ZZZZResolutionY"].text, out newY) &&
+                int.TryParse(inputBoxes["ZZZZResolutionY"].text, out newY) && 
                 newX > 0 && newY > 0)
                 game.ChangeResolution(newX, newY);
-
+            */
             if (float.TryParse(inputBoxes["ZZZZVolume"].text, out new_volume) &&
                 new_volume < 100 && new_volume >= 0)
                 volume = new_volume * 0.01f;
-            inputBoxes.Remove("ZZZZResolutionX");
-            inputBoxes.Remove("ZZZZResolutionY");
+            textBoxes.Remove("ZZZZFullscreentext");
+            textBoxes.Remove("ZZZZ16to9text");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
             buttons.Remove("ZZZZFullscreen");
+            buttons.Remove("ZZZZ16to9");
             inputBoxes.Remove("ZZZZVolume");
             buttons.Remove("ZZZZTestSound");
+            foreach (DisplayMode dp in displayModes)
+            {
+                string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
+                if (only16to9 == false || dp.AspectRatio == (16.0f / 9.0f))
+                {
+                    buttons.Remove("Z" + name);
+                    textBoxes.Remove(name);
+                }
+                    
+            }
             //textBoxes.Remove("ZZZZFullscreentext");
             buttons.Remove("ZZZZQuit");
             return;
@@ -736,5 +776,57 @@ namespace Ruetobas
         {
             soundEffect.Play(playVolume, 0.0f, 0.0f);
         }
+
+        public static int SortDisplay(DisplayMode a, DisplayMode b)
+        {
+            if(a.Width > maxResDefault.X || a.Height > maxResDefault.Y)
+            {
+                if(b.Width > maxResDefault.X || b.Height > maxResDefault.Y)
+                {
+                    if (a.Width > b.Width)
+                        return -1;
+                    else if (a.Width < b.Width)
+                        return 1;
+                    else
+                    {
+                        if (a.Height > b.Height)
+                            return -1;
+                        else if (a.Height < b.Height)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else if(b.Width > maxResDefault.X || b.Height > maxResDefault.Y){
+                return -1;
+            }
+            else
+            {
+                if (a.Width > b.Width)
+                    return -1;
+                else if (a.Width < b.Width)
+                    return 1;
+                else
+                {
+                    if (a.Height > b.Height)
+                        return -1;
+                    else if (a.Height < b.Height)
+                        return 1;
+                    else
+                        return 0;
+                }
+            }
+        }
+        
+        public static void Change16to9Mode()
+        {
+
+        }
+
     }
 }
