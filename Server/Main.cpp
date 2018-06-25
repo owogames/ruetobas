@@ -83,17 +83,7 @@ void newGame() {
 	
 	//kolejność kart
 	cards.clear();
-	/*
-	for(int i = 1; i <= NCARDS; i++)
-		if(cardType(i) == CARD_BUFF || 
-		   cardType(i) == CARD_DEBUFF || 
-		   cardType(i) == CARD_TUNNEL || 
-		   cardType(i) == CARD_MAP || 
-		   cardType(i) == CARD_CRUSH) 
-			cards.push_back(i);
-			*/
-	//potem zrobie to lepiej xdd
-	for(int i = 2; i <= 41; i++)
+	for(int i = 2; i <= 41; i++) //potem zrobie to lepiej xdd
 		cards.push_back(i);
 	for(int i = 46; i <= 72; i++)
 		cards.push_back(i);	
@@ -110,7 +100,8 @@ void newGame() {
 	});
 	
 	//rozdanie frakcji
-	bool tab[12], s = 1, k = 3, siz = players.size();
+	bool tab[12];
+	int s = 1, k = 3, siz = players.size();
 
 	if (siz > 3)
 		k = 4;
@@ -211,10 +202,10 @@ bool revealCards() {
 
 
 bool nextPlayer() {
-	for(int i = 0; i < player_order.size(); i++) {
+	for(int i = 0; i < (int)player_order.size(); i++) {
 	
 		curr_player++;
-		if(curr_player >= player_order.size())
+		if(curr_player >= (int)player_order.size())
 			curr_player = 0;
 		
 		if(!players[player_order[curr_player]].cards.empty()) {
@@ -413,7 +404,7 @@ int main() {
 				write(fd, "ERROR The game is not yet running");
 			
 			else if(ss.fail())
-				write(fd, "ERROR Incorrect command syntax0");
+				write(fd, "ERROR Incorrect command syntax");
 				
 			else if(fd != player_order[curr_player])
 				write(fd, "ERROR Not your turn");
@@ -428,7 +419,9 @@ int main() {
 						ss >> x >> y >> flip;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax1");
+							write(fd, "ERROR Incorrect command syntax");
+						else if(players[fd].buff_mask != 0)
+							write(fd, "ERROR You can't place tunnels, for you are blocked");
 						else if(!canPlaceCard(id, x, y, flip))
 							write(fd, "ERROR Invalid move");
 						else
@@ -441,7 +434,7 @@ int main() {
 						ss >> usr;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax2");
+							write(fd, "ERROR Incorrect command syntax");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
 						else if(players[usernames[usr]].hasBuff(buffId(id)))
@@ -458,7 +451,7 @@ int main() {
 						ss >> usr >> flip;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax3");
+							write(fd, "ERROR Incorrect command syntax");
 						else if(usernames.find(usr) == usernames.end())
 							write(fd, "ERROR Player doensn't exist");
 						else if(!players[usernames[usr]].hasBuff(debuffId(id, flip))) 
@@ -473,7 +466,7 @@ int main() {
 						ss >> x >> y;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax4");
+							write(fd, "ERROR Incorrect command syntax");
 						else if(!canUseCrush(x, y))
 							write(fd, "ERROR Can't touch that");
 						else
@@ -486,7 +479,7 @@ int main() {
 						ss >> x >> y;
 						
 						if(ss.fail())
-							write(fd, "ERROR Incorrect command syntax5");
+							write(fd, "ERROR Incorrect command syntax");
 						else if(!canUseMap(x, y))
 							write(fd, "ERROR Can't look there");
 						else
