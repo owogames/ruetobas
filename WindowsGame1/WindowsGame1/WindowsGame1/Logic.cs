@@ -362,11 +362,9 @@ namespace Ruetobas
                 buttons["SEND"] = new Button(chatSendTexture, new Rectangle(1870, 720, 50, 60), SendChatMessage);
                 textBoxes["HELP"] = new TextBox(errorBackground, 5, Alignment.Centered, font, new Rectangle(0, 720, 1380, 60), "");
                 textBoxes["HELP"].canScroll = false;
-                //tekstury dla HD - ["READY"] = new Button(notReadyTexture, new Rectangle(280, 190, 360, 140), Ready); //sam guzik = Rectangle(280, 190, 360, 140) guzik z tlem = new Rectangle(0, 0, 1380, 780)
                 buttons["READY"] = new Button(notReadyTexture, new Rectangle(420, 285, 540, 210), Ready);
                 buttons["CHARACTER"] = new Button(chatTexture, new Rectangle(0, 780, 180, 300), null);
                 textBoxes["ACTUALPLAYER"] = new TextBox(errorButton, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
-                buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
                 buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
                 buttons["REMOVE"] = new Button(errorButton, new Rectangle(1380, 855, 540, 75), null);
                 buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), OpenGameMenu);
@@ -374,6 +372,12 @@ namespace Ruetobas
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
+                buttons["PLAYERLISTON"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
+                buttons["PLAYERLISTOFF"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
+                buttons["PLAYERLISTOFF"].enabled = false;
+                grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 150), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
+                grids["ZPLAYERLIST"].offset = new Vector2(grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
+                grids["ZPLAYERLIST"].enabled = false;
             }
             else
             {
@@ -383,15 +387,16 @@ namespace Ruetobas
 
         public static void ShowPlayerList()
         {
-            buttons["PLAYERLISTSET"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
-            grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 150), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
-            grids["ZPLAYERLIST"].offset = new Vector2(grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
+            buttons["PLAYERLISTON"].enabled = false;
+            buttons["PLAYERLISTOFF"].enabled = true;
+            grids["ZPLAYERLIST"].enabled = true;
         }
 
         public static void HidePlayerList()
         {
-            buttons["PLAYERLISTSET"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
-            grids.Remove("ZPLAYERLIST");
+            buttons["PLAYERLISTON"].enabled = true;
+            buttons["PLAYERLISTOFF"].enabled = false;
+            grids["ZPLAYERLIST"].enabled = false;
         }
 
         public static int CheckCardPlacement(int x, int y, int ID, int rot)
@@ -703,8 +708,6 @@ namespace Ruetobas
             buttons["ZZZZ16to9"] = new Button(tickedTexture, new Rectangle(220, 120, 50, 50), Change16to9Mode);
             if (Game.isFullscreen == false)
                 buttons["ZZZZFullscreen"].texture = unTickedTexture;
-            //textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Left, font, new Rectangle(10, 230, 110, 40));
-            //textBoxes["ZZZZFullscreentext"].Append("Fullscreen");
             inputBoxes["ZZZZVolume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
             buttons["ZZZZTestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
             buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), CloseGameMenu);
@@ -734,14 +737,7 @@ namespace Ruetobas
 
         public static void CloseGameMenu()
         {
-            //int newX, newY;
             float new_volume;
-            /*
-            if (int.TryParse(inputBoxes["ZZZZResolutionX"].text, out newX) &&
-                int.TryParse(inputBoxes["ZZZZResolutionY"].text, out newY) && 
-                newX > 0 && newY > 0)
-                game.ChangeResolution(newX, newY);
-            */
             if (float.TryParse(inputBoxes["ZZZZVolume"].text, out new_volume) &&
                 new_volume < 100 && new_volume >= 0)
                 volume = new_volume * 0.01f;
@@ -756,14 +752,13 @@ namespace Ruetobas
             foreach (DisplayMode dp in displayModes)
             {
                 string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
-                if (only16to9 == false || dp.AspectRatio == (16.0f / 9.0f))
+                if (buttons.ContainsKey("Z" + name))
                 {
                     buttons.Remove("Z" + name);
                     textBoxes.Remove(name);
                 }
                     
             }
-            //textBoxes.Remove("ZZZZFullscreentext");
             buttons.Remove("ZZZZQuit");
             return;
         }
@@ -775,48 +770,19 @@ namespace Ruetobas
 
         public static int SortDisplay(DisplayMode a, DisplayMode b)
         {
-            if(a.Width > maxResDefault.X || a.Height > maxResDefault.Y)
-            {
-                if(b.Width > maxResDefault.X || b.Height > maxResDefault.Y)
-                {
-                    if (a.Width > b.Width)
-                        return -1;
-                    else if (a.Width < b.Width)
-                        return 1;
-                    else
-                    {
-                        if (a.Height > b.Height)
-                            return -1;
-                        else if (a.Height < b.Height)
-                            return 1;
-                        else
-                            return 0;
-                    }
-                }
-                else
-                {
-                    return 1;
-                }
-            }
-            else if(b.Width > maxResDefault.X || b.Height > maxResDefault.Y){
+            bool aSupported = (a.Width <= maxResDefault.X && a.Height <= maxResDefault.Y);
+            bool bSupported = (b.Width <= maxResDefault.X && b.Height <= maxResDefault.Y);
+            if (aSupported && !bSupported)
                 return -1;
-            }
-            else
-            {
-                if (a.Width > b.Width)
-                    return -1;
-                else if (a.Width < b.Width)
-                    return 1;
-                else
-                {
-                    if (a.Height > b.Height)
-                        return -1;
-                    else if (a.Height < b.Height)
-                        return 1;
-                    else
-                        return 0;
-                }
-            }
+            if (!aSupported && bSupported)
+                return 1;
+
+            if (a.Width > b.Width)
+                return -1;
+            if (a.Width < b.Width)
+                return 1;
+            
+            return a.Height.CompareTo(b.Height);
         }
         
         public static void Change16to9Mode()
