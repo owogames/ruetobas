@@ -81,3 +81,48 @@ std::string toStr(int x) {
 	ss << x;
 	return ss.str();
 }
+
+std::string censored(std::string str) {
+	const std::vector<std::pair<std::string, std::string>> c = {
+		{"cheat", "break the law"},
+		{"ppv2", "pp"},
+		{"gay", "coconut milk"},
+		{"fgt", "lieutenant"},
+		{"nigger", "fine sir"},
+		{"loli", "fine lady"},
+		{"fuck", "duck"},
+		{"ddos", "tomato sauce bottle"},
+		{"dildo", "poporing"},
+		{"filter", "percolate"},
+		{"illuminati", "baseball"},
+		{"kappa", "umbrellas"},
+		{"faggot", "lamborghini"},
+		{"^", "I agree!"},
+		{"cunt", "ant-hill"},
+		{"pico", "rocket"},
+		{"fag", "_"},
+		{"farm", "play"},
+		{"farming", "fruit picking"},
+		{"silenced", "tuned out"},
+		{"porn", "milk"},
+		{"cancer", "rainbows"},
+		{"suicide", "happyfuntime"},
+		{"crai", "memes"},
+		{"bancho", "mary poppins"},
+		{"weed", "salmon"},
+		{"bisexual", "onions"},
+		{"penis", "pencil"},
+		{"strawpoll.me", "osu.ppy.sh"},
+		{"shigetora.pw", "monopoly.com"},
+	};
+
+	for(auto p : c) {
+		size_t index = str.find(p.first);
+		while(index != std::string::npos) {
+			str.replace(index, p.first.size(), p.second);
+			index = str.find(p.first);
+		}
+	}
+
+	return str;
+}

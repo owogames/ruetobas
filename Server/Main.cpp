@@ -332,8 +332,6 @@ int main() {
 	
 	wakeMeUp(2137);
 	loadCards("../karty_normalne.txt");
-	//for(int i = 0; i <= NCARDS; i++)
-	//	std::cout << i << " " << cardType(i) << std::endl;
 	
 	while(true) {
 		int fd;
@@ -375,7 +373,7 @@ int main() {
 				write(fd, "ERROR Invalid chat message");
 				
 			else 
-				writeAll("CHAT " + text);
+				writeAll("CHAT " + censored(text));
 		}
 
 

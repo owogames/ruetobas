@@ -10,6 +10,8 @@ bool invalidLogin(const std::string& str);
 ///@brief sprawdza, czy wiadomość chatu jest legitna
 bool invalidChatMsg(const std::string& str);
 
+std::string censored(std::string str);
+
 ///@brief rozbija stringa na listę intów
 bool intList(const std::string& str, std::vector<int>& v);
 
