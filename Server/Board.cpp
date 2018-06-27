@@ -5,100 +5,51 @@
 #include <tuple>
 #include <algorithm>
 
+
+
+const static int inf = 0x7fffffff;
+
 using namespace std;
 
 static pair <int, bool> board[19][15];
 static int dis[19][15][4];
-static int t[3];
+static int treasure_id[3];
+static int treasure_x[3] = {13, 13, 13};
+static int treasure_y[3] = {5, 7, 9};
 static vector <Tunnel> tunnels;
 
-void initBoard() {
+////////////////////funkcje pomocnicze//////////////////////////////
 
-	for(int i = 0; i < 19; i++)
-		for(int j = 0; j < 15; j++)
-			board[i][j] = {0, false};
-
-	tunnels = getTunnels();
-	board[5][7] = make_pair(1, 0);
-	board[13][7] = make_pair(45, 0);
-	board[13][5] = make_pair(45, 0);
-	board[13][9] = make_pair(45, 0);
-	
-	
-
-	t[0] = 42;
-	t[1] = 43;
-	t[2] = 44;
-
-	random_shuffle(t, t + 3);
+///sprawdza czy pozycja jest git
+static bool validPos(int x, int y) {
+	return x >= 1 && x <= 17 && y >= 1 && y <= 13;
 }
 
-bool canPlaceCard(int id, int x, int y, bool flip) {
-	if (x < 1 || x > 17 || y < 1 || y > 13)
-		return false;
-	if (board[x][y] != make_pair(0, false))
-		return false;
-	return true;
-}
-
-void placeCard(int id, int x, int y, bool flip) {
-	board[x][y] = make_pair(id, flip);
-}
-
-bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
+///liczy odległość od drabiny wszystkiego
+static void bfs() {
 	
 	queue < tuple <int, int, int> > q;
 	
-	q.push(make_tuple(5, 7, 0));
-	q.push(make_tuple(5, 7, 1));
-	q.push(make_tuple(5, 7, 2));
-	q.push(make_tuple(5, 7, 3));
+	q.emplace(5, 7, 0);
+	q.emplace(5, 7, 1);
+	q.emplace(5, 7, 2);
+	q.emplace(5, 7, 3);
 
 	for (int i = 0; i < 19; i++)
 		for (int j = 0; j < 15; j++)
 			for (int k = 0; k < 4; k++)
-				dis[i][j][k] = 123456789;
+				dis[i][j][k] = inf;
 	
+	dis[5][7][0] = 0;
 	dis[5][7][1] = 0;
 	dis[5][7][2] = 0;
 	dis[5][7][3] = 0;
-	dis[5][7][0] = 0;
 
 	while (!q.empty())
 	{
 		int x, y, z;
 		tie(x, y, z) = q.front();
 		q.pop();
-
-		if (board[x][y].first == 45)
-		{
-			if (y == 5)
-			{
-				board[x][y] = make_pair(t[0], 0);
-				id = t[0];
-				_x = x;
-				_y = y;
-				_flip = 0;
-			}
-			else if (y == 7)
-			{
-				board[x][y] = make_pair(t[1], 0);
-				id = t[1];
-				_x = x;
-				_y = y;
-				_flip = 0;
-			}
-			else
-			{
-				board[x][y] = make_pair(t[2], 0);
-				id = t[2];
-				_x = x;
-				_y = y;
-				_flip = 0;
-			}
-
-			return true;
-		}
 
 		if (z == 0)
 		{
@@ -111,7 +62,7 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (dis[x][y - 1][2] > dis[x][y][z] + 1 && tunnels[board[x][y - 1].first].open[pos2])
 				{
 					dis[x][y - 1][2] = dis[x][y][z] + 1;
-					q.push(make_tuple(x, y - 1, 2));
+					q.emplace(x, y - 1, 2);
 				}
 			}
 		}
@@ -127,7 +78,7 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (dis[x + 1][y][3] > dis[x][y][z] + 1 && tunnels[board[x + 1][y].first].open[pos2])
 				{
 					dis[x + 1][y][3] = dis[x][y][z] + 1;
-					q.push(make_tuple(x + 1, y, 3));
+					q.emplace(x + 1, y, 3);
 				}
 			}
 		}
@@ -143,7 +94,7 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (dis[x][y + 1][0] > dis[x][y][z] + 1 && tunnels[board[x][y + 1].first].open[pos2])
 				{
 					dis[x][y + 1][0] = dis[x][y][z] + 1;
-					q.push(make_tuple(x, y + 1, 0));
+					q.emplace(x, y + 1, 0);
 				}
 			}
 		}
@@ -159,7 +110,7 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 				if (dis[x - 1][y][1] > dis[x][y][z] + 1 && tunnels[board[x - 1][y].first].open[pos2])
 				{
 					dis[x - 1][y][1] = dis[x][y][z] + 1;
-					q.push(make_tuple(x - 1, y, 1));
+					q.emplace(x - 1, y, 1);
 				}
 			}
 		}
@@ -179,14 +130,105 @@ bool revealedCard(int& id, int& _x, int& _y, bool& _flip) {
 					if (dis[x][y][i] > dis[x][y][z] + 1)
 					{
 						dis[x][y][i] = dis[x][y][z] + 1;
-						q.push(make_tuple(x, y, i));
+						q.emplace(x, y, i);
 					}
 		}
 	}
-
-	return false;
 }
 
+static void revealTreasure(int t) {
+	int id = treasure_id[t];
+	int x = treasure_x[t];
+	int y = treasure_y[t];
+	
+	for(int i = 0; i < 4; i++) {
+		if(dis[x][y][i] < inf) {
+			board[x][y].first = id;
+			if(!tunnels[id].open[i])
+				board[x][y].second = true;
+			break;
+		}
+	}
+}
+
+///////////////////funkcje z board.h///////////////////////
+
+void initBoard() {
+
+	for(int i = 0; i < 19; i++)
+		for(int j = 0; j < 15; j++)
+			board[i][j] = {0, false};
+
+	tunnels = getTunnels();
+	board[5][7] = make_pair(1, 0);
+	
+	for(int i = 0; i < 3; i++)
+		board[treasure_x[i]][treasure_y[i]] = make_pair(45, 0);
+	
+	treasure_id[0] = 42;
+	treasure_id[1] = 43;
+	treasure_id[2] = 44;
+
+	random_shuffle(treasure_id, treasure_id+3);
+}
+
+bool canPlaceCard(int id, int x, int y, bool flip) {
+	if(!validPos(x, y))
+		return false;
+	if (board[x][y].first != 0)
+		return false;
+		
+	const int dx[4] = {0, 1, 0, -1};
+	const int dy[4] = {-1, 0, 1, 0};
+		
+	bfs();
+	
+	bool visited = false;
+		
+	for(int i = 0; i < 4; i++) {
+		int id2 = board[x+dx[i]][y+dy[i]].first;
+		if(id2 == 0) continue;
+		
+		int d1 = flip ? (i+2)%4 : i;
+		int d2 = board[x+dx[i]][y+dy[i]].second ? i : (i+2)%4;
+		
+		if(tunnels[id].open[d1] != tunnels[id2].open[d2])
+			return false;
+		if(dis[x+dx[i]][y+dy[i]][(i+2)%4] < inf)
+			visited = true;
+	}
+		
+	return visited;
+}
+
+void placeCard(int id, int x, int y, bool flip) {
+	board[x][y] = {id, flip};
+}
+
+
+
+
+bool revealedCard(int& id, int& x, int& y, bool& flip) {
+	bfs();
+	
+	for(int i = 0; i < 3; i++) {
+		int _x = treasure_x[i];
+		int _y = treasure_y[i];
+		
+		if(board[_x][_y].first == 45 && (dis[_x][_y][0] < inf || 
+									     dis[_x][_y][1] < inf || 
+									     dis[_x][_y][2] < inf || 
+									     dis[_x][_y][3] < inf)) {
+			revealTreasure(i);
+			id = board[_x][_y].first;
+			x = _x;
+			y = _y;
+			flip = board[_x][_y].second;
+			return true;
+		}
+	}
+	return false;
+}
 
 bool canUseCrush(int x, int y) {
 	return tunnels[board[x][y].first].type == Tunnel::NORMAL || 
@@ -204,6 +246,8 @@ bool canUseMap(int x, int y) {
 }
 
 int useMap(int x, int y) {
-	return y == 5 ? t[0] : y == 7 ? t[1] : t[2];
+	return y == 5 ? treasure_id[0] : 
+		   y == 7 ? treasure_id[1] :
+					treasure_id[2];
 }
 

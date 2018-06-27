@@ -325,8 +325,6 @@ void doDiscard(int fd, int id) {
 
 ////////////////////////////////////////////////GŁÓWNA PĘTLA, OBSŁUGA BŁĘDÓW//////////////////////////////////////////////////////////////
 
-
-
 int main() {	
 	srand(std::chrono::system_clock::now().time_since_epoch().count()); //top lel
 	
