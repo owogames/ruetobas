@@ -187,7 +187,7 @@ bool canPlaceCard(int id, int x, int y, bool flip) {
 		
 	for(int i = 0; i < 4; i++) {
 		int id2 = board[x+dx[i]][y+dy[i]].first;
-		if(id2 == 0) continue;
+		if(id2 == 0 || id2 == 45) continue;
 		
 		int d1 = flip ? (i+2)%4 : i;
 		int d2 = board[x+dx[i]][y+dy[i]].second ? i : (i+2)%4;
