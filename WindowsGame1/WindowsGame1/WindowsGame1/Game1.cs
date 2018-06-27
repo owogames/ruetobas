@@ -560,7 +560,6 @@ namespace Ruetobas
                             targetRect.Y += grid.location.Height / 2 - grid.margin;
                             if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
                             {
-                                targetRect = Geo.Scale(targetRect); 
                                 grid.drawEvent(spriteBatch, targetRect, x, y);
                             }
                         }
@@ -657,7 +656,7 @@ namespace Ruetobas
             }
 
             //Rysowanie kursora
-            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X) - 16, (int)(Mouse.GetState().Y), 32, 32), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
             
             spriteBatch.End();
 
