@@ -560,6 +560,7 @@ namespace Ruetobas
                             targetRect.Y += grid.location.Height / 2 - grid.margin;
                             if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
                             {
+                                targetRect = Geo.Scale(targetRect); 
                                 grid.drawEvent(spriteBatch, targetRect, x, y);
                             }
                         }
@@ -568,7 +569,7 @@ namespace Ruetobas
                 }
             }
 
-            GraphicsDevice.SetRenderTarget(screen);
+            GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
@@ -601,7 +602,7 @@ namespace Ruetobas
                 if (Logic.buttons.ContainsKey(name))
                 {
                     Button button = Logic.buttons[name];
-                    spriteBatch.Draw(button.texture, button.location, Color.White);
+                    spriteBatch.Draw(button.texture, Geo.Scale(button.location), Color.White);
                 }
 
                 //Rysowanie textBoxów
@@ -610,7 +611,7 @@ namespace Ruetobas
                     TextBox textBox = Logic.textBoxes[name];
                     if (textBox.enabled)
                     {
-                        spriteBatch.Draw(textBox.texture, textBox.location, Color.White);
+                        spriteBatch.Draw(textBox.texture, Geo.Scale(textBox.location), Color.White);
                         for (int i = textBox.scroll; i < textBox.lines.Count && i < textBox.lineCount + textBox.scroll; i++)
                         {
                             float _x = 0;
@@ -622,7 +623,7 @@ namespace Ruetobas
 
                             Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
 
-                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position, Color.White);
+                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position * scale, Color.White, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
                         }
                     }
                 }
@@ -631,18 +632,18 @@ namespace Ruetobas
                 if (Logic.inputBoxes.ContainsKey(name))
                 {
                     InputBox inputBox = Logic.inputBoxes[name];
-                    spriteBatch.Draw(inputBox.texture, inputBox.location, inputBox.active ? Color.Gray : Color.White);
+                    spriteBatch.Draw(inputBox.texture, Geo.Scale(inputBox.location), inputBox.active ? Color.Gray : Color.White);
                     string text = inputBox.GetText();
                     if (inputBox.active) text += "|";
                     Vector2 position = new Vector2(inputBox.location.X + inputBox.margin, inputBox.location.Y + inputBox.location.Height / 2 - inputBox.font.LineSpacing / 2);
 
                     if (inputBox.text != "")
                     {
-                        spriteBatch.DrawString(inputBox.font, text, position, inputBox.color);
+                        spriteBatch.DrawString(inputBox.font, text, position * scale, inputBox.color, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
                     }
                     else
                     {
-                        spriteBatch.DrawString(inputBox.font, inputBox.emptyText, position, inputBox.emptyColor);
+                        spriteBatch.DrawString(inputBox.font, inputBox.emptyText, position * scale, inputBox.emptyColor, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
                     }
                 }
 
@@ -650,19 +651,14 @@ namespace Ruetobas
                 if (Logic.grids.ContainsKey(name))
                 {
                     Grid grid = Logic.grids[name];
-                    spriteBatch.Draw(grid.boxTexture, grid.location, Color.White);
-                    spriteBatch.Draw(grid.renderTarget, Geo.Shrink(grid.location, grid.margin), Color.White);
+                    spriteBatch.Draw(grid.boxTexture, Geo.Scale(grid.location), Color.White);
+                    spriteBatch.Draw(grid.renderTarget, Geo.Scale(Geo.Shrink(grid.location, grid.margin)), Color.White);
                 }
             }
 
             //Rysowanie kursora
-            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X / scale.X) - 16, (int)(Mouse.GetState().Y / scale.Y), 32, 32), Color.White);
-
-            spriteBatch.End();
-
-            GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin();
-            spriteBatch.Draw(screen, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.Draw(cursorTexture, new Rectangle((int)(Mouse.GetState().X) - 16, (int)(Mouse.GetState().Y), 32, 32), Color.White);
+            
             spriteBatch.End();
 
             base.Draw(gameTime);

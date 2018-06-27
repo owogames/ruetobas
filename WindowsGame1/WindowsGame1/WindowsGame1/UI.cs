@@ -202,7 +202,7 @@ namespace Ruetobas
             offset = new Vector2(sizeX * fieldSize.X / 2, sizeY * fieldSize.Y / 2);
             zoom = 1.0f;
 
-            renderTarget = new RenderTarget2D(game.GraphicsDevice, location.Width - 2 * margin, location.Height - 2 * margin);
+            renderTarget = new RenderTarget2D(game.GraphicsDevice, (int)((location.Width - 2 * margin) * Game.scale.X), (int)((location.Height - 2 * margin) * Game.scale.Y));
 
             fieldTexture = new Texture2D[sizeX, sizeY];
             for (int x = 0; x < sizeX; x++)

@@ -17,5 +17,10 @@ namespace Ruetobas
         {
             return new Rectangle(rect.X + amount, rect.Y + amount, rect.Width - 2 * amount, rect.Height - 2 * amount);
         }
+
+        public static Rectangle Scale(Rectangle rect)
+        {
+            return new Rectangle((int)(rect.X * Game.scale.X), (int)(rect.Y * Game.scale.Y), (int)(rect.Width * Game.scale.X), (int)(rect.Height * Game.scale.Y));
+        }
     }
 }
