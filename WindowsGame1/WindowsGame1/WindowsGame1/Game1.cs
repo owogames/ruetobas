@@ -334,7 +334,7 @@ namespace Ruetobas
                     for (i = UIelements.Count - 1; i >= 0; i--)
                     {
                         string name = UIelements[i];
-                        //Klikanie button體
+                        //Klikanie button贸w
                         if (Logic.buttons.ContainsKey(name))
                         {
                             if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled && Logic.buttons[name].registerClicks)
@@ -506,7 +506,7 @@ namespace Ruetobas
                 }
             }
 
-            //Wy彻czanie nieaktywnych obiekt體
+            //Wy鲁鹿czanie nieaktywnych obiekt贸w
             if (activeInputBox != null && !activeInputBox.enabled)
                 activeInputBox = null;
             if (draggedGrid != null && !draggedGrid.enabled)
@@ -541,7 +541,7 @@ namespace Ruetobas
         
         protected override void Draw(GameTime gameTime)
         {
-            //Rysowanie grid體
+            //Rysowanie grid贸w
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
@@ -600,14 +600,14 @@ namespace Ruetobas
             {
                 string name = UIelements[id];
 
-                //Rysowanie guzik體
+                //Rysowanie guzik贸w
                 if (Logic.buttons.ContainsKey(name))
                 {
                     Button button = Logic.buttons[name];
                     spriteBatch.Draw(button.texture, Geo.Scale(button.location), Color.White);
                 }
 
-                //Rysowanie textBox體
+                //Rysowanie textBox贸w
                 if (Logic.textBoxes.ContainsKey(name))
                 {
                     TextBox textBox = Logic.textBoxes[name];
@@ -630,7 +630,7 @@ namespace Ruetobas
                     }
                 }
 
-                //Rysowanie inputBox體
+                //Rysowanie inputBox贸w
                 if (Logic.inputBoxes.ContainsKey(name))
                 {
                     InputBox inputBox = Logic.inputBoxes[name];
@@ -649,7 +649,7 @@ namespace Ruetobas
                     }
                 }
 
-                //Rysowanie grid體
+                //Rysowanie grid贸w
                 if (Logic.grids.ContainsKey(name))
                 {
                     Grid grid = Logic.grids[name];
@@ -669,6 +669,11 @@ namespace Ruetobas
         protected override void OnExiting(Object sender, EventArgs args)
         {
             base.OnExiting(sender, args);
+            if (tcpThread != null)
+            {
+                TCPSend("QUIT");
+                tcpThread.Abort();
+            }
             Exit();
         }
     }
