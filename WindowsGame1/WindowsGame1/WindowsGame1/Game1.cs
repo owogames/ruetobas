@@ -422,7 +422,10 @@ namespace Ruetobas
                     if (keyboardState.IsKeyDown(Keys.LeftControl))
                     {
                         if (keyboardState.IsKeyDown(Keys.V) && keyboardBeforeState.IsKeyUp(Keys.V))
-                            activeInputBox.Append(GetClipboard());
+                        {
+                            string sOut = Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(GetClipboard()));
+                            activeInputBox.Append(sOut);
+                        }
                     }
                     else if (keyboardState.IsKeyDown(Keys.Delete))
                         activeInputBox.Clear();
