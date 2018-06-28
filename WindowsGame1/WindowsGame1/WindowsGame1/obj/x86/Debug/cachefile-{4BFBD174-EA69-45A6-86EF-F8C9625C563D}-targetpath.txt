@@ -95,6 +95,7 @@ Content\cards\mapcard43.xnb
 Content\cards\mapcard44.xnb
 Content\font.xnb
 Content\comic.xnb
+Content\shaders\Mask.xnb
 Content\SoundFX\best ost.xnb
 Content\SoundFX\best ost.wma
 Content\SoundFX\menuback2.xnb
@@ -104,3 +105,5 @@ Content\SoundFX\normal-hitwhistle.xnb
 Content\SoundFX\normal-hitwhistle2.xnb
 Content\SoundFX\seeya.xnb
 Content\SoundFX\soft-hitfinish.xnb
+Content\tileDirt.xnb
+Content\tileGrass.xnb

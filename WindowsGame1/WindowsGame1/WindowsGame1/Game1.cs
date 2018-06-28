@@ -159,7 +159,6 @@ namespace Ruetobas
             // TODO: Add your initialization logic here
             asen = new ASCIIEncoding();
             screen = new RenderTarget2D(GraphicsDevice, 1920, 1080);
-            Logic.Init(this);
             base.Initialize();
         }
 
@@ -172,6 +171,8 @@ namespace Ruetobas
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Logic.spriteBatch = spriteBatch;
+            Logic.Init(this);
             cursorTexture = Content.Load<Texture2D>("cursor");
             // TODO: use this.Content to load your game content here
         }

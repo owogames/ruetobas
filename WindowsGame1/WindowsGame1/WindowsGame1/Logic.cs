@@ -20,6 +20,7 @@ namespace Ruetobas
         public static Dictionary<string, Grid> grids;
 
         public static Game game;
+        public static SpriteBatch spriteBatch;
         public static Texture2D chatTexture;
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
@@ -39,7 +40,10 @@ namespace Ruetobas
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
+        public static Texture2D tileGrass, tileDirt;
+        public static Texture2D[] tileTunnel = new Texture2D[46];
         public static SpriteFont font;
+        public static Effect maskEffect;
 
         public static float volume = 1.0f;
         public static SoundEffect bubbles;
@@ -84,6 +88,7 @@ namespace Ruetobas
             inputBoxes = new Dictionary<string, InputBox>();
             grids = new Dictionary<string, Grid>();
 
+            maskEffect = game.Content.Load<Effect>("shaders\\mask");
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
             errorWindow = game.Content.Load<Texture2D>("tekstura");
             emptyTextbox = game.Content.Load<Texture2D>("empty");
@@ -104,6 +109,10 @@ namespace Ruetobas
             bye = game.Content.Load<SoundEffect>("SoundFX/seeya");
             for (int i = 0; i <= 72; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
+            tileGrass = game.Content.Load<Texture2D>("tileGrass");
+            tileDirt = game.Content.Load<Texture2D>("tileDirt");
+            for (int i = 0; i <= 45; i++)
+                tileTunnel[i] = Render.RenderTunnel(game, spriteBatch, i);
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
             buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
             buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
@@ -465,12 +474,14 @@ namespace Ruetobas
 
         public static void BoardDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
+            //spriteBatch.Draw(tileGrass, location, Color.White);
             float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
             if (map[x, y].rotation == 1)
             {
                 location.X += location.Width;
                 location.Y += location.Height;
             }
+            //spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
             spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
         }
 
