@@ -59,7 +59,18 @@ namespace Ruetobas
 
         public static List<Card> cards;
 
-        public static string[] windowNames = { "A tunnel placing card game.", "Boi I love this game.", "Let us all block Paweł.", "Just please don't destroy this tunnel!", "Made with love.", "Gosh I hate geologists!", "", "Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas...", "Now with Battle Royale!!" };
+        public static string[] windowNames = {
+            "A tunnel placing card game.",
+            "Boi I love this game.",
+            "Let us all block Paweł.",
+            "Just please don't destroy this tunnel!",
+            "Made with love.",
+            "Gosh I hate geologists!",
+            "",
+            "Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas...",
+            "Now with Battle Royale!!"
+        };
+
         public static int selectedCard = -1;
         public static int selectedRot = 0;
         public static int[] cardHand = new int[6];
