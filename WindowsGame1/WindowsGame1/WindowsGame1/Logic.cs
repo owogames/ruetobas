@@ -379,7 +379,7 @@ namespace Ruetobas
                 buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), OpenGameMenu);
                 buttons["EXIT"] = new Button(errorButton, new Rectangle(1380, 1005, 540, 75), null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
-                grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(100, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
+                grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
                 grids["BOARD"].enabled = false;
                 buttons["PLAYERLISTON"] = new Button(errorButton, new Rectangle(1670, 0, 250, 50), ShowPlayerList);
                 buttons["PLAYERLISTOFF"] = new Button(chatSendTexture, new Rectangle(1670, 0, 250, 50), HidePlayerList);
@@ -474,15 +474,15 @@ namespace Ruetobas
 
         public static void BoardDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
-            //spriteBatch.Draw(tileGrass, location, Color.White);
+            spriteBatch.Draw(tileGrass, location, Color.White);
             float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
             if (map[x, y].rotation == 1)
             {
                 location.X += location.Width;
                 location.Y += location.Height;
             }
-            //spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
-            spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+            //spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
         }
 
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
