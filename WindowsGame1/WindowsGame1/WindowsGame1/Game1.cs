@@ -513,6 +513,23 @@ namespace Ruetobas
             if (draggedGrid != null && !draggedGrid.enabled)
                 draggedGrid = null;
 
+            //Aktualizacja Timer'ów
+            List<string> usedUpTimers = new List<string>();
+            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            foreach (KeyValuePair<string, Timer> timerpair in Logic.timers)
+            {
+                Timer timer = timerpair.Value;
+                timer.Update(elapsedTime);
+                if (timer.isReady)
+                {
+                    usedUpTimers.Add(timerpair.Key);
+                }
+            }
+            for(int i = 0; i < usedUpTimers.Count; i++)
+            {
+                Logic.timers.Remove(usedUpTimers[i]);
+            }
+
             //Cofanie gdy przejedziesz grida za bardzo
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {

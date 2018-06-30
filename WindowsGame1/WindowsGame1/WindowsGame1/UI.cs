@@ -221,4 +221,33 @@ namespace Ruetobas
             spriteBatch.Draw(fieldTexture[gridX, gridY], location, Color.White);
         }
     }
+
+    public class Timer
+    {
+        public float countDuration;
+        public float currentTime;
+        public Action countdownEvent;
+        public bool isReady;
+
+        public Timer(float countDuration, Action countdownEvent)
+        {
+            this.countDuration = countDuration;
+            this.countdownEvent = countdownEvent;
+            this.currentTime = 0f;
+            this.isReady = false;
+        }
+
+        public void Update(float elapsedTime)
+        {
+            currentTime += elapsedTime;
+            if(currentTime > countDuration)
+            {
+                isReady = true;
+                if(countdownEvent != null)
+                {
+                    countdownEvent();
+                }
+            }
+        }
+    }
 }

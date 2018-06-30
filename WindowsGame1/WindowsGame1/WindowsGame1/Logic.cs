@@ -18,6 +18,7 @@ namespace Ruetobas
         public static Dictionary<string, TextBox> textBoxes;
         public static Dictionary<string, InputBox> inputBoxes;
         public static Dictionary<string, Grid> grids;
+        public static Dictionary<string, Timer> timers;
 
         public static Game game;
         public static SpriteBatch spriteBatch;
@@ -98,6 +99,7 @@ namespace Ruetobas
             textBoxes = new Dictionary<string, TextBox>();
             inputBoxes = new Dictionary<string, InputBox>();
             grids = new Dictionary<string, Grid>();
+            timers = new Dictionary<string, Timer>();
 
             maskEffect = game.Content.Load<Effect>("shaders\\mask");
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
@@ -144,6 +146,7 @@ namespace Ruetobas
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
+            //timers["testtimer"] = new Timer(5, OpenGameMenu);
         }
         
         public static void Update()
