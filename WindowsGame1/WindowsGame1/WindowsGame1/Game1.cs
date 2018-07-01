@@ -74,6 +74,7 @@ namespace Ruetobas
             }
             catch (Exception e)
             {
+                Logic.AnnounceError("Connection timed out");
                 Console.WriteLine("Connection Timed Out: " + e.Message);
                 return false;
             }
@@ -81,9 +82,16 @@ namespace Ruetobas
 
         public void TCPSend(string msg)
         {
-            msg += '\n';
-            byte[] bytes = asen.GetBytes(msg);
-            stream.Write(bytes, 0, bytes.Length);
+            try
+            {
+                msg += '\n';
+                byte[] bytes = asen.GetBytes(msg);
+                stream.Write(bytes, 0, bytes.Length);
+            }
+            catch
+            {
+                Logic.TCPRecieved("DISCONNECT Server stopped responding\n");
+            }
         }
         
         public void TCPListening()
@@ -91,11 +99,18 @@ namespace Ruetobas
             byte[] bytes = new byte[100];
             while (true)
             {
-                int length = stream.Read(bytes, 0, 100);
-                string msg = "";
-                for (int i = 0; i < length; i++)
-                    msg += Convert.ToChar(bytes[i]);
-                Logic.TCPRecieved(msg);
+                try
+                {
+                    int length = stream.Read(bytes, 0, 100);
+                    string msg = "";
+                    for (int i = 0; i < length; i++)
+                        msg += Convert.ToChar(bytes[i]);
+                    Logic.TCPRecieved(msg);
+                }
+                catch
+                {
+                    Logic.TCPRecieved("DISCONNECT Server stopped responding\n");
+                }
             }
         }
 
@@ -514,20 +529,16 @@ namespace Ruetobas
                 draggedGrid = null;
 
             //Aktualizacja Timer'ów
-            List<string> usedUpTimers = new List<string>();
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            foreach (KeyValuePair<string, Timer> timerpair in Logic.timers)
+            for (int i = Logic.timers.Count - 1; i >= 0; i--)
             {
-                Timer timer = timerpair.Value;
-                timer.Update(elapsedTime);
-                if (timer.isReady)
+                Timer timer = Logic.timers.ElementAt(i).Value;
+                timer.currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (timer.currentTime >= timer.countDuration)
                 {
-                    usedUpTimers.Add(timerpair.Key);
+                    if (timer.countdownEvent != null)
+                        timer.countdownEvent();
+                    Logic.timers.Remove(Logic.timers.ElementAt(i).Key);
                 }
-            }
-            for(int i = 0; i < usedUpTimers.Count; i++)
-            {
-                Logic.timers.Remove(usedUpTimers[i]);
             }
 
             //Cofanie gdy przejedziesz grida za bardzo

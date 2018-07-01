@@ -11,6 +11,7 @@ namespace Ruetobas
     {
         public static Texture2D RenderTunnel(Game game, SpriteBatch spriteBatch, int ID)
         {
+            Console.WriteLine("Rendering texture ID: {0}", ID);
             Texture2D target = new Texture2D(game.GraphicsDevice, 420, 600);
             Color[] maskData = new Color[420 * 600];
             Color[] dirtData = new Color[420 * 600];

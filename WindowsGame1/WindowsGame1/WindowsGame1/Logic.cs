@@ -146,7 +146,6 @@ namespace Ruetobas
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
             buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
-            //timers["testtimer"] = new Timer(5, OpenGameMenu);
         }
         
         public static void Update()
@@ -325,6 +324,10 @@ namespace Ruetobas
                 {
                     Player.FindByName(data[2].Trim()).RemoveBuff((Buff)int.Parse(data[3]));
                 }
+                if (data[0] == "DISCONNECT")
+                {
+                    Disconnect(sub.Substring(11));
+                }
                 if (data[0] == "OK")
                 {
                     if (data[1] == "READY")
@@ -378,6 +381,8 @@ namespace Ruetobas
                 inputBoxes.Clear();
                 buttons.Clear();
                 textBoxes.Clear();
+                grids.Clear();
+                timers.Clear();
 
                 ReadCards();
                 textBoxes["CHAT"] = new TextBox(chatTexture, 10, Alignment.Left, font, new Rectangle(1380, 50, 540, 670), "You joined the game");
@@ -406,6 +411,22 @@ namespace Ruetobas
             {
                 AnnounceError("Connection error, try again");
             }
+        }
+
+        public static void Disconnect(string error)
+        {
+            inputBoxes.Clear();
+            buttons.Clear();
+            textBoxes.Clear();
+            grids.Clear();
+            timers.Clear();
+            inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
+            inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
+            buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
+            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
+            if (error != "")
+                AnnounceError(error);
+            game.tcpThread.Abort();
         }
 
         public static void ShowPlayerList()
@@ -814,6 +835,5 @@ namespace Ruetobas
         {
 
         }
-
     }
 }
