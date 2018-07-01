@@ -54,7 +54,7 @@ namespace Ruetobas
 
         public static DisplayMode[] displayModes;
         public static Point maxResDefault;
-        public static bool only16to9 = true;
+        public static bool onlyNativeRes = true;
 
         public static PlacedCard[,] map;
 
@@ -749,9 +749,9 @@ namespace Ruetobas
         {
             buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
             textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
-            textBoxes["ZZZZ16to9text"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Allow only 16:9 res");
+            textBoxes["ZZZZnativeResText"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Only native resolution");
             buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
-            buttons["ZZZZ16to9"] = new Button(tickedTexture, new Rectangle(220, 120, 50, 50), Change16to9Mode);
+            buttons["ZZZZnativeRes"] = new Button(onlyNativeRes?tickedTexture:unTickedTexture, new Rectangle(220, 120, 50, 50), ChangeNativeResMode);
             if (Game.isFullscreen == false)
                 buttons["ZZZZFullscreen"].texture = unTickedTexture;
             inputBoxes["ZZZZVolume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
@@ -761,7 +761,7 @@ namespace Ruetobas
             int height = 20;
             foreach (DisplayMode dp in displayModes)
             {
-                if (only16to9 == false || dp.AspectRatio == (16.0f / 9.0f))
+                if (onlyNativeRes == false || dp.Width/(float)dp.Height == (maxResDefault.X / (float)maxResDefault.Y))
                 {
                     string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
                     buttons["Z" + name] = new Button(transparentTexture, new Rectangle(1000, height, 200, 50), () => game.ChangeResolution(dp.Width, dp.Height));
@@ -788,11 +788,11 @@ namespace Ruetobas
                 new_volume < 100 && new_volume >= 0)
                 volume = new_volume * 0.01f;
             textBoxes.Remove("ZZZZFullscreentext");
-            textBoxes.Remove("ZZZZ16to9text");
+            textBoxes.Remove("ZZZZNativeResText");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
             buttons.Remove("ZZZZFullscreen");
-            buttons.Remove("ZZZZ16to9");
+            buttons.Remove("ZZZZnativeRes");
             inputBoxes.Remove("ZZZZVolume");
             buttons.Remove("ZZZZTestSound");
             foreach (DisplayMode dp in displayModes)
@@ -831,9 +831,11 @@ namespace Ruetobas
             return a.Height.CompareTo(b.Height);
         }
         
-        public static void Change16to9Mode()
+        public static void ChangeNativeResMode()
         {
-
+            onlyNativeRes = !onlyNativeRes;
+            CloseGameMenu();
+            OpenGameMenu();
         }
     }
 }
