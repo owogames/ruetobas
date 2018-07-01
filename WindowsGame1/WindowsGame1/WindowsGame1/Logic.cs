@@ -38,6 +38,8 @@ namespace Ruetobas
         public static Texture2D settingsTexture;
         public static Texture2D unTickedTexture;
         public static Texture2D tickedTexture;
+        public static Texture2D noButton;
+        public static Texture2D yesButton;
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
@@ -105,6 +107,8 @@ namespace Ruetobas
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
             errorWindow = game.Content.Load<Texture2D>("tekstura");
             emptyTextbox = game.Content.Load<Texture2D>("empty");
+            noButton = game.Content.Load<Texture2D>("NO");
+            yesButton = game.Content.Load<Texture2D>("YES");
             errorButton = game.Content.Load<Texture2D>("errorButton");
             unTickedTexture = game.Content.Load<Texture2D>("CheckBoxUnTicked");
             tickedTexture = game.Content.Load<Texture2D>("CheckBoxTicked");
@@ -722,6 +726,25 @@ namespace Ruetobas
             textBoxes["ZZZERRORBOX"] = new TextBox(emptyTextbox, 15, Alignment.Centered, font, new Rectangle(560, 375, 800, 220), error);
             buttons["ZZZBUTTON"] = new Button(errorWindow, new Rectangle(560, 300, 800, 330), null);
             buttons["ZZZZBUTTON"] = new Button(errorButton, new Rectangle(885, 550, 150, 50), CloseError);
+        }
+
+        public static void Ask(string question, Action yes, Action no)
+        {
+            buttons["ZZXBACKGROUND"] = new Button(errorBackground, new Rectangle(0, 0, 1920, 1080), null);
+            textBoxes["ZZXQUESTIONBOX"] = new TextBox(emptyTextbox, 15, Alignment.Centered, font, new Rectangle(560, 375, 800, 220), question);
+            buttons["ZZXBUTTON"] = new Button(errorWindow, new Rectangle(560, 300, 800, 330), null);
+            buttons["ZZZYESBUTTON"] = new Button(yesButton, new Rectangle(760, 550, 150, 50), ()=>CloseQuestionBox(yes));
+            buttons["ZZZNOBUTTON"] = new Button(noButton, new Rectangle(1010, 550, 150, 50), ()=>CloseQuestionBox(no));
+        }
+
+        public static void CloseQuestionBox(Action decision)
+        {
+            buttons.Remove("ZZXBACKGROUND");
+            textBoxes.Remove("ZZXQUESTIONBOX");
+            buttons.Remove("ZZXBUTTON");
+            buttons.Remove("ZZZYESBUTTON");
+            buttons.Remove("ZZZNOBUTTON");
+            decision();
         }
 
         public static void RemoveSelectedCard()
