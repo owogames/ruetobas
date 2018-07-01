@@ -513,10 +513,20 @@ namespace Ruetobas
                             Grid grid = Logic.grids.ElementAt(i).Value;
                             if (Geo.RectContains(grid.location, mousePos) && grid.enabled)
                             {
-                                if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
-                                    grid.zoom -= 0.1f;
-                                else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
-                                    grid.zoom += 0.1f;
+                                if (grid.useScrollToScroll)
+                                {
+                                    if (scrollWheelDelta < 0)
+                                        grid.offset.Y += 5.0f;
+                                    else if (scrollWheelDelta > 0)
+                                        grid.offset.Y -= 5.0f;
+                                }
+                                else
+                                {
+                                    if (scrollWheelDelta < 0 && grid.zoom > 0.5f)
+                                        grid.zoom -= 0.1f;
+                                    else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
+                                        grid.zoom += 0.1f;
+                                }
                             }
                         }
                 }

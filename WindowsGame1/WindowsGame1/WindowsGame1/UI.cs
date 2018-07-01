@@ -187,6 +187,7 @@ namespace Ruetobas
         public RenderTarget2D renderTarget; // super inba XNA elo
 
         public bool enabled = true;
+        public bool useScrollToScroll = false;
 
         public Grid(Game game, Texture2D boxTexture, Texture2D defaultFieldTexture, int sizeX, int sizeY, Vector2 fieldSize, Rectangle location, int margin, Action<int, int> clickEvent)
         {

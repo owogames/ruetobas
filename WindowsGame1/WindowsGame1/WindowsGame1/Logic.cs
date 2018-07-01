@@ -406,6 +406,7 @@ namespace Ruetobas
                 grids["ZPLAYERLIST"] = new Grid(game, chatTexture, chatTexture, 1, 10, new Vector2(250, 150), new Rectangle(1670, 50, 250, 1030), 1, PlayerListClick, PlayerListDraw);
                 grids["ZPLAYERLIST"].offset = new Vector2(grids["ZPLAYERLIST"].location.Width / 2 - grids["ZPLAYERLIST"].margin, grids["ZPLAYERLIST"].location.Height / 2 - grids["ZPLAYERLIST"].margin);
                 grids["ZPLAYERLIST"].enabled = false;
+                grids["ZPLAYERLIST"].useScrollToScroll = true;
             }
             else
             {
