@@ -789,7 +789,7 @@ namespace Ruetobas
                 new_volume < 100 && new_volume >= 0)
                 volume = new_volume * 0.01f;
             textBoxes.Remove("ZZZZFullscreentext");
-            textBoxes.Remove("ZZZZNativeResText");
+            textBoxes.Remove("ZZZZnativeResText");
             buttons.Remove("ZZZBackground");
             buttons.Remove("ZZZZdone");
             buttons.Remove("ZZZZFullscreen");
