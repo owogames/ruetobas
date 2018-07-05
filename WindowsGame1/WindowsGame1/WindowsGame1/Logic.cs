@@ -73,6 +73,7 @@ namespace Ruetobas
             "Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas...",
             "Now with Battle Royale!!"
         };
+        public static string menuNamespace = "ZZZZMENU"; // Taki prefix mają alementy z menu.
 
         public static int selectedCard = -1;
         public static int selectedRot = 0;
@@ -146,10 +147,12 @@ namespace Ruetobas
 
             // grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
 
+            InitGameMenu();
+            DisplayMenu(false);
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
-            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
+            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), () => DisplayMenu(true));
         }
         
         public static void Update()
@@ -399,7 +402,7 @@ namespace Ruetobas
                 textBoxes["ACTUALPLAYER"] = new TextBox(errorButton, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
                 buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
                 buttons["REMOVE"] = new Button(errorButton, new Rectangle(1380, 855, 540, 75), null);
-                buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), OpenGameMenu);
+                buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), () => DisplayMenu(false));
                 buttons["EXIT"] = new Button(errorButton, new Rectangle(1380, 1005, 540, 75), null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
@@ -428,7 +431,7 @@ namespace Ruetobas
             inputBoxes["ip"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             inputBoxes["nick"] = new InputBox(chatInputTexture, 10, font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             buttons["connect"] = new Button(chatSendTexture, new Rectangle(210, 750, 1500, 75), LoadGameScreen);
-            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), OpenGameMenu);
+            buttons["menubutton"] = new Button(settingsTexture, new Rectangle(10, 10, 40, 40), () => DisplayMenu(true));
             if (error != "")
                 AnnounceError(error);
             game.tcpThread.Abort();
@@ -769,30 +772,51 @@ namespace Ruetobas
             game.TCPSend("READY");          
         }
 
-        public static void OpenGameMenu()
+        public static void InitGameMenu()
         {
-            buttons["ZZZBackground"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            textBoxes["ZZZZFullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
-            textBoxes["ZZZZnativeResText"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Only native resolution");
-            buttons["ZZZZFullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
-            buttons["ZZZZnativeRes"] = new Button(onlyNativeRes?tickedTexture:unTickedTexture, new Rectangle(220, 120, 50, 50), ChangeNativeResMode);
+            buttons[menuNamespace + "0Background"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
+            textBoxes[menuNamespace + "Fullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
+            textBoxes[menuNamespace + "NativeResText"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Only native resolution");
+            buttons[menuNamespace + "Fullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
+            buttons[menuNamespace + "nativeRes"] = new Button(onlyNativeRes ? tickedTexture : unTickedTexture, new Rectangle(220, 120, 50, 50), ChangeNativeResMode);
             if (Game.isFullscreen == false)
-                buttons["ZZZZFullscreen"].texture = unTickedTexture;
-            inputBoxes["ZZZZVolume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
-            buttons["ZZZZTestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
-            buttons["ZZZZdone"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), CloseGameMenu);
-            buttons["ZZZZQuit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
-            int height = 20;
-            foreach (DisplayMode dp in displayModes)
+                buttons[menuNamespace + "Fullscreen"].texture = unTickedTexture;
+            inputBoxes[menuNamespace + "Volume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
+            buttons[menuNamespace + "TestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
+            buttons[menuNamespace + "done"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), () => DisplayMenu(false));
+            buttons[menuNamespace + "Quit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
+            grids[menuNamespace + "Resolutions"] = new Grid(game, chatTexture, null, 1, displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, ResolutionsClick, ResolutionsDraw);
+            grids[menuNamespace + "Resolutions"].useScrollToScroll = true;
+        }
+
+        public static void DisplayMenu(bool shouldBeVisible)
+        {
+            foreach (KeyValuePair<string, Button> b in buttons)
             {
-                if (onlyNativeRes == false || dp.Width/(float)dp.Height == (maxResDefault.X / (float)maxResDefault.Y))
-                {
-                    string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
-                    buttons["Z" + name] = new Button(transparentTexture, new Rectangle(1000, height, 200, 50), () => game.ChangeResolution(dp.Width, dp.Height));
-                    textBoxes[name] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(1000, height, 200, 50));
-                    textBoxes[name].Append(dp.Width.ToString() + ":" + dp.Height.ToString());
-                    height += 60;
-                }
+                if (b.Key.Contains(menuNamespace))
+                    b.Value.enabled = shouldBeVisible;
+            }
+            foreach (KeyValuePair<string, TextBox> b in textBoxes)
+            {
+                if (b.Key.Contains(menuNamespace))
+                    b.Value.enabled = shouldBeVisible;
+            }
+            foreach (KeyValuePair<string, InputBox> b in inputBoxes)
+            {
+                if (b.Key.Contains(menuNamespace))
+                    b.Value.enabled = shouldBeVisible;
+            }
+            foreach (KeyValuePair<string, Grid> b in grids)
+            {
+                if (b.Key.Contains(menuNamespace))
+                    b.Value.enabled = shouldBeVisible;
+            }
+            if(shouldBeVisible == false)
+            {
+                float new_volume;
+                if (float.TryParse(inputBoxes[menuNamespace + "Volume"].text, out new_volume) &&
+                    new_volume < 100 && new_volume >= 0)
+                    volume = new_volume * 0.01f;
             }
         }
 
@@ -800,37 +824,22 @@ namespace Ruetobas
         {
             game.ChangeFullscreen();
             if (Game.isFullscreen)
-                buttons["ZZZZFullscreen"].texture = tickedTexture;
+                buttons[menuNamespace + "Fullscreen"].texture = tickedTexture;
             else
-                buttons["ZZZZFullscreen"].texture = unTickedTexture;
+                buttons[menuNamespace + "Fullscreen"].texture = unTickedTexture;
         }
 
-        public static void CloseGameMenu()
+        public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location,int x, int y)
         {
-            float new_volume;
-            if (float.TryParse(inputBoxes["ZZZZVolume"].text, out new_volume) &&
-                new_volume < 100 && new_volume >= 0)
-                volume = new_volume * 0.01f;
-            textBoxes.Remove("ZZZZFullscreentext");
-            textBoxes.Remove("ZZZZnativeResText");
-            buttons.Remove("ZZZBackground");
-            buttons.Remove("ZZZZdone");
-            buttons.Remove("ZZZZFullscreen");
-            buttons.Remove("ZZZZnativeRes");
-            inputBoxes.Remove("ZZZZVolume");
-            buttons.Remove("ZZZZTestSound");
-            foreach (DisplayMode dp in displayModes)
-            {
-                string name = "ZZZZ" + dp.Width.ToString() + ":" + dp.Height.ToString();
-                if (buttons.ContainsKey("Z" + name))
-                {
-                    buttons.Remove("Z" + name);
-                    textBoxes.Remove(name);
-                }
-                    
-            }
-            buttons.Remove("ZZZZQuit");
-            return;
+            Point curRes = new Point(displayModes[y].Width, displayModes[y].Height);
+            Color c = game.GetCurrentDeviceResolution() == curRes ? Color.LightYellow : Color.White;
+            spriteBatch.Draw(chatTexture, location, c);
+            spriteBatch.DrawString(font, displayModes[y].Width.ToString() + " x " + displayModes[y].Height.ToString(), new Vector2(location.X + 3, location.Y + 3), Color.White);
+        }
+
+        public static void ResolutionsClick(int x, int y)
+        {
+            game.ChangeResolution(displayModes[y].Width, displayModes[y].Height);
         }
 
         public static void PlaySound(SoundEffect soundEffect, float playVolume)
@@ -858,8 +867,6 @@ namespace Ruetobas
         public static void ChangeNativeResMode()
         {
             onlyNativeRes = !onlyNativeRes;
-            CloseGameMenu();
-            OpenGameMenu();
         }
     }
 }
