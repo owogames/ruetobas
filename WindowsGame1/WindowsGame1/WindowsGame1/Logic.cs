@@ -785,7 +785,7 @@ namespace Ruetobas
             buttons[menuNamespace + "TestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
             buttons[menuNamespace + "done"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), () => DisplayMenu(false));
             buttons[menuNamespace + "Quit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
-            grids[menuNamespace + "Resolutions"] = new Grid(game, chatTexture, null, 1, displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, ResolutionsClick, ResolutionsDraw);
+            grids[menuNamespace + "Resolutions"] = new Grid(game, errorButton, null, 1, displayModes.Length, new Vector2(200, 50), new Rectangle(1027, 20, 200, 500), 0, ResolutionsClick, ResolutionsDraw);
             grids[menuNamespace + "Resolutions"].useScrollToScroll = true;
         }
 
@@ -831,6 +831,8 @@ namespace Ruetobas
 
         public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location,int x, int y)
         {
+            y = GetTheNthFittingResolution(y);
+            if (y == -1) return;
             Point curRes = new Point(displayModes[y].Width, displayModes[y].Height);
             Color c = game.GetCurrentWindowResolution() == curRes ? Color.LightYellow : Color.White;
             spriteBatch.Draw(chatTexture, location, c);
@@ -845,7 +847,27 @@ namespace Ruetobas
 
         public static void ResolutionsClick(int x, int y)
         {
+            y = GetTheNthFittingResolution(y);
+            if (y == -1) return;
             game.ChangeResolution(displayModes[y].Width, displayModes[y].Height);
+        }
+
+        public static int GetTheNthFittingResolution(int N)
+        {
+            for(int i = 0; i < displayModes.Length; i++)
+            {
+                Point curRes = game.GetCurrentDeviceResolution();
+                if (onlyNativeRes)
+                {
+                    if (displayModes[i].Width / (float)displayModes[i].Height == curRes.X / (float)curRes.Y)
+                        N--;
+                }
+                else
+                    N--;
+                    
+                if (N == -1) return i;
+            }
+            return -1;
         }
 
         public static void PlaySound(SoundEffect soundEffect, float playVolume)
@@ -873,6 +895,10 @@ namespace Ruetobas
         public static void ChangeNativeResMode()
         {
             onlyNativeRes = !onlyNativeRes;
+            if (onlyNativeRes)
+                buttons[menuNamespace + "nativeRes"].texture = tickedTexture;
+            else
+                buttons[menuNamespace + "nativeRes"].texture = unTickedTexture;
         }
 
         public static int GCD(int a, int b)
