@@ -763,26 +763,6 @@ namespace Ruetobas
             game.TCPSend("READY");          
         }
 
-<<<<<<< HEAD
-=======
-        public static void InitGameMenu()
-        {
-            buttons[menuNamespace + "0Background"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            textBoxes[menuNamespace + "Fullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
-            textBoxes[menuNamespace + "NativeResText"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Only native resolution");
-            buttons[menuNamespace + "Fullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
-            buttons[menuNamespace + "nativeRes"] = new Button(onlyNativeRes ? tickedTexture : unTickedTexture, new Rectangle(220, 120, 50, 50), ChangeNativeResMode);
-            if (Game.isFullscreen == false)
-                buttons[menuNamespace + "Fullscreen"].texture = unTickedTexture;
-            inputBoxes[menuNamespace + "Volume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
-            buttons[menuNamespace + "TestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
-            buttons[menuNamespace + "done"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), () => DisplayMenu(false));
-            buttons[menuNamespace + "Quit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
-            grids[menuNamespace + "Resolutions"] = new Grid(game, errorButton, null, 1, displayModes.Length, new Vector2(200, 50), new Rectangle(1027, 20, 200, 500), 0, ResolutionsClick, ResolutionsDraw);
-            grids[menuNamespace + "Resolutions"].useScrollToScroll = true;
-        }
-
->>>>>>> 29d8257cecc1a2c9cad47bcb806a0b3c9b07d09d
         public static void DisplayMenu(bool shouldBeVisible)
         {
             if (shouldBeVisible)
@@ -807,23 +787,45 @@ namespace Ruetobas
                 buttons[optionsNamespace + "Fullscreen"].texture = unTickedTexture;
         }
 
-        public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location,int x, int y)
+        public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
+            y = GetTheNthFittingResolution(y);
+            if (y == -1) return;
             Point curRes = new Point(displayModes[y].Width, displayModes[y].Height);
             Color c = game.GetCurrentWindowResolution() == curRes ? Color.LightYellow : Color.White;
             spriteBatch.Draw(chatTexture, location, c);
             int gcd = GCD(displayModes[y].Width, displayModes[y].Height);
-            spriteBatch.DrawString(font, displayModes[y].Width.ToString() 
-                + " x " + displayModes[y].Height.ToString() 
-                + "  " + (displayModes[y].Width/gcd).ToString() 
-                + ":" 
+            spriteBatch.DrawString(font, displayModes[y].Width.ToString()
+                + " x " + displayModes[y].Height.ToString()
+                + "  " + (displayModes[y].Width / gcd).ToString()
+                + ":"
                 + (displayModes[y].Height / gcd).ToString(),
                 new Vector2(location.X + 5, location.Y + 10), Color.White);
         }
 
         public static void ResolutionsClick(int x, int y)
         {
+            y = GetTheNthFittingResolution(y);
+            if (y == -1) return;
             game.ChangeResolution(displayModes[y].Width, displayModes[y].Height);
+        }
+
+        public static int GetTheNthFittingResolution(int N)
+        {
+            for (int i = 0; i < displayModes.Length; i++)
+            {
+                Point curRes = game.GetCurrentDeviceResolution();
+                if (onlyNativeRes)
+                {
+                    if (displayModes[i].Width / (float)displayModes[i].Height == curRes.X / (float)curRes.Y)
+                        N--;
+                }
+                else
+                    N--;
+
+                if (N == -1) return i;
+            }
+            return -1;
         }
 
         public static void PlaySound(SoundEffect soundEffect, float playVolume)
@@ -847,10 +849,14 @@ namespace Ruetobas
             
             return a.Height.CompareTo(b.Height);
         }
-        
+
         public static void ChangeNativeResMode()
         {
             onlyNativeRes = !onlyNativeRes;
+            if (onlyNativeRes)
+                buttons[optionsNamespace + "nativeRes"].texture = tickedTexture;
+            else
+                buttons[optionsNamespace + "nativeRes"].texture = unTickedTexture;
         }
 
         public static int GCD(int a, int b)
