@@ -555,14 +555,16 @@ namespace Ruetobas
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
                 Grid grid = gridpair.Value;
-                if (grid.offset.X < grid.location.Width / 2 - grid.margin)
-                    grid.offset.X = Math.Min(grid.offset.X + 20, grid.location.Width / 2 - grid.margin);
-                if (grid.offset.Y < grid.location.Height / 2 - grid.margin)
-                    grid.offset.Y = Math.Min(grid.offset.Y + 20, grid.location.Height / 2 - grid.margin);
-                if (grid.offset.X > grid.sizeX * grid.fieldSize.X - grid.location.Width / 2 + grid.margin)
-                    grid.offset.X = Math.Max(grid.offset.X - 20, grid.sizeX * grid.fieldSize.X - grid.location.Width / 2 + grid.margin);
-                if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - grid.location.Height / 2 + grid.margin)
-                    grid.offset.Y = Math.Max(grid.offset.Y - 20, grid.sizeY * grid.fieldSize.Y - grid.location.Height / 2 + grid.margin);
+                int marginX = (int)((grid.location.Width / 2 - grid.margin) / grid.zoom);
+                int marginY = (int)((grid.location.Height / 2 - grid.margin) / grid.zoom);
+                if (grid.offset.X < marginX)
+                    grid.offset.X = Math.Min(grid.offset.X + 20, marginX);
+                if (grid.offset.Y < marginY)
+                    grid.offset.Y = Math.Min(grid.offset.Y + 20, marginY);
+                if (grid.offset.X > grid.sizeX * grid.fieldSize.X - marginX)
+                    grid.offset.X = Math.Max(grid.offset.X - 20, grid.sizeX * grid.fieldSize.X - marginX);
+                if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - marginY)
+                    grid.offset.Y = Math.Max(grid.offset.Y - 20, grid.sizeY * grid.fieldSize.Y - marginY);
             }
 
             Logic.Update();
