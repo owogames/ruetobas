@@ -832,9 +832,15 @@ namespace Ruetobas
         public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location,int x, int y)
         {
             Point curRes = new Point(displayModes[y].Width, displayModes[y].Height);
-            Color c = game.GetCurrentDeviceResolution() == curRes ? Color.LightYellow : Color.White;
+            Color c = game.GetCurrentWindowResolution() == curRes ? Color.LightYellow : Color.White;
             spriteBatch.Draw(chatTexture, location, c);
-            spriteBatch.DrawString(font, displayModes[y].Width.ToString() + " x " + displayModes[y].Height.ToString(), new Vector2(location.X + 3, location.Y + 3), Color.White);
+            int gcd = GCD(displayModes[y].Width, displayModes[y].Height);
+            spriteBatch.DrawString(font, displayModes[y].Width.ToString() 
+                + " x " + displayModes[y].Height.ToString() 
+                + "  " + (displayModes[y].Width/gcd).ToString() 
+                + ":" 
+                + (displayModes[y].Height / gcd).ToString(),
+                new Vector2(location.X + 5, location.Y + 10), Color.White);
         }
 
         public static void ResolutionsClick(int x, int y)
@@ -867,6 +873,11 @@ namespace Ruetobas
         public static void ChangeNativeResMode()
         {
             onlyNativeRes = !onlyNativeRes;
+        }
+
+        public static int GCD(int a, int b)
+        {
+            return b == 0 ? a : GCD(b, a % b);
         }
     }
 }

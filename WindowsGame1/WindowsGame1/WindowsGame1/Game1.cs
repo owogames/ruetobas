@@ -149,6 +149,8 @@ namespace Ruetobas
             return resolution;
         }
 
+        public Point GetCurrentWindowResolution() => new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
+
         public DisplayMode[] GetDisplayModes()
         {
             return GraphicsAdapter.DefaultAdapter.SupportedDisplayModes.ToArray();
