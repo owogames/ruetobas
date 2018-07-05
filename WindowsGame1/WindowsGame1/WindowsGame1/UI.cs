@@ -236,4 +236,105 @@ namespace Ruetobas
             currentTime = 0f;
         }
     }
+
+    public class UI
+    {
+        public static void DisableGroup(string prefix)
+        {
+            foreach (KeyValuePair<string, Button> b in Logic.buttons)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = false;
+            }
+            foreach (KeyValuePair<string, TextBox> b in Logic.textBoxes)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = false;
+            }
+            foreach (KeyValuePair<string, InputBox> b in Logic.inputBoxes)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = false;
+            }
+            foreach (KeyValuePair<string, Grid> b in Logic.grids)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = false;
+            }
+        }
+
+        public static void EnableGroup(string prefix)
+        {
+            foreach (KeyValuePair<string, Button> b in Logic.buttons)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = true;
+            }
+            foreach (KeyValuePair<string, TextBox> b in Logic.textBoxes)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = true;
+            }
+            foreach (KeyValuePair<string, InputBox> b in Logic.inputBoxes)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = true;
+            }
+            foreach (KeyValuePair<string, Grid> b in Logic.grids)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = true;
+            }
+        }
+
+        public static void InitUI()
+        {
+            //Menu
+            Logic.inputBoxes[Logic.menuNamespace + "ip"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
+            Logic.inputBoxes[Logic.menuNamespace + "nick"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
+            Logic.buttons[Logic.menuNamespace + "connect"] = new Button(Logic.chatSendTexture, new Rectangle(210, 750, 1500, 75), Logic.LoadGameScreen);
+            Logic.buttons[Logic.menuNamespace + "menubutton"] = new Button(Logic.settingsTexture, new Rectangle(10, 10, 40, 40), () => Logic.DisplayMenu(true));
+
+            //Options
+            Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
+            Logic.textBoxes[Logic.optionsNamespace + "Fullscreentext"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 10, 200, 50), "Fullscreen");
+            Logic.textBoxes[Logic.optionsNamespace + "NativeResText"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 120, 200, 50), "Only native resolution");
+            Logic.buttons[Logic.optionsNamespace + "Fullscreen"] = new Button(Logic.tickedTexture, new Rectangle(220, 10, 50, 50), Logic.ChangeFullscreen);
+            Logic.buttons[Logic.optionsNamespace + "nativeRes"] = new Button(Logic.onlyNativeRes ? Logic.tickedTexture : Logic.unTickedTexture, new Rectangle(220, 120, 50, 50), Logic.ChangeNativeResMode);
+            if (Game.isFullscreen == false)
+                Logic.buttons[Logic.optionsNamespace + "Fullscreen"].texture = Logic.unTickedTexture;
+            Logic.inputBoxes[Logic.optionsNamespace + "Volume"] = new InputBox(Logic.chatInputTexture, 8, Logic.font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
+            Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Logic.volume));
+            Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayMenu(false));
+            Logic.buttons[Logic.optionsNamespace + "Quit"] = new Button(Logic.errorButton, new Rectangle(1700, 940, 140, 80), Logic.game.Exit);
+            Logic.grids[Logic.optionsNamespace + "Resolutions"] = new Grid(Logic.game, Logic.chatTexture, null, 1, Logic.displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, Logic.ResolutionsClick, Logic.ResolutionsDraw);
+            Logic.grids[Logic.optionsNamespace + "Resolutions"].useScrollToScroll = true;
+            DisableGroup(Logic.optionsNamespace);
+
+            //Game
+            Logic.textBoxes[Logic.gameNamespace + "CHAT"] = new TextBox(Logic.chatTexture, 10, Alignment.Left, Logic.font, new Rectangle(1380, 50, 540, 670), "You joined the game");
+            Logic.inputBoxes[Logic.gameNamespace + "CHATINPUT"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(1380, 720, 490, 60), Color.White, Color.LightGray, "Enter message...", 120);
+            Logic.buttons[Logic.gameNamespace + "SEND"] = new Button(Logic.chatSendTexture, new Rectangle(1870, 720, 50, 60), Logic.SendChatMessage);
+            Logic.textBoxes[Logic.gameNamespace + "HELP"] = new TextBox(Logic.errorBackground, 5, Alignment.Centered, Logic.font, new Rectangle(0, 720, 1380, 60), "");
+            Logic.textBoxes[Logic.gameNamespace + "HELP"].canScroll = false;
+            Logic.buttons[Logic.gameNamespace + "READY"] = new Button(Logic.notReadyTexture, new Rectangle(420, 285, 540, 210), Logic.Ready);
+            Logic.buttons[Logic.gameNamespace + "CHARACTER"] = new Button(Logic.chatTexture, new Rectangle(0, 780, 180, 300), null);
+            Logic.textBoxes[Logic.gameNamespace + "ACTUALPLAYER"] = new TextBox(Logic.errorButton, 5, Alignment.Left, Logic.font, new Rectangle(1380, 0, 290, 50));
+            Logic.buttons[Logic.gameNamespace + "DISCARD"] = new Button(Logic.discardTexture, new Rectangle(1380, 780, 540, 75), Logic.DiscardCard);
+            Logic.buttons[Logic.gameNamespace + "REMOVE"] = new Button(Logic.errorButton, new Rectangle(1380, 855, 540, 75), null);
+            Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayMenu(true));
+            Logic.buttons[Logic.gameNamespace + "EXIT"] = new Button(Logic.errorButton, new Rectangle(1380, 1005, 540, 75), null);
+            Logic.grids[Logic.gameNamespace + "CARDS"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, Logic.HandClick, Logic.HandDraw);
+            Logic.grids[Logic.gameNamespace + "BOARD"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, Logic.BoardClick, Logic.BoardDraw);
+            Logic.grids[Logic.gameNamespace + "BOARD"].enabled = false;
+            Logic.buttons[Logic.gameNamespace + "PLAYERLISTON"] = new Button(Logic.errorButton, new Rectangle(1670, 0, 250, 50), Logic.ShowPlayerList);
+            Logic.buttons[Logic.gameNamespace + "PLAYERLISTOFF"] = new Button(Logic.chatSendTexture, new Rectangle(1670, 0, 250, 50), Logic.HidePlayerList);
+            Logic.buttons[Logic.gameNamespace + "PLAYERLISTOFF"].enabled = false;
+            Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 1, 10, new Vector2(250, 150), new Rectangle(1670, 50, 250, 1030), 1, Logic.PlayerListClick, Logic.PlayerListDraw);
+            Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].offset = new Vector2(Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].location.Width / 2 - Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].margin, Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].location.Height / 2 - Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].margin);
+            Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].enabled = false;
+            Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].useScrollToScroll = true;
+            DisableGroup(Logic.gameNamespace);
+        }
+    }
 }

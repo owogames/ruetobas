@@ -417,7 +417,7 @@ namespace Ruetobas
                         for (int i = Logic.grids.Count - 1; i >= 0; i--)
                         {
                             Grid grid = Logic.grids.ElementAt(i).Value;
-                            if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
+                            if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled && !grid.useScrollToScroll)
                                 draggedGrid = grid;
                         }
                     }
@@ -518,9 +518,9 @@ namespace Ruetobas
                                 if (grid.useScrollToScroll)
                                 {
                                     if (scrollWheelDelta < 0)
-                                        grid.offset.Y += 5.0f;
+                                        grid.offset.Y += 25.0f;
                                     else if (scrollWheelDelta > 0)
-                                        grid.offset.Y -= 5.0f;
+                                        grid.offset.Y -= 25.0f;
                                 }
                                 else
                                 {
@@ -560,13 +560,13 @@ namespace Ruetobas
                 int marginX = (int)((grid.location.Width / 2 - grid.margin) / grid.zoom);
                 int marginY = (int)((grid.location.Height / 2 - grid.margin) / grid.zoom);
                 if (grid.offset.X < marginX)
-                    grid.offset.X = Math.Min(grid.offset.X + 20, marginX);
+                    grid.offset.X = Math.Min(grid.offset.X + 25, marginX);
                 if (grid.offset.Y < marginY)
-                    grid.offset.Y = Math.Min(grid.offset.Y + 20, marginY);
+                    grid.offset.Y = Math.Min(grid.offset.Y + 25, marginY);
                 if (grid.offset.X > grid.sizeX * grid.fieldSize.X - marginX)
-                    grid.offset.X = Math.Max(grid.offset.X - 20, grid.sizeX * grid.fieldSize.X - marginX);
+                    grid.offset.X = Math.Max(grid.offset.X - 25, grid.sizeX * grid.fieldSize.X - marginX);
                 if (grid.offset.Y > grid.sizeY * grid.fieldSize.Y - marginY)
-                    grid.offset.Y = Math.Max(grid.offset.Y - 20, grid.sizeY * grid.fieldSize.Y - marginY);
+                    grid.offset.Y = Math.Max(grid.offset.Y - 25, grid.sizeY * grid.fieldSize.Y - marginY);
             }
 
             Logic.Update();
