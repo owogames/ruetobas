@@ -763,6 +763,26 @@ namespace Ruetobas
             game.TCPSend("READY");          
         }
 
+<<<<<<< HEAD
+=======
+        public static void InitGameMenu()
+        {
+            buttons[menuNamespace + "0Background"] = new Button(semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
+            textBoxes[menuNamespace + "Fullscreentext"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 10, 200, 50), "Fullscreen");
+            textBoxes[menuNamespace + "NativeResText"] = new TextBox(chatInputTexture, 8, Alignment.Centered, font, new Rectangle(10, 120, 200, 50), "Only native resolution");
+            buttons[menuNamespace + "Fullscreen"] = new Button(tickedTexture, new Rectangle(220, 10, 50, 50), ChangeFullscreen);
+            buttons[menuNamespace + "nativeRes"] = new Button(onlyNativeRes ? tickedTexture : unTickedTexture, new Rectangle(220, 120, 50, 50), ChangeNativeResMode);
+            if (Game.isFullscreen == false)
+                buttons[menuNamespace + "Fullscreen"].texture = unTickedTexture;
+            inputBoxes[menuNamespace + "Volume"] = new InputBox(chatInputTexture, 8, font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
+            buttons[menuNamespace + "TestSound"] = new Button(errorButton, new Rectangle(220, 230, 50, 50), () => PlaySound(bubbles, volume));
+            buttons[menuNamespace + "done"] = new Button(readyTexture, new Rectangle(10, 345, 140, 80), () => DisplayMenu(false));
+            buttons[menuNamespace + "Quit"] = new Button(errorButton, new Rectangle(1700, 940, 140, 80), game.Exit);
+            grids[menuNamespace + "Resolutions"] = new Grid(game, errorButton, null, 1, displayModes.Length, new Vector2(200, 50), new Rectangle(1027, 20, 200, 500), 0, ResolutionsClick, ResolutionsDraw);
+            grids[menuNamespace + "Resolutions"].useScrollToScroll = true;
+        }
+
+>>>>>>> 29d8257cecc1a2c9cad47bcb806a0b3c9b07d09d
         public static void DisplayMenu(bool shouldBeVisible)
         {
             if (shouldBeVisible)
