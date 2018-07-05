@@ -73,7 +73,7 @@ namespace Ruetobas
             "Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas: Ruetobas...",
             "Now with Battle Royale!!"
         };
-        public static string menuNamespace = "ZZZZMENU"; // Taki prefix mają alementy z menu.
+        public static string menuNamespace = "ZZZZMENU"; // Taki prefix mają elementy z menu.
 
         public static int selectedCard = -1;
         public static int selectedRot = 0;
@@ -402,7 +402,7 @@ namespace Ruetobas
                 textBoxes["ACTUALPLAYER"] = new TextBox(errorButton, 5, Alignment.Left, font, new Rectangle(1380, 0, 290, 50));
                 buttons["DISCARD"] = new Button(discardTexture, new Rectangle(1380, 780, 540, 75), DiscardCard);
                 buttons["REMOVE"] = new Button(errorButton, new Rectangle(1380, 855, 540, 75), null);
-                buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), () => DisplayMenu(false));
+                buttons["MENU"] = new Button(settingsTexture, new Rectangle(1380, 930, 540, 75), () => DisplayMenu(true));
                 buttons["EXIT"] = new Button(errorButton, new Rectangle(1380, 1005, 540, 75), null);
                 grids["CARDS"] = new Grid(game, chatTexture, chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, HandClick, HandDraw);
                 grids["BOARD"] = new Grid(game, chatTexture, chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, BoardClick, BoardDraw);
