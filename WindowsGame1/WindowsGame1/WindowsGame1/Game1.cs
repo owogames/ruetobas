@@ -497,33 +497,49 @@ namespace Ruetobas
                 if (scrollWheelDelta != 0)
                 {
                     int i;
-                    for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
+                    for (i = UIelements.Count - 1; i >= 0; i--)
                     {
-                        TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                        if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled)
+                        string name = UIelements[i];
+                        if (Logic.buttons.ContainsKey(name))
                         {
-                            if (textBox.canScroll)
-                            {
-                                if (scrollWheelDelta < 0)
-                                    textBox.scroll++;
-                                else if (textBox.scroll > 0)
-                                    textBox.scroll--;
-
-                                if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
-                                    textBox.scroll = textBox.lines.Count - textBox.lineCount;
-
-                                if (textBox.scroll < 0)
-                                    textBox.scroll = 0;
-                            }
-
-                            i = -2;
+                            Button button = Logic.buttons[name];
+                            if (Geo.RectContains(button.location, mousePos) && button.enabled)
+                                i = -2;
                         }
-                    }
 
-                    if (i != -2)
-                        for (i = Logic.grids.Count - 1; i >= 0; i--)
+                        if (Logic.inputBoxes.ContainsKey(name))
                         {
-                            Grid grid = Logic.grids.ElementAt(i).Value;
+                            InputBox inputBox = Logic.inputBoxes[name];
+                            if (Geo.RectContains(inputBox.location, mousePos) && inputBox.enabled)
+                                i = -2;
+                        }
+
+                        if (Logic.textBoxes.ContainsKey(name))
+                        {
+                            TextBox textBox = Logic.textBoxes[name];
+                            if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled)
+                            {
+                                if (textBox.canScroll)
+                                {
+                                    if (scrollWheelDelta < 0)
+                                        textBox.scroll++;
+                                    else if (textBox.scroll > 0)
+                                        textBox.scroll--;
+
+                                    if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
+                                        textBox.scroll = textBox.lines.Count - textBox.lineCount;
+
+                                    if (textBox.scroll < 0)
+                                        textBox.scroll = 0;
+                                }
+
+                                i = -2;
+                            }
+                        }
+
+                        if (Logic.grids.ContainsKey(name))
+                        {
+                            Grid grid = Logic.grids[name];
                             if (Geo.RectContains(grid.location, mousePos) && grid.enabled)
                             {
                                 if (grid.useScrollToScroll)
@@ -543,6 +559,7 @@ namespace Ruetobas
                                 i = -2;
                             }
                         }
+                    }
                 }
             }
 

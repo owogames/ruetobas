@@ -14,11 +14,11 @@ namespace Ruetobas
     {
         public static Random rand = new Random();
 
-        public static Dictionary<string, Button> buttons;
-        public static Dictionary<string, TextBox> textBoxes;
-        public static Dictionary<string, InputBox> inputBoxes;
-        public static Dictionary<string, Grid> grids;
-        public static Dictionary<string, Timer> timers;
+        public static SortedDictionary<string, Button> buttons;
+        public static SortedDictionary<string, TextBox> textBoxes;
+        public static SortedDictionary<string, InputBox> inputBoxes;
+        public static SortedDictionary<string, Grid> grids;
+        public static SortedDictionary<string, Timer> timers;
 
         public static Game game;
         public static SpriteBatch spriteBatch;
@@ -101,11 +101,11 @@ namespace Ruetobas
             displayModes = game.GetDisplayModes();
             Array.Sort(displayModes, SortDisplay);
             
-            buttons = new Dictionary<string, Button>();
-            textBoxes = new Dictionary<string, TextBox>();
-            inputBoxes = new Dictionary<string, InputBox>();
-            grids = new Dictionary<string, Grid>();
-            timers = new Dictionary<string, Timer>();
+            buttons = new SortedDictionary<string, Button>();
+            textBoxes = new SortedDictionary<string, TextBox>();
+            inputBoxes = new SortedDictionary<string, InputBox>();
+            grids = new SortedDictionary<string, Grid>();
+            timers = new SortedDictionary<string, Timer>();
 
             maskEffect = game.Content.Load<Effect>("shaders\\mask");
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
@@ -370,7 +370,7 @@ namespace Ruetobas
 
         public static void ReadCards()
         {
-            cards = new List<Card> { };
+            cards = new List<Card>();
             using (StreamReader sr = new StreamReader("data\\cards.txt"))
             {
                 while (!sr.EndOfStream)
@@ -419,6 +419,7 @@ namespace Ruetobas
 
         public static void Disconnect(string error)
         {
+            yourPlayerId = -1;
             players.Clear();
             for (int i = 0; i < 6; i++)
                 cardHand[i] = 0;
