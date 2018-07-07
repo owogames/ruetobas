@@ -53,6 +53,14 @@ namespace Ruetobas
                 if (msg.Substring(0, 2) == "OK")
                 {
                     string[] data = msg.Split(' ');
+
+                    Logic.players.Clear();
+                    for (int i = 0; i < 6; i++)
+                        Logic.cardHand[i] = 0;
+                    for (int i = 0; i < 19; i++)
+                        for (int j = 0; j < 15; j++)
+                            Logic.map[i, j] = new PlacedCard(0, 0);
+
                     for (int i = 1; i < data.Length; i += 2)
                     {
                         Logic.players.Add(new Player(i, data[i].Trim()));
@@ -492,18 +500,21 @@ namespace Ruetobas
                     for (i = Logic.textBoxes.Count - 1; i >= 0; i--)
                     {
                         TextBox textBox = Logic.textBoxes.ElementAt(i).Value;
-                        if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled && textBox.canScroll)
+                        if (Geo.RectContains(textBox.location, mousePos) && textBox.enabled)
                         {
-                            if (scrollWheelDelta < 0)
-                                textBox.scroll++;
-                            else if (textBox.scroll > 0)
-                                textBox.scroll--;
+                            if (textBox.canScroll)
+                            {
+                                if (scrollWheelDelta < 0)
+                                    textBox.scroll++;
+                                else if (textBox.scroll > 0)
+                                    textBox.scroll--;
 
-                            if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
-                                textBox.scroll = textBox.lines.Count - textBox.lineCount;
+                                if (textBox.lines.Count - textBox.scroll < textBox.lineCount)
+                                    textBox.scroll = textBox.lines.Count - textBox.lineCount;
 
-                            if (textBox.scroll < 0)
-                                textBox.scroll = 0;
+                                if (textBox.scroll < 0)
+                                    textBox.scroll = 0;
+                            }
 
                             i = -2;
                         }
@@ -529,6 +540,7 @@ namespace Ruetobas
                                     else if (scrollWheelDelta > 0 && grid.zoom < 2.0f)
                                         grid.zoom += 0.1f;
                                 }
+                                i = -2;
                             }
                         }
                 }

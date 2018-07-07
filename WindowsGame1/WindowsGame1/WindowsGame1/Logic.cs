@@ -281,12 +281,30 @@ namespace Ruetobas
                 }
                 if (data[0] == "GIB")
                 {
-                    for (int i = 0; i < 6; i++)
+                    for (int j = 1; j < data.Count(); j++)
                     {
-                        if (cardHand[i] == 0)
+                        for (int i = 0; i < 6; i++)
                         {
-                            cardHand[i] = int.Parse(data[1]);
-                            i = 6;
+                            if (cardHand[i] == 0)
+                            {
+                                cardHand[i] = int.Parse(data[j]);
+                                i = 6;
+                            }
+                        }
+                    }
+                }
+                if (data[0] == "TAEK")
+                {
+                    for (int j = 1; j < data.Count(); j++)
+                    {
+                        for (int i = 5; i >= 0; i--)
+                        {
+                            if (cardHand[i] == int.Parse(data[j]))
+                            {
+                                for (int ij = i; ij < 5; ij++)
+                                    cardHand[ij] = cardHand[ij + 1];
+                                cardHand[5] = 0;
+                            }
                         }
                     }
                 }
@@ -401,6 +419,12 @@ namespace Ruetobas
 
         public static void Disconnect(string error)
         {
+            players.Clear();
+            for (int i = 0; i < 6; i++)
+                cardHand[i] = 0;
+            for (int i = 0; i < 19; i++)
+                for (int j = 0; j < 15; j++)
+                    map[i, j] = new PlacedCard(0, 0);
             timers.Clear();
             UI.DisableGroup(gameNamespace);
             UI.DisableGroup(optionsNamespace);
@@ -483,22 +507,27 @@ namespace Ruetobas
             }
 
             int id = cardHand[selectedCard];
-            RemoveSelectedCard();
             game.TCPSend("DISCARD " + id.ToString());
         }
 
 
         public static void BoardDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
-            spriteBatch.Draw(tileGrass, location, Color.White);
-            float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
-            if (map[x, y].rotation == 1)
+            if (map[x, y].ID == 45)
             {
-                location.X += location.Width;
-                location.Y += location.Height;
+                spriteBatch.Draw(grids[gameNamespace + "BOARD"].fieldTexture[x, y], location, Color.White);
             }
-            spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
-            //spriteBatch.Draw(grids["BOARD"].fieldTexture[x, y], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+            else
+            {
+                spriteBatch.Draw(tileGrass, location, Color.White);
+                float rot = map[x, y].rotation == 1 ? (float)Math.PI : 0.0f;
+                if (map[x, y].rotation == 1)
+                {
+                    location.X += location.Width;
+                    location.Y += location.Height;
+                }
+                spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+            }
         }
 
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
@@ -613,7 +642,6 @@ namespace Ruetobas
                 if (result == 0)
                 {
                     string line = "PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString();
-                    RemoveSelectedCard();
                     game.TCPSend(line);
                 }
                 else if (result == 1)
@@ -648,7 +676,6 @@ namespace Ruetobas
                     else
                     {
                         string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
-                        RemoveSelectedCard();
                         game.TCPSend(line);
                     }
                 }
@@ -662,7 +689,6 @@ namespace Ruetobas
                 if (map[x, y].ID == 45)
                 {
                     string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
-                    RemoveSelectedCard();
                     game.TCPSend(line);
                 }
                 else
@@ -691,7 +717,6 @@ namespace Ruetobas
                 else
                 {
                     string line = "USE " + id.ToString() + " " + players[y].username + " 0";
-                    RemoveSelectedCard();
                     game.TCPSend(line);
                 }
             }
@@ -707,7 +732,6 @@ namespace Ruetobas
                 else
                 {
                     string line = "USE " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
-                    RemoveSelectedCard();
                     game.TCPSend(line);
                 }
             }
@@ -741,15 +765,6 @@ namespace Ruetobas
             decision();
         }
 
-        public static void RemoveSelectedCard()
-        {
-            for (int i = selectedCard; i < 5; i++)
-                cardHand[i] = cardHand[i + 1];
-            selectedCard = -1;
-            cardHand[5] = 0;
-            selectedRot = 0;
-        }
-
         public static void CloseError()
         {
             buttons.Remove("ZZZBACKGROUND");
@@ -763,7 +778,7 @@ namespace Ruetobas
             game.TCPSend("READY");          
         }
 
-        public static void DisplayMenu(bool shouldBeVisible)
+        public static void DisplayOptions(bool shouldBeVisible)
         {
             if (shouldBeVisible)
                 UI.EnableGroup(optionsNamespace);
@@ -827,7 +842,7 @@ namespace Ruetobas
             }
             return -1;
         }
-
+        
         public static void PlaySound(SoundEffect soundEffect, float playVolume)
         {
             soundEffect.Play(playVolume, 0.0f, 0.0f);

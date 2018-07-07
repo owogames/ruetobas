@@ -293,7 +293,7 @@ namespace Ruetobas
             Logic.inputBoxes[Logic.menuNamespace + "ip"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             Logic.inputBoxes[Logic.menuNamespace + "nick"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             Logic.buttons[Logic.menuNamespace + "connect"] = new Button(Logic.chatSendTexture, new Rectangle(210, 750, 1500, 75), Logic.LoadGameScreen);
-            Logic.buttons[Logic.menuNamespace + "menubutton"] = new Button(Logic.settingsTexture, new Rectangle(10, 10, 40, 40), () => Logic.DisplayMenu(true));
+            Logic.buttons[Logic.menuNamespace + "menubutton"] = new Button(Logic.settingsTexture, new Rectangle(10, 10, 40, 40), () => Logic.DisplayOptions(true));
 
             //Options
             Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
@@ -305,7 +305,7 @@ namespace Ruetobas
                 Logic.buttons[Logic.optionsNamespace + "Fullscreen"].texture = Logic.unTickedTexture;
             Logic.inputBoxes[Logic.optionsNamespace + "Volume"] = new InputBox(Logic.chatInputTexture, 8, Logic.font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
             Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Logic.volume));
-            Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayMenu(false));
+            Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayOptions(false));
             Logic.buttons[Logic.optionsNamespace + "Quit"] = new Button(Logic.errorButton, new Rectangle(1700, 940, 140, 80), Logic.game.Exit);
             Logic.grids[Logic.optionsNamespace + "Resolutions"] = new Grid(Logic.game, Logic.chatTexture, null, 1, Logic.displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, Logic.ResolutionsClick, Logic.ResolutionsDraw);
             Logic.grids[Logic.optionsNamespace + "Resolutions"].useScrollToScroll = true;
@@ -322,7 +322,7 @@ namespace Ruetobas
             Logic.textBoxes[Logic.gameNamespace + "ACTUALPLAYER"] = new TextBox(Logic.errorButton, 5, Alignment.Left, Logic.font, new Rectangle(1380, 0, 290, 50));
             Logic.buttons[Logic.gameNamespace + "DISCARD"] = new Button(Logic.discardTexture, new Rectangle(1380, 780, 540, 75), Logic.DiscardCard);
             Logic.buttons[Logic.gameNamespace + "REMOVE"] = new Button(Logic.errorButton, new Rectangle(1380, 855, 540, 75), null);
-            Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayMenu(true));
+            Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayOptions(true));
             Logic.buttons[Logic.gameNamespace + "EXIT"] = new Button(Logic.errorButton, new Rectangle(1380, 1005, 540, 75), null);
             Logic.grids[Logic.gameNamespace + "CARDS"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, Logic.HandClick, Logic.HandDraw);
             Logic.grids[Logic.gameNamespace + "BOARD"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, Logic.BoardClick, Logic.BoardDraw);
