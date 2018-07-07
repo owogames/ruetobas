@@ -39,19 +39,19 @@ static std::queue<std::pair<int, std::string>> msg_queue;
 
 
 
-
-void fatal_err(const char* msg) {
+//
+static void fatal_err(const char* msg) {
 	fprintf(stderr, "%s", msg);
     fflush(stderr);
     exit(1);
 }
 
-void err(const char* msg) {
+static void err(const char* msg) {
     fprintf(stderr, "%s", msg);
     fflush(stderr);
 }
 
-const int BUFF_SIZE = 1024;
+static const int BUFF_SIZE = 1024;
 
 
 
@@ -65,8 +65,8 @@ void remove(int fd) {
 }
 
 
-
-std::string getMsg(int fd) {
+///pomocnicza funkcja czytająca wiadomość od konkretnego klienta
+static std::string _readFrom(int fd) {
 
 	char buff[BUFF_SIZE];
 	memset(buff, 0, BUFF_SIZE);
@@ -91,15 +91,11 @@ std::string getMsg(int fd) {
 
 
 int accept() {
-
+	//adres klienta, może się kiedyś przydać xdd
     socklen_t addrlen = sizeof(sockaddr_in);
 	sockaddr_in client_addr;
 
-    #ifdef WIN32
-	int newsockfd = ::accept(sockfd, nullptr, nullptr);
-    #else
 	int newsockfd = ::accept(sockfd, (sockaddr*) &client_addr, &addrlen);
-    #endif
 
 	if(newsockfd == -1)
 		err("accept\n");
@@ -116,7 +112,7 @@ int accept() {
 
 
 void wakeMeUp(int port) {
-
+	//ŁINDOS
     #ifdef WIN32
 	WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
@@ -150,7 +146,7 @@ void wakeMeUp(int port) {
     if(listen(sockfd, SOMAXCONN) == SOCKET_ERROR)
         fatal_err("listen\n");
 
-
+	//LINKEKS
     #else
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if(sockfd == -1)
@@ -195,9 +191,8 @@ std::pair<int, std::string> read() {
 	if(msg_queue.empty()) {
 
 		fd_set read_fds = fds;
-		timeval timeout{0, 0};
 
-		if(select(maxfd + 1, &read_fds, NULL, NULL, &timeout) == -1)
+		if(select(maxfd + 1, &read_fds, nullptr, nullptr, nullptr) == -1)
 			err("select\n");
 
 		for(int fd = 0; fd <= maxfd; fd++) {
@@ -209,7 +204,7 @@ std::pair<int, std::string> read() {
 				}
 				else {
 					//rozdziel po enterach
-					std::string buff = getMsg(fd) + '\n';
+					std::string buff = _readFrom(fd) + '\n';
 					std::string msg;
 					bool has_content = false;
 					for(auto c : buff) {
@@ -228,7 +223,7 @@ std::pair<int, std::string> read() {
 	}
 
 	if(msg_queue.empty())
-		return {-1, ""};
+		return {-1, ""}; //tak na wszelki wypadek; nie powinno się zdarzyć
 	else {
 		auto ret = msg_queue.front();
 		msg_queue.pop();

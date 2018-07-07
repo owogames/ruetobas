@@ -337,10 +337,6 @@ int main() {
 		std::tie(fd, msg) = read();
 		std::tie(command, text) = split(msg);
 
-		if(!running && isEveryoneReady()) {		
-			running = true;
-			newGame();
-		}
 
 		if(fd == -1) continue;
 
@@ -513,6 +509,12 @@ int main() {
 		
 		else
 			write(fd, "ERROR Unknown command");
+			
+		//na sam koniec sprawdź czy gra się nie powinna zacząć
+		if(!running && isEveryoneReady()) {		
+			running = true;
+			newGame();
+		}
 	} 
 	
 	
