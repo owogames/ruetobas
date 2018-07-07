@@ -180,14 +180,7 @@ void wakeMeUp(int port) {
 
 
 std::pair<int, std::string> read() {
-	#ifdef MANUAL_INPUT
-	int fd;
-	std::string str;
-	std::cin >> fd;
-	std::getline(std::cin, str);
-	return {fd, str};
 	
-	#else
 	if(msg_queue.empty()) {
 
 		fd_set read_fds = fds;
@@ -230,16 +223,11 @@ std::pair<int, std::string> read() {
 		return ret;
 	}
 	
-	#endif
 }
 
 
 
 void write(int fd, std::string msg) {
-	#ifdef MANUAL_INPUT
-	std::cout << fd << ": " << msg << std::endl;
-	#else
-	
 	std::cout << msg << " -> [" << fd << "]\n";
 	
 	msg += '\n';
@@ -247,7 +235,6 @@ void write(int fd, std::string msg) {
 	if(send(fd, msg.data(), msg.size(), 0) == -1)
 		err("send\n");
 		
-	#endif
 }
 
 

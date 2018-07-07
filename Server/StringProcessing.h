@@ -1,19 +1,33 @@
 #include <string>
 #include <vector>
 
-///@brief rozdziel wiadomość na komendę i treść komendy
+///rozdziela wiadomość na komendę i treść komendy
 std::pair<std::string, std::string> split(const std::string& str);
 
-///@brief sprawdza, czy login jest legitny
+///sprawdza, czy login jest legitny
 bool invalidLogin(const std::string& str);
 
-///@brief sprawdza, czy wiadomość chatu jest legitna
+///sprawdza, czy wiadomość chatu jest legitna
 bool invalidChatMsg(const std::string& str);
 
+///cenzuruje wiadomość (hehe)
 std::string censored(std::string str);
 
-///@brief rozbija stringa na listę intów
+///rozbija stringa na listę intów
 bool intList(const std::string& str, std::vector<int>& v);
 
-///@brief int -> string (c++ taki super język xddddd)
-std::string toStr(int x);
+///konwertuje na stringa
+template<class T>
+std::string toStr(T x) {
+	std::stringstream ss;
+	ss << x;
+	return ss.str();
+}
+
+///formatuje do stringa
+template<class... Ts>
+std::string format(const char* fmt, Ts... ts) {
+	char buffer[1000];
+	sprintf_s(buffer, 1000, fmt, ts...);
+	return std::string(buffer);
+}

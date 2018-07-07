@@ -24,16 +24,17 @@ static bool running = false;
 
 ///////////////////////////////////////////////PRZYDATNE FUNKCJE/////////////////////////////////////////////////
 
-void writeAll(std::string msg) {
+template<class... Args>
+void writeAll(Args...args) {
 	for(auto p : players)
-		write(p.first, msg);
+		write(p.first, args...);
 }
 
-
-void writeAllBut(int fd, std::string msg) {
+template<class... Args>
+void writeAllBut(int fd, Args... args) {
 	for(auto p : players)
 		if(p.first != fd)
-			write(p.first, msg);
+			write(p.first, args...);
 }
 
 
@@ -172,12 +173,14 @@ void newGame() {
 
 void newCard(int fd, int old_card) {
 	players[fd].removeCard(old_card);
+		
+	write(fd, "TAEK %i", old_card); 
 					
 	if(cards.empty())	
 		write(fd, "GIB 0");
 	
 	else {
-		write(fd, "GIB " + toStr(cards.back()));
+		write(fd, "GIB %i", cards.back());
 		players[fd].addCard(cards.back());
 		cards.pop_back();
 	}
@@ -194,7 +197,7 @@ bool revealCards() {
 		if(id == 43) //const
 			ret = 1;
 		
-		writeAll("PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip));
+		writeAll("PLACE %i %i %i %i", id, x, y, flip);
 	}
 	
 	return ret;
@@ -268,7 +271,7 @@ void removePlayer(int fd) {
 
 void doTunnel(int fd, int id, int x, int y, int flip) {
 	placeCard(id, x, y, flip);
-	writeAll("PLACE " + toStr(id) + " " + toStr(x) + " " + toStr(y) + " " + toStr(flip) + " ");
+	writeAll("PLACE %i %i %i %i", id, x, y, flip);
 							
 	newCard(fd, id);
 	if(revealCards())
@@ -301,7 +304,7 @@ void doDebuff(int fd, int id, int fd2, int b) {
 
 void doCrush(int fd, int id, int x, int y) {
 	useCrush(x, y);
-	writeAll("PLACE 0 " + toStr(x) + " " + toStr(y) + " 0");
+	writeAll("PLACE 0 %i %i 0", x, y);
 	
 	newCard(fd, id);
 	if(!nextPlayer())
@@ -310,7 +313,7 @@ void doCrush(int fd, int id, int x, int y) {
 
 
 void doMap(int fd, int id, int x, int y) {
-	write(fd, "MAP " + toStr(useMap(x, y)) + " " + toStr(x) + " " + toStr(y));
+	write(fd, "MAP %i %i %i", useMap(x, y), x, y);
 	
 	newCard(fd, id);
 	if(!nextPlayer())
