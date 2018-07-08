@@ -48,8 +48,7 @@ namespace Ruetobas
         public static Texture2D[] tileTunnel = new Texture2D[46];
         public static SpriteFont font;
         public static Effect maskEffect;
-
-        public static float volume = 1.0f;
+        
         public static SoundEffect bubbles;
         public static SoundEffect boop;
         public static SoundEffect bye;
@@ -216,7 +215,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "BYE")
                 {
-                    PlaySound(bye, volume);
+                    PlaySound(bye, Settings.volume);
                     textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.");
                     for (int i = 0; i < players.Count; i++)
                     {
@@ -314,11 +313,11 @@ namespace Ruetobas
                     if (playerTurn == username)
                     {
                         textBoxes[gameNamespace + "HELP"].lines[0] = "Select card from your hand";
-                        PlaySound(bubbles, volume);
+                        PlaySound(bubbles, Settings.volume);
                     }
                     else
                     {
-                        PlaySound(boop, volume * 0.3f);
+                        PlaySound(boop, Settings.volume * 0.3f);
                     }
                         
                 }
@@ -790,14 +789,15 @@ namespace Ruetobas
                 float new_volume;
                 if (float.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
                     new_volume < 100 && new_volume >= 0)
-                    volume = new_volume * 0.01f;
+                    Settings.volume = new_volume * 0.01f;
+                Settings.SaveToFile();
             }
         }
 
         public static void ChangeFullscreen()
         {
             game.ChangeFullscreen();
-            if (Game.isFullscreen)
+            if (Settings.isFullscreen)
                 buttons[optionsNamespace + "Fullscreen"].texture = tickedTexture;
             else
                 buttons[optionsNamespace + "Fullscreen"].texture = unTickedTexture;

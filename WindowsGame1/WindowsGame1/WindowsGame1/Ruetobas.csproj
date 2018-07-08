@@ -60,6 +60,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Render.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Geo.cs" />
     <Compile Include="Logic.cs" />

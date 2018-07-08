@@ -127,14 +127,12 @@ namespace Ruetobas
         public static Texture2D cursorTexture;
 
         public static Vector2 scale = Vector2.One * 1280.0f/1920.0f;
-        public static Vector2 resolution = new Vector2(1280, 720);
-        public static bool isFullscreen = false;
         
         public void ChangeResolution(float X, float Y)
         {
             int width = (int)X;
             int height = (int)Y;
-            resolution = new Vector2(width, height);
+            Settings.resolution = new Point(width, height);
             scale = new Vector2(width / 1920.0f, height / 1080.0f);
             graphics.PreferredBackBufferWidth = width;
             graphics.PreferredBackBufferHeight = height;
@@ -146,7 +144,7 @@ namespace Ruetobas
         public void ChangeFullscreen()
         {
             graphics.ToggleFullScreen();
-            isFullscreen = !isFullscreen;
+            Settings.isFullscreen = !Settings.isFullscreen;
         }
 
         public Point GetCurrentDeviceResolution()
@@ -167,8 +165,8 @@ namespace Ruetobas
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = (int)(resolution.X);
-            graphics.PreferredBackBufferHeight = (int)(resolution.Y);
+            graphics.PreferredBackBufferWidth = Settings.resolution.X;
+            graphics.PreferredBackBufferHeight = Settings.resolution.Y;
             Content.RootDirectory = "Content";
         }
 
@@ -185,6 +183,7 @@ namespace Ruetobas
             asen = new ASCIIEncoding();
             screen = new RenderTarget2D(GraphicsDevice, 1920, 1080);
             base.Initialize();
+            Settings.Initialize(this);
         }
 
         /// <summary>

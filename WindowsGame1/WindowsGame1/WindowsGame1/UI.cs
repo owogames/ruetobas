@@ -301,10 +301,10 @@ namespace Ruetobas
             Logic.textBoxes[Logic.optionsNamespace + "NativeResText"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 120, 200, 50), "Only native resolution");
             Logic.buttons[Logic.optionsNamespace + "Fullscreen"] = new Button(Logic.tickedTexture, new Rectangle(220, 10, 50, 50), Logic.ChangeFullscreen);
             Logic.buttons[Logic.optionsNamespace + "nativeRes"] = new Button(Logic.onlyNativeRes ? Logic.tickedTexture : Logic.unTickedTexture, new Rectangle(220, 120, 50, 50), Logic.ChangeNativeResMode);
-            if (Game.isFullscreen == false)
+            if (Settings.isFullscreen == false)
                 Logic.buttons[Logic.optionsNamespace + "Fullscreen"].texture = Logic.unTickedTexture;
             Logic.inputBoxes[Logic.optionsNamespace + "Volume"] = new InputBox(Logic.chatInputTexture, 8, Logic.font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
-            Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Logic.volume));
+            Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Settings.volume));
             Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayOptions(false));
             Logic.buttons[Logic.optionsNamespace + "Quit"] = new Button(Logic.errorButton, new Rectangle(1700, 940, 140, 80), Logic.game.Exit);
             Logic.grids[Logic.optionsNamespace + "Resolutions"] = new Grid(Logic.game, Logic.chatTexture, null, 1, Logic.displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, Logic.ResolutionsClick, Logic.ResolutionsDraw);
