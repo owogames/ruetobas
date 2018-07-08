@@ -4,4 +4,4 @@
 WindowsGame1/.vs/**
 *.pdb
 WindowsGame1/WindowsGame1/WindowsGame1/obj/x86/Debug/Ruetobas.csproj.CoreCompileInputs.cache
-
+Server/CMakeFiles/**
