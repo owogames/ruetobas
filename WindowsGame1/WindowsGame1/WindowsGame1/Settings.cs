@@ -70,14 +70,15 @@ namespace Ruetobas
                     Console.WriteLine(e.Message);
                     return 2;
                 }
-                
-                game.ChangeResolution(new_res);
+
                 if (isFullscreen != new_fullscreen)
                     Logic.ChangeFullscreen();
                 if (onlyNativeRes != new_nativeRes)
                     Logic.ChangeNativeResMode();
                 volume = new_volume;
-                
+                if (new_res.X > 256 & new_res.Y > 144)
+                    game.ChangeResolution(new_res);
+
                 return 0;
             }
             else
