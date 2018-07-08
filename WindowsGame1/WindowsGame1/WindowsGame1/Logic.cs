@@ -398,7 +398,7 @@ namespace Ruetobas
         public static void LoadGameScreen()
         {
             IP = inputBoxes[menuNamespace + "ip"].text;
-            username = inputBoxes[menuNamespace + "nick"].text;
+            username = inputBoxes[menuNamespace + "nick"].text.Trim();
 
             if (game.TCPConnect(IP, port))
             {
