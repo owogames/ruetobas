@@ -290,25 +290,34 @@ namespace Ruetobas
         public static void InitUI()
         {
             //Menu
+            Logic.buttons[Logic.menuNamespace + "0Background"] = new Button(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080), null);
             Logic.inputBoxes[Logic.menuNamespace + "ip"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
             Logic.inputBoxes[Logic.menuNamespace + "nick"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
             Logic.buttons[Logic.menuNamespace + "connect"] = new Button(Logic.chatSendTexture, new Rectangle(210, 750, 1500, 75), Logic.LoadGameScreen);
             Logic.buttons[Logic.menuNamespace + "menubutton"] = new Button(Logic.settingsTexture, new Rectangle(10, 10, 40, 40), () => Logic.DisplayOptions(true));
 
             //Options
-            Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.semiTransparentTexture, new Rectangle(0, 0, 1920, 1080), null);
-            Logic.textBoxes[Logic.optionsNamespace + "Fullscreentext"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 10, 200, 50), "Fullscreen");
-            Logic.textBoxes[Logic.optionsNamespace + "NativeResText"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 120, 200, 50), "Only native resolution");
-            Logic.buttons[Logic.optionsNamespace + "Fullscreen"] = new Button(Logic.tickedTexture, new Rectangle(220, 10, 50, 50), Logic.ChangeFullscreen);
-            Logic.buttons[Logic.optionsNamespace + "nativeRes"] = new Button(Logic.onlyNativeRes ? Logic.tickedTexture : Logic.unTickedTexture, new Rectangle(220, 120, 50, 50), Logic.ChangeNativeResMode);
-            if (Settings.isFullscreen == false)
+            Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.optionsWindow, new Rectangle(0, 0, 1920, 1080), () => { Logic.grids[Logic.optionsNamespace + "ZResolutions"].enabled = false; });
+            Logic.buttons[Logic.optionsNamespace + "FullscreenText"] = new Button(Logic.fullscreenTexture, new Rectangle(200, 200, 300, 60), null);
+            Logic.buttons[Logic.optionsNamespace + "ResolutionText"] = new Button(Logic.resolutionTexture, new Rectangle(200, 280, 300, 60), null);
+            Logic.buttons[Logic.optionsNamespace + "VolumeText"] = new Button(Logic.volumeTexture, new Rectangle(200, 360, 200, 60), null);
+            Logic.buttons[Logic.optionsNamespace + "Done"] = new Button(Logic.doneTexture, new Rectangle(200, 820, 140, 60), () => Logic.DisplayOptions(false));
+            Logic.buttons[Logic.optionsNamespace + "Exit"] = new Button(Logic.exitTexture, new Rectangle(1620, 820, 100, 60), Logic.game.Exit);
+            Logic.textBoxes[Logic.optionsNamespace + "ResolutionSelected"] = new TextBox(Logic.inputboxTexture, 5, Alignment.Centered, Logic.guifont, new Rectangle(560, 280, 380, 60), "1280 x 720    16:9");
+            Logic.textBoxes[Logic.optionsNamespace + "ResolutionSelected"].canScroll = false;
+            Logic.buttons[Logic.optionsNamespace + "ResolutionButton"] = new Button(Logic.dropdownTexture, new Rectangle(960, 280, 60, 60), () => { Logic.grids[Logic.optionsNamespace + "ZResolutions"].enabled = true; });
+            //Logic.textBoxes[Logic.optionsNamespace + "NativeResText"] = new TextBox(Logic.chatInputTexture, 8, Alignment.Centered, Logic.font, new Rectangle(10, 120, 200, 50), "Only native resolution");
+            Logic.buttons[Logic.optionsNamespace + "Fullscreen"] = new Button(Logic.tickedTexture, new Rectangle(560, 200, 60, 60), Logic.ChangeFullscreen);
+            //Logic.buttons[Logic.optionsNamespace + "nativeRes"] = new Button(Logic.onlyNativeRes ? Logic.tickedTexture : Logic.unTickedTexture, new Rectangle(220, 120, 50, 50), Logic.ChangeNativeResMode);
+            if (!Settings.isFullscreen)
                 Logic.buttons[Logic.optionsNamespace + "Fullscreen"].texture = Logic.unTickedTexture;
-            Logic.inputBoxes[Logic.optionsNamespace + "Volume"] = new InputBox(Logic.chatInputTexture, 8, Logic.font, new Rectangle(10, 230, 200, 100), Color.Aquamarine, Color.BlueViolet, "Volume", 3);
-            Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Settings.volume));
-            Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayOptions(false));
-            Logic.buttons[Logic.optionsNamespace + "Quit"] = new Button(Logic.errorButton, new Rectangle(1700, 940, 140, 80), Logic.game.Exit);
-            Logic.grids[Logic.optionsNamespace + "Resolutions"] = new Grid(Logic.game, Logic.chatTexture, null, 1, Logic.displayModes.Length, new Vector2(200, 50), new Rectangle(1000, 20, 200, 1000), 0, Logic.ResolutionsClick, Logic.ResolutionsDraw);
-            Logic.grids[Logic.optionsNamespace + "Resolutions"].useScrollToScroll = true;
+            Logic.inputBoxes[Logic.optionsNamespace + "Volume"] = new InputBox(Logic.inputboxSmallTexture, 10, Logic.guifont, new Rectangle(560, 360, 140, 60), Color.Orange, Color.White, "Enter", 3);
+            //Logic.buttons[Logic.optionsNamespace + "TestSound"] = new Button(Logic.errorButton, new Rectangle(220, 230, 50, 50), () => Logic.PlaySound(Logic.bubbles, Settings.volume));
+            //Logic.buttons[Logic.optionsNamespace + "done"] = new Button(Logic.readyTexture, new Rectangle(10, 345, 140, 80), () => Logic.DisplayOptions(false));
+            //Logic.buttons[Logic.optionsNamespace + "Quit"] = new Button(Logic.errorButton, new Rectangle(1700, 940, 140, 80), Logic.game.Exit);
+            Logic.grids[Logic.optionsNamespace + "ZResolutions"] = new Grid(Logic.game, Logic.dropdownMenuTexture, null, 1, Logic.displayModes.Length, new Vector2(380, 60), new Rectangle(560, 360, 380, 300), 5, Logic.ResolutionsClick, Logic.ResolutionsDraw);
+            Logic.grids[Logic.optionsNamespace + "ZResolutions"].useScrollToScroll = true;
+            Logic.grids[Logic.optionsNamespace + "ZResolutions"].offset.Y = 145;
             DisableGroup(Logic.optionsNamespace);
 
             //Game

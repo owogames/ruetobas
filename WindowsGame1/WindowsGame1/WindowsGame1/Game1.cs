@@ -364,6 +364,9 @@ namespace Ruetobas
                         {
                             if (Geo.RectContains(Logic.buttons[name].location, mousePos) && Logic.buttons[name].enabled && Logic.buttons[name].registerClicks)
                             {
+                                if (activeInputBox != null)
+                                    activeInputBox.active = false;
+                                activeInputBox = null;
                                 if (Logic.buttons[name].clickEvent != null)
                                     Logic.buttons[name].clickEvent();
                                 i = -1;
@@ -374,6 +377,9 @@ namespace Ruetobas
                         {
                             if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled)
                             {
+                                if (activeInputBox != null)
+                                    activeInputBox.active = false;
+                                activeInputBox = null;
                                 i = -1;
                             }
                         }
@@ -395,6 +401,9 @@ namespace Ruetobas
                             Grid grid = Logic.grids[name];
                             if (Geo.RectContains(Geo.Shrink(grid.location, grid.margin), mousePos) && grid.enabled)
                             {
+                                if (activeInputBox != null)
+                                    activeInputBox.active = false;
+                                activeInputBox = null;
                                 int pressX = (int)((mousePos.X - grid.location.X - grid.margin - grid.location.Width / 2 + grid.margin) / grid.zoom + grid.offset.X);
                                 int pressY = (int)((mousePos.Y - grid.location.Y - grid.margin - grid.location.Height / 2 + grid.margin) / grid.zoom + grid.offset.Y);
                                 int tileX = pressX / (int)grid.fieldSize.X;

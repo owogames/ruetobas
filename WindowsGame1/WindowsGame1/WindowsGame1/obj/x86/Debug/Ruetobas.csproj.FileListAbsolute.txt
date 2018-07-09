@@ -329,3 +329,23 @@ C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\Windo
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\SoundFX\best ost.wma
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tileDirt.xnb
 C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\tileGrass.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\YES.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\NO.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\black.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\options.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\menubackground.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\fullscreen.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\inputbox.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\resolution.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\toggleboxoff.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\toggleboxon.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\volume.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\window.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\done.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\exit.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\dropdown.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\guifont.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\dropdownmenu.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\slider.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\volumeslider.xnb
+C:\Users\Admonistrator\Documents\GitHub\ruetobas\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Content\gui\inputboxsmall.xnb

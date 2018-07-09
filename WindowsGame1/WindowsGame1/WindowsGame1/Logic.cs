@@ -41,12 +41,18 @@ namespace Ruetobas
         public static Texture2D tickedTexture;
         public static Texture2D noButton;
         public static Texture2D yesButton;
+        public static Texture2D menuBackground;
+        public static Texture2D optionsWindow;
+        public static Texture2D inputboxTexture, inputboxSmallTexture;
+        public static Texture2D dropdownTexture;
+        public static Texture2D dropdownMenuTexture;
+        public static Texture2D fullscreenTexture, resolutionTexture, volumeTexture, doneTexture, exitTexture;
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
         public static Texture2D tileGrass, tileDirt;
         public static Texture2D[] tileTunnel = new Texture2D[46];
-        public static SpriteFont font;
+        public static SpriteFont font, guifont;
         public static Effect maskEffect;
         
         public static SoundEffect bubbles;
@@ -113,8 +119,8 @@ namespace Ruetobas
             noButton = game.Content.Load<Texture2D>("NO");
             yesButton = game.Content.Load<Texture2D>("YES");
             errorButton = game.Content.Load<Texture2D>("errorButton");
-            unTickedTexture = game.Content.Load<Texture2D>("CheckBoxUnTicked");
-            tickedTexture = game.Content.Load<Texture2D>("CheckBoxTicked");
+            unTickedTexture = game.Content.Load<Texture2D>("gui\\toggleboxoff");
+            tickedTexture = game.Content.Load<Texture2D>("gui\\toggleboxon");
             chatTexture = game.Content.Load<Texture2D>("tekstura");
             chatInputTexture = game.Content.Load<Texture2D>("tekstura2");
             chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
@@ -125,6 +131,17 @@ namespace Ruetobas
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
             solidTexture = game.Content.Load<Texture2D>("black");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
+            menuBackground = game.Content.Load<Texture2D>("gui\\menubackground");
+            optionsWindow = game.Content.Load<Texture2D>("gui\\options");
+            inputboxTexture = game.Content.Load<Texture2D>("gui\\inputbox");
+            inputboxSmallTexture = game.Content.Load<Texture2D>("gui\\inputboxsmall");
+            dropdownTexture = game.Content.Load<Texture2D>("gui\\dropdown");
+            dropdownMenuTexture = game.Content.Load<Texture2D>("gui\\dropdownmenu");
+            fullscreenTexture = game.Content.Load<Texture2D>("gui\\fullscreen");
+            resolutionTexture = game.Content.Load<Texture2D>("gui\\resolution");
+            volumeTexture = game.Content.Load<Texture2D>("gui\\volume");
+            doneTexture = game.Content.Load<Texture2D>("gui\\done");
+            exitTexture = game.Content.Load<Texture2D>("gui\\exit");
             bubbles = game.Content.Load<SoundEffect>("SoundFX/menuback2");
             boop = game.Content.Load<SoundEffect>("SoundFX/normal-hitwhistle");
             bye = game.Content.Load<SoundEffect>("SoundFX/seeya");
@@ -142,6 +159,7 @@ namespace Ruetobas
             discardTexture = game.Content.Load<Texture2D>("buttondiscard");
 
             font = game.Content.Load<SpriteFont>("comic");
+            guifont = game.Content.Load<SpriteFont>("guifont");
 
             map = new PlacedCard[19, 15];
             for (int i = 0; i < 19; i++)
@@ -783,13 +801,18 @@ namespace Ruetobas
             if (shouldBeVisible)
                 UI.EnableGroup(optionsNamespace);
             else UI.DisableGroup(optionsNamespace);
+            grids[optionsNamespace + "ZResolutions"].enabled = false;
+            int gcd = GCD(Settings.resolution.X, Settings.resolution.Y);
+            string line = Settings.resolution.X.ToString() + " x " + Settings.resolution.Y.ToString() + "    " +
+                (Settings.resolution.X / gcd).ToString() + ":" + (Settings.resolution.Y / gcd).ToString();
+            textBoxes[optionsNamespace + "ResolutionSelected"].lines[0] = line;
 
-            if(shouldBeVisible == false)
+            if (shouldBeVisible == false)
             {
-                float new_volume;
+                /*float new_volume;
                 if (float.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
                     new_volume < 100 && new_volume >= 0)
-                    Settings.volume = new_volume * 0.01f;
+                    Settings.volume = new_volume * 0.01f;*/
                 Settings.SaveToFile();
             }
         }
@@ -809,20 +832,22 @@ namespace Ruetobas
             if (y == -1) return;
             Point curRes = new Point(displayModes[y].Width, displayModes[y].Height);
             Color c = game.GetCurrentWindowResolution() == curRes ? Color.LightYellow : Color.White;
-            spriteBatch.Draw(chatTexture, location, c);
             int gcd = GCD(displayModes[y].Width, displayModes[y].Height);
-            spriteBatch.DrawString(font, displayModes[y].Width.ToString()
-                + " x " + displayModes[y].Height.ToString()
-                + "  " + (displayModes[y].Width / gcd).ToString()
-                + ":"
-                + (displayModes[y].Height / gcd).ToString(),
-                new Vector2(location.X + 5, location.Y + 10), Color.White);
+            string line = displayModes[y].Width.ToString() + " x " + displayModes[y].Height.ToString() + "    " +
+                (displayModes[y].Width / gcd).ToString() + ":" + (displayModes[y].Height / gcd).ToString();
+            spriteBatch.DrawString(guifont, line,
+                new Vector2(location.X + (location.Width - guifont.MeasureString(line).X) / 2, location.Y + (location.Height - guifont.MeasureString(line).Y) / 2), Color.White);
         }
 
         public static void ResolutionsClick(int x, int y)
         {
             y = GetTheNthFittingResolution(y);
             if (y == -1) return;
+            int gcd = GCD(displayModes[y].Width, displayModes[y].Height);
+            string line = displayModes[y].Width.ToString() + " x " + displayModes[y].Height.ToString() + "    " +
+                (displayModes[y].Width / gcd).ToString() + ":" + (displayModes[y].Height / gcd).ToString();
+            textBoxes[optionsNamespace + "ResolutionSelected"].lines[0] = line;
+            grids[optionsNamespace + "ZResolutions"].enabled = false;
             game.ChangeResolution(displayModes[y].Width, displayModes[y].Height);
         }
 
