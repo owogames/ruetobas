@@ -98,18 +98,6 @@ Content\tileGrass.xnb
 Content\YES.xnb
 Content\NO.xnb
 Content\black.xnb
-Content\font.xnb
-Content\comic.xnb
-Content\shaders\Mask.xnb
-Content\SoundFX\best ost.xnb
-Content\SoundFX\best ost.wma
-Content\SoundFX\menuback2.xnb
-Content\SoundFX\menuclick.xnb
-Content\SoundFX\menuhit.xnb
-Content\SoundFX\normal-hitwhistle.xnb
-Content\SoundFX\normal-hitwhistle2.xnb
-Content\SoundFX\seeya.xnb
-Content\SoundFX\soft-hitfinish.xnb
 Content\gui\options.xnb
 Content\gui\menubackground.xnb
 Content\gui\fullscreen.xnb
@@ -122,8 +110,26 @@ Content\gui\window.xnb
 Content\gui\done.xnb
 Content\gui\exit.xnb
 Content\gui\dropdown.xnb
-Content\guifont.xnb
 Content\gui\dropdownmenu.xnb
 Content\gui\slider.xnb
 Content\gui\volumeslider.xnb
 Content\gui\inputboxsmall.xnb
+Content\font.xnb
+Content\comic.xnb
+Content\guifont.xnb
+Content\shaders\Mask.xnb
+Content\SoundFX\best ost.xnb
+Content\SoundFX\best ost.wma
+Content\SoundFX\menuback2.xnb
+Content\SoundFX\menuclick.xnb
+Content\SoundFX\menuhit.xnb
+Content\SoundFX\normal-hitwhistle.xnb
+Content\SoundFX\normal-hitwhistle2.xnb
+Content\SoundFX\seeya.xnb
+Content\SoundFX\soft-hitfinish.xnb
+Content\gui\join.xnb
+Content\gui\quit.xnb
+Content\gui\optionswindow.xnb
+Content\gui\cancel.xnb
+Content\gui\connect.xnb
+Content\gui\connectwindow.xnb

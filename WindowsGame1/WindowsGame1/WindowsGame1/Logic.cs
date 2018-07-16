@@ -42,11 +42,11 @@ namespace Ruetobas
         public static Texture2D noButton;
         public static Texture2D yesButton;
         public static Texture2D menuBackground;
-        public static Texture2D optionsWindow;
+        public static Texture2D optionsWindow, windowTexture, connectWindow;
         public static Texture2D inputboxTexture, inputboxSmallTexture;
         public static Texture2D dropdownTexture;
         public static Texture2D dropdownMenuTexture;
-        public static Texture2D fullscreenTexture, resolutionTexture, volumeTexture, doneTexture, exitTexture;
+        public static Texture2D fullscreenTexture, resolutionTexture, volumeTexture, doneTexture, exitTexture, joinTexture, optionsTexture, quitTexture, connectTexture, cancelTexture;
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
@@ -132,7 +132,9 @@ namespace Ruetobas
             solidTexture = game.Content.Load<Texture2D>("black");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
             menuBackground = game.Content.Load<Texture2D>("gui\\menubackground");
-            optionsWindow = game.Content.Load<Texture2D>("gui\\options");
+            optionsWindow = game.Content.Load<Texture2D>("gui\\optionswindow");
+            connectWindow = game.Content.Load<Texture2D>("gui\\connectwindow");
+            windowTexture = game.Content.Load<Texture2D>("gui\\window");
             inputboxTexture = game.Content.Load<Texture2D>("gui\\inputbox");
             inputboxSmallTexture = game.Content.Load<Texture2D>("gui\\inputboxsmall");
             dropdownTexture = game.Content.Load<Texture2D>("gui\\dropdown");
@@ -142,6 +144,11 @@ namespace Ruetobas
             volumeTexture = game.Content.Load<Texture2D>("gui\\volume");
             doneTexture = game.Content.Load<Texture2D>("gui\\done");
             exitTexture = game.Content.Load<Texture2D>("gui\\exit");
+            joinTexture = game.Content.Load<Texture2D>("gui\\join");
+            optionsTexture = game.Content.Load<Texture2D>("gui\\options");
+            quitTexture = game.Content.Load<Texture2D>("gui\\quit");
+            cancelTexture = game.Content.Load<Texture2D>("gui\\cancel");
+            connectTexture = game.Content.Load<Texture2D>("gui\\connect");
             bubbles = game.Content.Load<SoundEffect>("SoundFX/menuback2");
             boop = game.Content.Load<SoundEffect>("SoundFX/normal-hitwhistle");
             bye = game.Content.Load<SoundEffect>("SoundFX/seeya");
@@ -414,8 +421,8 @@ namespace Ruetobas
 
         public static void LoadGameScreen()
         {
-            IP = inputBoxes[menuNamespace + "ip"].text;
-            username = inputBoxes[menuNamespace + "nick"].text.Trim();
+            IP = inputBoxes[menuNamespace + "Zip"].text;
+            username = inputBoxes[menuNamespace + "Znick"].text.Trim();
 
             if (game.TCPConnect(IP, port))
             {

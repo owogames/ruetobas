@@ -291,10 +291,15 @@ namespace Ruetobas
         {
             //Menu
             Logic.buttons[Logic.menuNamespace + "0Background"] = new Button(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080), null);
-            Logic.inputBoxes[Logic.menuNamespace + "ip"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 450, 1500, 75), Color.White, Color.LightGray, "Enter server IP");
-            Logic.inputBoxes[Logic.menuNamespace + "nick"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(210, 600, 1500, 75), Color.White, Color.LightGray, "Enter username", 32);
-            Logic.buttons[Logic.menuNamespace + "connect"] = new Button(Logic.chatSendTexture, new Rectangle(210, 750, 1500, 75), Logic.LoadGameScreen);
-            Logic.buttons[Logic.menuNamespace + "menubutton"] = new Button(Logic.settingsTexture, new Rectangle(10, 10, 40, 40), () => Logic.DisplayOptions(true));
+            Logic.buttons[Logic.menuNamespace + "Join"] = new Button(Logic.joinTexture, new Rectangle(120, 620, 360, 80), () => { EnableGroup(Logic.menuNamespace + "Z"); });
+            Logic.buttons[Logic.menuNamespace + "Options"] = new Button(Logic.optionsTexture, new Rectangle(120, 700, 300, 80), () => Logic.DisplayOptions(true));
+            Logic.buttons[Logic.menuNamespace + "Quit"] = new Button(Logic.quitTexture, new Rectangle(120, 780, 200, 80), Logic.game.Exit);
+            Logic.buttons[Logic.menuNamespace + "ZBackground"] = new Button(Logic.connectWindow, new Rectangle(0, 0, 1920, 1080), null);
+            Logic.inputBoxes[Logic.menuNamespace + "Zip"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 440, 380, 60), Color.White, Color.LightGray, "Enter server IP");
+            Logic.inputBoxes[Logic.menuNamespace + "Znick"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 560, 380, 60), Color.White, Color.LightGray, "Enter username", 32);
+            Logic.buttons[Logic.menuNamespace + "Zconnect"] = new Button(Logic.connectTexture, new Rectangle(840, 680, 260, 60), Logic.LoadGameScreen);
+            Logic.buttons[Logic.menuNamespace + "Zcancel"] = new Button(Logic.cancelTexture, new Rectangle(1520, 820, 200, 60), () => { DisableGroup(Logic.menuNamespace + "Z"); });
+            DisableGroup(Logic.menuNamespace + "Z");
 
             //Options
             Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.optionsWindow, new Rectangle(0, 0, 1920, 1080), () => { Logic.grids[Logic.optionsNamespace + "ZResolutions"].enabled = false; });
