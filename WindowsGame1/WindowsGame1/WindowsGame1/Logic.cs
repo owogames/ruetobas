@@ -700,7 +700,7 @@ namespace Ruetobas
                     }
                     else
                     {
-                        string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
+                        string line = "CRUSH " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
                         game.TCPSend(line);
                     }
                 }
@@ -713,7 +713,7 @@ namespace Ruetobas
             {
                 if (map[x, y].ID == 45)
                 {
-                    string line = "USE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
+                    string line = "MAP " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString();
                     game.TCPSend(line);
                 }
                 else
@@ -741,7 +741,7 @@ namespace Ruetobas
                     textBoxes[gameNamespace + "HELP"].lines[0] = "This player already has this effect applied";
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username + " 0";
+                    string line = "BUFF " + id.ToString() + " " + players[y].username + " 0";
                     game.TCPSend(line);
                 }
             }
@@ -756,7 +756,7 @@ namespace Ruetobas
                     textBoxes[gameNamespace + "HELP"].lines[0] = "This player doesn't have this effect applied";
                 else
                 {
-                    string line = "USE " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
+                    string line = "DEBUFF " + id.ToString() + " " + players[y].username + " " + selectedRot.ToString();
                     game.TCPSend(line);
                 }
             }
