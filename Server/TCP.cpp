@@ -27,8 +27,6 @@
 
 #endif
 
-//#define MANUAL_INPUT
-
 
 static int sockfd;
 static fd_set fds;
@@ -39,7 +37,6 @@ static std::queue<std::pair<int, std::string>> msg_queue;
 
 
 
-//
 static void fatal_err(const char* msg) {
 	fprintf(stderr, "%s", msg);
     fflush(stderr);

@@ -172,7 +172,8 @@ void initBoard() {
 	random_shuffle(treasure_id, treasure_id+3);
 }
 
-bool canPlaceCard(int id, int x, int y, bool flip) {
+
+bool placeCard(int id, int x, int y, bool flip) {
 	if(!validPos(x, y))
 		return false;
 	if (board[x][y].first != 0)
@@ -197,15 +198,12 @@ bool canPlaceCard(int id, int x, int y, bool flip) {
 		if(dis[x+dx[i]][y+dy[i]][(i+2)%4] < inf)
 			visited = true;
 	}
+	
+	if(visited)
+		board[x][y] = {id, flip};
 		
 	return visited;
 }
-
-void placeCard(int id, int x, int y, bool flip) {
-	board[x][y] = {id, flip};
-}
-
-
 
 
 bool revealedCard(int& id, int& x, int& y, bool& flip) {
@@ -230,24 +228,20 @@ bool revealedCard(int& id, int& x, int& y, bool& flip) {
 	return false;
 }
 
-bool canUseCrush(int x, int y) {
-	return tunnels[board[x][y].first].type == Tunnel::NORMAL || 
-		   tunnels[board[x][y].first].type == Tunnel::CRYSTAL; 
+
+bool useCrush(int x, int y) {
+	if(tunnels[board[x][y].first].type == Tunnel::NORMAL || tunnels[board[x][y].first].type == Tunnel::CRYSTAL) {
+		board[x][y] = {0, false};
+		return true;
+	}
+	return false;
 }
 
-void useCrush(int x, int y) {
-	board[x][y] = {0, false};
-}
-
-
-bool canUseMap(int x, int y) {
-	return board[x][y].first == 45;
-		   
-}
 
 int useMap(int x, int y) {
+	if(board[x][y].first != 45) return -1;
+	
 	return y == 5 ? treasure_id[0] : 
 		   y == 7 ? treasure_id[1] :
 					treasure_id[2];
 }
-

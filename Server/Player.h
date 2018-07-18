@@ -3,14 +3,16 @@
 #include <string>
 #include <vector>
 
-#define REGGID true
-#define RUETOBAS false
+enum {
+	TEAM_REGGID,
+	TEAM_RUETOBAS,
+};
 
 struct Player {
 	std::string name;
 	std::vector<int> cards;
 	bool ready;
-	bool team;
+	int team;
 	int score;
 	int buff_mask;
 	

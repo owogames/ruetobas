@@ -8,17 +8,17 @@
 
 static int card_type[1000];
 static std::vector<Tunnel> tunnels;
-static int buff_id[1000];
-static int debuff_id[2][1000];
+static int buff_type[2][1000];
 
 
 bool loadCards(std::string path) {
 	
+	#define PANIC(str) {std::cerr << str << path << std::endl; return false;}
+	
 	std::ifstream ifs(path);
-	if(!ifs.is_open()) {
-		std::cerr << "Couldn't open file " << path << std::endl;
-		return false;
-	}
+	if(!ifs.is_open())
+		PANIC("Couldn't open file " + path);
+
 	
 	bool ok = true;
 	int card_id = 0;
@@ -57,20 +57,19 @@ bool loadCards(std::string path) {
 				break;
 				
 			case 'B':
-				
 				int buff;
 				ifs >> buff;
 				
-				buff_id[card_id] = buff;
+				buff_type[0][card_id] = buff;
 				card_type[card_id] = CARD_BUFF;
 				break;
 				
 			case 'D':
-				int debuff0, debuff1;
-				ifs >> debuff0 >> debuff1;
-				debuff_id[0][card_id] = debuff0;
-				debuff_id[1][card_id] = debuff1;
+				int buff0, buff1;
+				ifs >> buff0 >> buff1;
 				
+				buff_type[0][card_id] = buff0;
+				buff_type[1][card_id] = buff1;
 				card_type[card_id] = CARD_DEBUFF;
 				break;
 				
@@ -102,12 +101,8 @@ int cardType(int card_id) {
 	return card_type[card_id];
 }
 
-int buffId(int card_id) {
-	return buff_id[card_id];
-}
-
-int debuffId(int card_id, int flip) {
-	return debuff_id[flip][card_id];
+int buffType(int card_id, int flip) {
+	return buff_type[flip][card_id];
 }
 
 

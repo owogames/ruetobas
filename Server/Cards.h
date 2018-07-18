@@ -15,6 +15,14 @@ enum {
 	CARD_CRUSH,
 };
 
+/*
+#define BUFF_NONE    0
+#define BUFF_PICKAXE 1
+#define BUFF_LANTERN 2
+#define BUFF_CART    4
+*/
+//wtedy można by robić np BUFF_PICKAXE | BUFF_CART ale trzeba konwertować z formatu klucza i to wkurza :c
+
 enum {
 	BUFF_NONE,
 	BUFF_PICKAXE,
@@ -28,5 +36,5 @@ std::vector<Tunnel> getTunnels();
 
 int cardType(int card_id);
 
-int buffId(int card_id);
-int debuffId(int card_id, int flip);
+int buffType(int card_id, int flip = 0);
+

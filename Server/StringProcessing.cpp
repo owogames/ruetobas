@@ -30,20 +30,6 @@ std::pair<std::string, std::string> split(const std::string& str) {
 	return {command, text};
 }
 
-bool invalidLogin(const std::string& str) {
-	if(str.empty() || str.size() > 32) return true;
-	for(auto c : str)
-		if(c < 33 || c > 126) return true;
-	return false;
-}
-
-bool invalidChatMsg(const std::string& str) {
-	if(str.empty() || str.size() > 128) return true;
-	for(auto c : str)
-		if(c < 32 || c > 126) return true;
-	return false;
-}
-
 bool intList(const std::string& str, std::vector<int>& v) {
 	//sprawdzanie czy string jest listą liczb całkowitych
 	int state = 0;
