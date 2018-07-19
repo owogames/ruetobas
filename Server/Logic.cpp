@@ -224,7 +224,7 @@ void endGame(bool who_won) {
 
 
 //bardzo fajne makro ;--D
-#define ASS(x, err) if(x) {write(fd, std::string("ERROR ") + err); return;}
+#define ASS(x, err) if(!(x)) {write(fd, std::string("ERROR ") + err); return;}
 
 
 void login(int fd, std::string name) {
