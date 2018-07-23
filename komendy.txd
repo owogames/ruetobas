@@ -1,0 +1,69 @@
+Logowanie:
+	Komenda:
+		LOGIN <gracz>
+	Odpowiedź do gracza wysyłającego:
+		OK <gracz1> <punkty1> <gracz2> <punkty2> ...
+	Wiadomość do wszystkich pozostałych graczy:
+		JOIN <gracz>	
+
+Czat:
+	Komenda:
+		CHAT <wiadomość>
+	Odpowiedź do wszystkich zalogowanych osób:
+		CHAT <gracz> <wiadomość>
+		
+Lobby:
+	Aby zrobić się gotowym:
+		READY
+	Odpowiedź do gracza wysyłającego:
+		OK READY
+	Wiadomość do wszystkich pozostałych graczy:
+		READY <gracz>
+
+Gra:
+	Początek gry:
+		Kiedy wszyscy będą gotowi, serwer wysyła do każdego tę komendę:
+			START <id1> <id2> ... <team>
+			<id1>, <id2>, ... = lista początkowych kart
+			<team> = frakcja gracza:
+				1 = kopacz
+				2 = sabotażysta
+	Tura:
+		Komenda wysyłana do wszystkich graczy:
+			TURN <gracz> [akcja]
+			<gracz> = nazwa gracza którego teraz będzie ruch
+			[akcja] = komenda, którą wysłał gracz, którego teraz był ruch (tylko że nie do końca, o tym mowa niżej)
+		Akcje:
+			<id> = id karty którą gracz zagrywa
+			<x> <y> = współrzędne miejsca gdzie karta ma być zagrana
+			<flip> = 0 jeśli karta ma być użyta normalnie, 1 jeśli ma być odwrócona
+			
+			Kładzenie tunelu:
+				PLACE <id> <x> <y> <flip>
+			Wyburzenie:
+				CRUSH <id> <x> <y>
+			Mapa:	
+				MAP <id> <x> <y>
+			Zablokowanie:
+				BUFF <id> <gracz>
+			Odblokowanie:
+				DEBUFF <id> <gracz> <flip>
+			Odrzucenie karty:
+				DISCARD <id>
+		Po wysłaniu akcji serwer odpisuje ERROR jeśli jest ona niepoprawna, lub OK w przeciwnym wypadku	
+		UWAGA - jeśli gracz odrzucił kartę, to w komendzie TURN [akcja] to będzie DISCARD, a nie DISCARD <id> (innymi słowy odrzucanie nie jest jawne)
+		
+		Odkrywanie skarbów:
+			Kiedy w skutek położenia tunelu odkryty zostaje skarb, serwer wysyła do wszystkich tę komendę:
+				PLACE <id> <x> <y> <flip>
+				
+	Koniec gry:
+		Jeśli odkryty zostanie skarb ze złotem lub karty się skończą, serwer wysyła do wszystkich komendę:
+			END <team> <gracz1> <punkty1> <team1> <gracz2> <punkty2> <team2> ...
+			<team> = liczba określająca frakcję, która wygrała (w ten sam sposób co wyżej)
+			<punktyx> = liczba punktów, które dany gracz ma po zakończeniu gry
+			<teamx> = frakcja, do której należał dany gracz
+			
+Błędy:
+	Na komendę o niepoprawnej składni lub niedozwolonej akcji serwer odpowie:
+		ERROR <krótki-opis-błędu> 
