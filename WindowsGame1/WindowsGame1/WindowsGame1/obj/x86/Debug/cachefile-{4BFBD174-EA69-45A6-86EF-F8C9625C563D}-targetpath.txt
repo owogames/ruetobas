@@ -114,6 +114,12 @@ Content\gui\dropdownmenu.xnb
 Content\gui\slider.xnb
 Content\gui\volumeslider.xnb
 Content\gui\inputboxsmall.xnb
+Content\gui\join.xnb
+Content\gui\quit.xnb
+Content\gui\optionswindow.xnb
+Content\gui\cancel.xnb
+Content\gui\connect.xnb
+Content\gui\connectwindow.xnb
 Content\font.xnb
 Content\comic.xnb
 Content\guifont.xnb
@@ -127,9 +133,4 @@ Content\SoundFX\normal-hitwhistle.xnb
 Content\SoundFX\normal-hitwhistle2.xnb
 Content\SoundFX\seeya.xnb
 Content\SoundFX\soft-hitfinish.xnb
-Content\gui\join.xnb
-Content\gui\quit.xnb
-Content\gui\optionswindow.xnb
-Content\gui\cancel.xnb
-Content\gui\connect.xnb
-Content\gui\connectwindow.xnb
+Content\tileGrid.xnb

@@ -11,8 +11,8 @@ namespace Ruetobas
     public static class Settings
     {
         public static Game game;
-        public static string SaveFileString = "Settings.txt";
-        private static char divisionChar = '♂';
+        public const string savePath = "Settings.txt";
+        private const char divisionChar = '♂';
         public static Point resolution = new Point(1280, 720);
         public static bool isFullscreen = false;
         public static bool onlyNativeRes = true;
@@ -33,15 +33,17 @@ namespace Ruetobas
 
         public static int SaveToFile()
         {
-            FileStream save = File.OpenWrite(SaveFileString);
-            string output = resolution.X.ToString() + divisionChar
-                + resolution.Y.ToString() + divisionChar
-                + isFullscreen.ToString() + divisionChar
-                + onlyNativeRes.ToString() + divisionChar
-                + volume.ToString();
-            byte[] b = Encoding.UTF8.GetBytes(output);
-            save.Write(b, 0, b.Length);
-            save.Close();
+            using (StreamWriter sr = new StreamWriter(savePath))
+            {
+                string output = resolution.X.ToString() + divisionChar
+                    + resolution.Y.ToString() + divisionChar
+                    + isFullscreen.ToString() + divisionChar
+                    + onlyNativeRes.ToString() + divisionChar
+                    + volume.ToString();
+                Console.WriteLine(volume.ToString());
+                sr.Write(output);
+                sr.Close();
+            }
             return 0;
         }
 
@@ -51,31 +53,36 @@ namespace Ruetobas
             bool new_fullscreen;
             bool new_nativeRes;
             float new_volume;
-            if (File.Exists(SaveFileString))
+            if (File.Exists(savePath))
             {
-                try
+                using (StreamReader sr = new StreamReader(savePath))
                 {
-                    string input = File.ReadAllText(SaveFileString);
-                    string[] elements = input.Split(divisionChar);
-                    int x = 0;
-                    new_res.X = int.Parse(elements[x++]);
-                    new_res.Y = int.Parse(elements[x++]);
-                    new_fullscreen = bool.Parse(elements[x++]);
-                    new_nativeRes = bool.Parse(elements[x++]);
-                    new_volume = float.Parse(elements[x++]);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error loading file!");
-                    Console.WriteLine(e.Message);
-                    return 2;
+                    try
+                    {
+                        string input = sr.ReadToEnd();
+                        string[] elements = input.Split(divisionChar);
+                        int x = 0;
+                        new_res.X = int.Parse(elements[x++]);
+                        new_res.Y = int.Parse(elements[x++]);
+                        new_fullscreen = bool.Parse(elements[x++]);
+                        new_nativeRes = bool.Parse(elements[x++]);
+                        new_volume = float.Parse(elements[x++]);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Error loading file!");
+                        Console.WriteLine(e.Message);
+                        return 2;
+                    }
+                    sr.Close();
                 }
 
                 if (isFullscreen != new_fullscreen)
                     Logic.ChangeFullscreen();
                 if (onlyNativeRes != new_nativeRes)
                     Logic.ChangeNativeResMode();
-                volume = new_volume;
+                if (new_volume > 0.0f && new_volume < 1.0f)
+                    volume = new_volume;
                 if (new_res.X > 256 & new_res.Y > 144)
                     game.ChangeResolution(new_res);
 
@@ -84,7 +91,5 @@ namespace Ruetobas
             else
                 return 1;
         }
-        
-
     }
 }

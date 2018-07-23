@@ -9,7 +9,7 @@ namespace Ruetobas
 {
     public static class Render
     {
-        public const bool DEBUGMODE = false;
+        public const bool RENDERSHADOWS = true;
 
         public static Texture2D RenderTunnel(Game game, SpriteBatch spriteBatch, int ID)
         {
@@ -18,7 +18,13 @@ namespace Ruetobas
             Color[] maskData = new Color[420 * 600];
             Color[] dirtData = new Color[420 * 600];
             Color[] output = new Color[420 * 600];
-            Logic.cardTexture[ID].GetData(maskData);
+            if (ID > 0)
+                Logic.cardTexture[ID].GetData(maskData);
+            else
+            {
+                for (int i = 0; i < 420 * 600; i++)
+                    maskData[i] = Color.White;
+            }
             Logic.tileDirt.GetData(dirtData);
             for (int x = 0; x < 420; x++)
             {
@@ -27,7 +33,7 @@ namespace Ruetobas
                     if (maskData[x + 420 * y].B < 20)
                     {
                         output[x + 420 * y] = dirtData[x + 420 * y];
-                        if (!DEBUGMODE)
+                        if (RENDERSHADOWS)
                         {
                             double amount = 0;
                             for (int x1 = Math.Max(0, x - 12); x1 < Math.Min(420, x + 13); x1++)

@@ -96,9 +96,10 @@ namespace Ruetobas
                 byte[] bytes = asen.GetBytes(msg);
                 stream.Write(bytes, 0, bytes.Length);
             }
-            catch
+            catch (Exception e)
             {
-                Logic.TCPRecieved("DISCONNECT Server stopped responding\n");
+                Console.WriteLine(e.Message);
+                Logic.TCPRecieved("DISCONNECT Error sending packet to server\n");
             }
         }
         
@@ -115,9 +116,10 @@ namespace Ruetobas
                         msg += Convert.ToChar(bytes[i]);
                     Logic.TCPRecieved(msg);
                 }
-                catch
+                catch (Exception e)
                 {
-                    Logic.TCPRecieved("DISCONNECT Server stopped responding\n");
+                    Console.WriteLine(e.Message);
+                    Logic.TCPRecieved("DISCONNECT Error recieving packet from server\n");
                 }
             }
         }
@@ -637,8 +639,8 @@ namespace Ruetobas
                             Rectangle targetRect = new Rectangle(x * (int)grid.fieldSize.X - (int)grid.offset.X, y * (int)grid.fieldSize.Y - (int)grid.offset.Y, (int)grid.fieldSize.X, (int)grid.fieldSize.Y);
                             targetRect.X = (int)(grid.zoom * targetRect.X);
                             targetRect.Y = (int)(grid.zoom * targetRect.Y);
-                            targetRect.Width = (int)(grid.zoom * targetRect.Width);
-                            targetRect.Height = (int)(grid.zoom * targetRect.Height);
+                            targetRect.Width = (int)(grid.zoom * targetRect.Width) + 1;
+                            targetRect.Height = (int)(grid.zoom * targetRect.Height) + 1;
                             targetRect.X += grid.location.Width / 2 - grid.margin;
                             targetRect.Y += grid.location.Height / 2 - grid.margin;
                             if (targetRect.Intersects(new Rectangle(0, 0, grid.location.Width, grid.location.Height)))
@@ -705,7 +707,7 @@ namespace Ruetobas
 
                             Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
 
-                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position * scale, Color.White, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
+                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position * scale, textBox.colors[i], 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
                         }
                     }
                 }

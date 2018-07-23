@@ -29,6 +29,7 @@ namespace Ruetobas
     public class TextBox
     {
         public List<string> lines;
+        public List<Color> colors;
         public Texture2D texture;
         public SpriteFont font;
         public Rectangle location;
@@ -47,6 +48,7 @@ namespace Ruetobas
             this.font = font;
             this.location = location;
             lines = new List<string>();
+            colors = new List<Color>();
             lineCount = (location.Height - 2 * margin) / font.LineSpacing;
         }
         public TextBox(Texture2D texture, int margin, Alignment align, SpriteFont font, Rectangle location, string line)
@@ -58,17 +60,25 @@ namespace Ruetobas
             this.location = location;
             lines = new List<string>();
             lines.Add(line);
+            colors = new List<Color>();
+            colors.Add(Color.White);
             lineCount = (location.Height - 2 * margin) / font.LineSpacing;
         }
 
-        public void Append(string line)
+        public void Append(string line, Color color)
         {
             lines.Add(line);
+            colors.Add(color);
             if (lines.Count - scroll > lineCount)
                 scroll = lines.Count - lineCount;
         }
 
-        public void AppendAndWrap(string line)
+        public void Append(string line)
+        {
+            Append(line, Color.White);
+        }
+
+        public void AppendAndWrap(string line, Color color)
         {
             string[] words = line.Split(' ');
             string actLine = words[0];
@@ -82,7 +92,7 @@ namespace Ruetobas
                 }
                 else
                 {
-                    Append(actLine);
+                    Append(actLine, color);
                     if (i < words.Count())
                     {
                         actLine = words[i];
@@ -96,7 +106,18 @@ namespace Ruetobas
                 }
             }
             if (lenX > 0)
-               Append(actLine);
+               Append(actLine, color);
+        }
+
+        public void AppendAndWrap(string line)
+        {
+            AppendAndWrap(line, Color.White);
+        }
+
+        public void Reset()
+        {
+            lines.Clear();
+            colors.Clear();
         }
 
         public int scroll = 0;
@@ -295,8 +316,8 @@ namespace Ruetobas
             Logic.buttons[Logic.menuNamespace + "Options"] = new Button(Logic.optionsTexture, new Rectangle(120, 700, 300, 80), () => Logic.DisplayOptions(true));
             Logic.buttons[Logic.menuNamespace + "Quit"] = new Button(Logic.quitTexture, new Rectangle(120, 780, 200, 80), Logic.game.Exit);
             Logic.buttons[Logic.menuNamespace + "ZBackground"] = new Button(Logic.connectWindow, new Rectangle(0, 0, 1920, 1080), null);
-            Logic.inputBoxes[Logic.menuNamespace + "Zip"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 440, 380, 60), Color.White, Color.LightGray, "Enter server IP");
-            Logic.inputBoxes[Logic.menuNamespace + "Znick"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 560, 380, 60), Color.White, Color.LightGray, "Enter username", 32);
+            Logic.inputBoxes[Logic.menuNamespace + "Zip"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 440, 380, 60), Color.White, Color.Gray, "Enter server IP");
+            Logic.inputBoxes[Logic.menuNamespace + "Znick"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 560, 380, 60), Color.White, Color.Gray, "Enter username", 32);
             Logic.buttons[Logic.menuNamespace + "Zconnect"] = new Button(Logic.connectTexture, new Rectangle(840, 680, 260, 60), Logic.LoadGameScreen);
             Logic.buttons[Logic.menuNamespace + "Zcancel"] = new Button(Logic.cancelTexture, new Rectangle(1520, 820, 200, 60), () => { DisableGroup(Logic.menuNamespace + "Z"); });
             DisableGroup(Logic.menuNamespace + "Z");
@@ -326,7 +347,7 @@ namespace Ruetobas
             DisableGroup(Logic.optionsNamespace);
 
             //Game
-            Logic.textBoxes[Logic.gameNamespace + "CHAT"] = new TextBox(Logic.chatTexture, 10, Alignment.Left, Logic.font, new Rectangle(1380, 50, 540, 670), "You joined the game");
+            Logic.textBoxes[Logic.gameNamespace + "CHAT"] = new TextBox(Logic.chatTexture, 10, Alignment.Left, Logic.font, new Rectangle(1380, 50, 540, 670));
             Logic.inputBoxes[Logic.gameNamespace + "CHATINPUT"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(1380, 720, 490, 60), Color.White, Color.LightGray, "Enter message...", 120);
             Logic.buttons[Logic.gameNamespace + "SEND"] = new Button(Logic.chatSendTexture, new Rectangle(1870, 720, 50, 60), Logic.SendChatMessage);
             Logic.textBoxes[Logic.gameNamespace + "HELP"] = new TextBox(Logic.errorBackground, 5, Alignment.Centered, Logic.font, new Rectangle(0, 720, 1380, 60), "");

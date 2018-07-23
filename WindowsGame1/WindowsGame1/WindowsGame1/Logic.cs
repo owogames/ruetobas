@@ -50,7 +50,7 @@ namespace Ruetobas
         public static Texture2D[] buffTexture = new Texture2D[3];
         public static Texture2D[] cardTexture = new Texture2D[73];
         public static Texture2D[] mapCardTexture = new Texture2D[3];
-        public static Texture2D tileGrass, tileDirt;
+        public static Texture2D tileGrass, tileDirt, tileGrid;
         public static Texture2D[] tileTunnel = new Texture2D[46];
         public static SpriteFont font, guifont;
         public static Effect maskEffect;
@@ -156,6 +156,7 @@ namespace Ruetobas
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
             tileGrass = game.Content.Load<Texture2D>("tileGrass");
             tileDirt = game.Content.Load<Texture2D>("tileDirt");
+            tileGrid = game.Content.Load<Texture2D>("tileGrid");
             for (int i = 0; i <= 45; i++)
                 tileTunnel[i] = Render.RenderTunnel(game, spriteBatch, i);
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
@@ -234,14 +235,14 @@ namespace Ruetobas
                     textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim());
                 if (data[0] == "JOIN")
                 {
-                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim() + " has joined the game.");
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim() + " has joined the game.", Color.Yellow);
                     players.Add(new Player(0, sub.Substring(5).Trim()));
                     SortPlayers();
                 }
                 if (data[0] == "BYE")
                 {
-                    PlaySound(bye, Settings.volume);
-                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.");
+                    PlaySound(bye, 1.0f);
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.", Color.Yellow);
                     for (int i = 0; i < players.Count; i++)
                     {
                         if (players[i].username == sub.Substring(4).Trim())
@@ -289,7 +290,7 @@ namespace Ruetobas
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 5] = cardTexture[45];
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 7] = cardTexture[45];
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 9] = cardTexture[45];
-                    grids[gameNamespace + "BOARD"].enabled = true;
+                    //grids[gameNamespace + "BOARD"].enabled = true;
                     buttons[gameNamespace + "READY"].enabled = false;
                     for (int i = 0; i < data.Count() - 2; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
@@ -334,17 +335,46 @@ namespace Ruetobas
                 }
                 if (data[0] == "TURN")
                 {
+                    if (data.Count() > 2)
+                    {
+                        string player = playerTurn;
+                        if (playerTurn == username)
+                            player = "You";
+                        string line = "";
+                        if (data[2] == "PLACE")
+                            line = playerTurn + " placed a tunnel card";
+                        if (data[2] == "CRUSH")
+                            line = playerTurn + " destroyed a tunnel";
+                        if (data[2] == "MAP")
+                        {
+                            int pos = int.Parse(data[4]);
+                            string posline = pos == 5 ? "top" : (pos == 7 ? "middle" : "bottom");
+                            line = playerTurn + " used map on " + posline + " treasure card";
+                        }
+                        if (data[2] == "BUFF" || data[2] == "DEBUFF")
+                        {
+                            int id = int.Parse(data[3]);
+                            string buffline = id == 1 ? "pickaxe" : (id == 2 ? "lantern" : "cart");
+                            if (data[2] == "BUFF")
+                                line = playerTurn + " gave a " + buffline + " buff to " + data[4].Trim();
+                            else line = playerTurn + " removed a " + buffline + " buff from " + data[4].Trim();
+                        }
+                        if (data[2] == "DISCARD")
+                            line = playerTurn + " discarded " + int.Parse(data[3]) + " card" + (int.Parse(data[3]) > 1 ? "s" : "");
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap(line, Color.PaleTurquoise);
+                    }
+
                     playerTurn = data[1].Trim();
                     if (playerTurn == username)
                     {
                         textBoxes[gameNamespace + "HELP"].lines[0] = "Select card from your hand";
-                        PlaySound(bubbles, Settings.volume);
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("It's your turn", Color.PaleTurquoise);
+                        PlaySound(bubbles, 1.0f);
                     }
                     else
                     {
-                        PlaySound(boop, Settings.volume * 0.3f);
+                        PlaySound(boop, 0.3f);
                     }
-                        
                 }
                 if (data[0] == "END")
                 {
@@ -360,7 +390,7 @@ namespace Ruetobas
                                 players[j].playerClass = (PlayerClass)int.Parse(data[3 * i + 4]);
                             }
                     }
-                    grids[gameNamespace + "BOARD"].enabled = false;
+                    //grids[gameNamespace + "BOARD"].enabled = false;
                     buttons[gameNamespace + "READY"].enabled = true;
                     buttons[gameNamespace + "READY"].texture = notReadyTexture;
                 }
@@ -431,9 +461,19 @@ namespace Ruetobas
                 UI.DisableGroup(optionsNamespace);
                 UI.DisableGroup(menuNamespace);
                 UI.EnableGroup(gameNamespace);
+                for (int i = 0; i < 6; i++)
+                    cardHand[i] = 0;
+                for (int i = 0; i < 19; i++)
+                    for (int j = 0; j < 15; j++)
+                        map[i, j] = new PlacedCard(0, 0);
+                timers.Clear();
+                textBoxes[gameNamespace + "CHAT"].Reset();
                 buttons[gameNamespace + "PLAYERLISTOFF"].enabled = false;
-                grids[gameNamespace + "BOARD"].enabled = false;
+                //grids[gameNamespace + "BOARD"].enabled = false;
                 grids[gameNamespace + "ZPLAYERLIST"].enabled = false;
+                textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You joined the game.", Color.Yellow);
+                inputBoxes[gameNamespace + "CHATINPUT"].text = "";
+                buttons[gameNamespace + "READY"].texture = notReadyTexture;
             }
             else
             {
@@ -451,6 +491,7 @@ namespace Ruetobas
                 for (int j = 0; j < 15; j++)
                     map[i, j] = new PlacedCard(0, 0);
             timers.Clear();
+            textBoxes[gameNamespace + "CHAT"].Reset();
             UI.DisableGroup(gameNamespace);
             UI.DisableGroup(optionsNamespace);
             UI.EnableGroup(menuNamespace);
@@ -552,7 +593,13 @@ namespace Ruetobas
                     location.Y += location.Height;
                 }
                 spriteBatch.Draw(tileTunnel[map[x, y].ID], location, null, Color.White, rot, Vector2.Zero, SpriteEffects.None, 0);
+                if (map[x, y].rotation == 1)
+                {
+                    location.X -= location.Width;
+                    location.Y -= location.Height;
+                }
             }
+            spriteBatch.Draw(tileGrid, location, Color.White);
         }
 
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
@@ -566,6 +613,9 @@ namespace Ruetobas
                 }
                 else
                     spriteBatch.Draw(cards[cardHand[x]].texture, location, Color.White);
+
+                if (selectedCard == x)
+                    spriteBatch.Draw(solidTexture, location, Color.Yellow * 0.3f);
             }
             else
             {
@@ -580,10 +630,12 @@ namespace Ruetobas
                 {
                     spriteBatch.Draw(cards[cardHand[x]].texture, location, null, Color.White, (float)Math.PI, Vector2.Zero, SpriteEffects.None, 0);
                 }
-            }
 
-            if (selectedCard == x)
-                spriteBatch.Draw(solidTexture, location, Color.Yellow * 0.3f);
+                location.X -= location.Width;
+                location.Y -= location.Height;
+                if (selectedCard == x)
+                    spriteBatch.Draw(solidTexture, location, Color.Yellow * 0.3f);
+            }
         }
 
         public static void PlayerListDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
@@ -816,10 +868,10 @@ namespace Ruetobas
 
             if (shouldBeVisible == false)
             {
-                /*float new_volume;
-                if (float.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
-                    new_volume < 100 && new_volume >= 0)
-                    Settings.volume = new_volume * 0.01f;*/
+                int new_volume = 0;
+                if (int.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
+                    new_volume <= 100 && new_volume >= 0)
+                    Settings.volume = new_volume * 0.01f;
                 Settings.SaveToFile();
             }
         }
@@ -878,6 +930,9 @@ namespace Ruetobas
         
         public static void PlaySound(SoundEffect soundEffect, float playVolume)
         {
+            playVolume *= Settings.volume;
+            if (playVolume < 0.0f || playVolume > 1.0f)
+                return;
             soundEffect.Play(playVolume, 0.0f, 0.0f);
         }
 
