@@ -265,6 +265,7 @@ namespace Ruetobas
                     int orientation = int.Parse(data[4]);
                     map[x, y] = new PlacedCard(ID, orientation);
                     grids[gameNamespace + "BOARD"].fieldTexture[x, y] = cardTexture[ID];
+                    Card.RecalculateReach();
                 }
                 if (data[0] == "MAP")
                 {
@@ -303,6 +304,7 @@ namespace Ruetobas
                     players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[data.Count() - 1]);
                     textBoxes[gameNamespace + "CHAT"].Append("You Are:");
                     textBoxes[gameNamespace + "CHAT"].Append(players[yourPlayerId].playerClass.ToString());
+                    Card.RecalculateReach();
                 }
                 if (data[0] == "GIB")
                 {
@@ -514,50 +516,6 @@ namespace Ruetobas
             grids[gameNamespace + "ZPLAYERLIST"].enabled = false;
         }
 
-        public static int CheckCardPlacement(int x, int y, int ID, int rot)
-        {
-            if (cards[ID].cardType != CardType.Tunnel)
-                return 4;
-            if (x < 1 || x > 17 || y < 1 || y > 13)
-                return -1;
-            if (cards[map[x, y].ID].cardType != CardType.Empty)
-                return 3;
-
-            Vector2[] placements = { new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0)};
-            bool any_valid_card = false;
-            Tunnel center = (Tunnel)cards[ID];
-
-            for (int i = 0; i < 4; i++)
-            {
-                PlacedCard current = map[x + (int)placements[i].X, y + (int)placements[i].Y];
-                if (current.ID == 45 || current.ID == 0)
-                    continue;
-                else
-                {
-                    
-                    Tunnel currentTL = (Tunnel)cards[current.ID];
-                    if(center.GetEntrance(i + rot * 2) != currentTL.GetEntrance(i + (current.rotation - 1) * 2))
-                    {
-                        return 2;
-                    }
-                    else if(center.GetEntrance(i + rot * 2))
-                        any_valid_card = true;
-                }
-            }
-            //    0       0    
-            //  3 C 1 - 3 T 1  //no rotation
-            //    2       2    
-
-            if (any_valid_card == false)
-                return 1;
-            return 0; 
-            //0 - OK
-            //1 - karta musi przylegać do innej karty (pamiętać, żeby nie brać karty 45 pod uwagę)
-            //2 - tunele wychodzące z karty muszą pasować do sąsiednich kart
-            //3 - karta musi być położona na pustym polu
-            //4 - karta musi tunelem
-        }
-
         public static void DiscardCard()
         {
             if (playerTurn != username)
@@ -715,7 +673,7 @@ namespace Ruetobas
                     return;
                 }
 
-                int result = CheckCardPlacement(x, y, cardHand[selectedCard], selectedRot);
+                int result = Card.CheckPlacement(x, y, cardHand[selectedCard], selectedRot);
                 if (result == 0)
                 {
                     string line = "PLACE " + cardHand[selectedCard].ToString() + " " + x.ToString() + " " + y.ToString() + " " + selectedRot.ToString();
@@ -723,7 +681,7 @@ namespace Ruetobas
                 }
                 else if (result == 1)
                 {
-                    textBoxes[gameNamespace + "HELP"].lines[0] = "You can only place card next to other card";
+                    textBoxes[gameNamespace + "HELP"].lines[0] = "Placed tunnel must be connected to starting point";
                 }
                 else if (result == 2)
                 {
