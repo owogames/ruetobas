@@ -98,16 +98,27 @@ namespace Ruetobas
                     }
 
                 int xn = e == 0 ? x : (e == 1 ? x + 1 : (e == 2 ? x : x - 1));
-                int yn = e == 0 ? y - 1 : (e == 2 ? y : (e == 3 ? y + 1 : y));
+                int yn = e == 0 ? y - 1 : (e == 1 ? y : (e == 2 ? y + 1 : y));
                 PlacedCard neighbor = Logic.map[xn, yn];
                 Tunnel t2 = (Tunnel)Logic.cards[neighbor.ID];
                 bool r2 = (neighbor.rotation == 1);
-                if (t1.GetEntrance(e, r1) && t2.GetEntrance(e + 2, r2) && !reach[xn, yn, (e + 2) % 2])
+                if (t1.GetEntrance(e, r1) && t2.GetEntrance(e + 2, r2) && !reach[xn, yn, (e + 2) % 4])
                 {
-                    reach[xn, yn, (e + 2) % 2] = true;
-                    q.Enqueue(new Tuple<int, int, int>(xn, yn, (e + 2) % 2));
+                    reach[xn, yn, (e + 2) % 4] = true;
+                    q.Enqueue(new Tuple<int, int, int>(xn, yn, (e + 2) % 4));
                 }
             }
+
+            /*for (int j = 1; j <= 13; j++)
+            {
+                for (int i = 1; i <= 17; i++)
+                {
+                    for (int ij = 0; ij < 4; ij++)
+                        Console.Write(Convert.ToInt32(reach[i, j, ij]));
+                    Console.Write(" ");
+                }
+                Console.WriteLine();
+            }*/
         }
 
         public static int CheckPlacement(int x, int y, int ID, int rot)
@@ -130,13 +141,12 @@ namespace Ruetobas
                     continue;
                 else
                 {
-
                     Tunnel currentTL = (Tunnel)Logic.cards[current.ID];
                     if (center.GetEntrance(i + rot * 2) != currentTL.GetEntrance(i + (current.rotation - 1) * 2))
                     {
-                        return 2;
+                        //return 2;
                     }
-                    else if (center.GetEntrance(i + rot * 2) && reach[x + placements[i].X, y + placements[i].Y, (i + 2) % 2])
+                    else if (center.GetEntrance(i + rot * 2) && reach[x + placements[i].X, y + placements[i].Y, (i + 2) % 4])
                     {
                         any_valid_card = true;
                     }
@@ -150,7 +160,7 @@ namespace Ruetobas
                 return 1;
             return 0;
             //0 - OK
-            //1 - karta musi przylegać do innej karty (pamiętać, żeby nie brać karty 45 pod uwagę)
+            //1 - karta musi mieć połączenie z początkiem
             //2 - tunele wychodzące z karty muszą pasować do sąsiednich kart
             //3 - karta musi być położona na pustym polu
             //4 - karta musi tunelem

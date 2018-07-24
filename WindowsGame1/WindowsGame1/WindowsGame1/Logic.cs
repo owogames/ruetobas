@@ -253,6 +253,10 @@ namespace Ruetobas
                     }
                     SortPlayers();
                 }
+                if (data[0] == "READY")
+                {
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(data[1] + " is ready", Color.LawnGreen);
+                }
                 if (data[0] == "ERROR")
                 {
                     AnnounceError(sub.Substring(6).Trim());
@@ -302,8 +306,8 @@ namespace Ruetobas
                         players[i].buffs.Clear();
 
                     players[yourPlayerId].playerClass = (PlayerClass)int.Parse(data[data.Count() - 1]);
-                    textBoxes[gameNamespace + "CHAT"].Append("You Are:");
-                    textBoxes[gameNamespace + "CHAT"].Append(players[yourPlayerId].playerClass.ToString());
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("The game has started", Color.LawnGreen);
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You are: " + players[yourPlayerId].playerClass.ToString(), Color.LawnGreen);
                     Card.RecalculateReach();
                 }
                 if (data[0] == "GIB")
@@ -349,17 +353,20 @@ namespace Ruetobas
                             line = playerTurn + " destroyed a tunnel";
                         if (data[2] == "MAP")
                         {
-                            int pos = int.Parse(data[4]);
+                            int pos = int.Parse(data[5]);
                             string posline = pos == 5 ? "top" : (pos == 7 ? "middle" : "bottom");
                             line = playerTurn + " used map on " + posline + " treasure card";
                         }
-                        if (data[2] == "BUFF" || data[2] == "DEBUFF")
+                        if (data[2] == "BUFF")
                         {
-                            int id = int.Parse(data[3]);
-                            string buffline = id == 1 ? "pickaxe" : (id == 2 ? "lantern" : "cart");
-                            if (data[2] == "BUFF")
-                                line = playerTurn + " gave a " + buffline + " buff to " + data[4].Trim();
-                            else line = playerTurn + " removed a " + buffline + " buff from " + data[4].Trim();
+                            string buffname = ((BuffCard)cards[int.Parse(data[3])]).buffType.ToString();
+                            line = playerTurn + " gave a " + buffname + " buff to " + data[4].Trim();
+                        }
+                        if (data[2] == "DEBUFF")
+                        {
+                            DebuffCard card = (DebuffCard)cards[int.Parse(data[3])];
+                            string buffname = data[5] == "0" ? card.buffType.ToString() : card.buffType2.ToString();
+                            line = playerTurn + " removed a " + buffname + " buff from " + data[4].Trim();
                         }
                         if (data[2] == "DISCARD")
                             line = playerTurn + " discarded " + int.Parse(data[3]) + " card" + (int.Parse(data[3]) > 1 ? "s" : "");
@@ -380,7 +387,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "END")
                 {
-                    textBoxes[gameNamespace + "CHAT"].Append("Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!");
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!", Color.LawnGreen);
                     textBoxes[gameNamespace + "HELP"].lines[0] = "Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!";
                     for (int i = 0; i < players.Count; i++)
                     {
@@ -388,6 +395,8 @@ namespace Ruetobas
                         for (int j = 0; j < players.Count; j++)
                             if (players[j].username == playername)
                             {
+                                if (playername == username)
+                                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You got " + (int.Parse(data[3 * i + 3]) - players[j].score).ToString() + " points!", Color.LawnGreen);
                                 players[j].score = int.Parse(data[3 * i + 3]);
                                 players[j].playerClass = (PlayerClass)int.Parse(data[3 * i + 4]);
                             }
