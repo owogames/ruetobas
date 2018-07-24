@@ -3,10 +3,8 @@
 #include <string>
 #include <vector>
 
-enum {
-	TEAM_REGGID,
-	TEAM_RUETOBAS,
-};
+#define TEAM_REGGID 1
+#define TEAM_RUETOBAS 2
 
 struct Player {
 	std::string name;

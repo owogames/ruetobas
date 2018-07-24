@@ -141,10 +141,10 @@ static void newGame() {
 			cards.pop_back();
 		}
 
-		write(p.first, "START " + card_list + (p.second.team == TEAM_REGGID ? '1' : '2'));
+		write(p.first, format("START % %", card_list, p.second.team));
 	}
 	
-	writeAll("TURN " + players[player_order[curr_player]].name);
+	writeAll(format("TURN %", players[player_order[curr_player]].name));
 }
 
 
@@ -152,13 +152,13 @@ static void newGame() {
 void giveNewCard(int fd, int old_card) {
 	players[fd].removeCard(old_card);
 		
-	write(fd, format("TAEK %i", old_card)); 
+	write(fd, format("TAEK %", old_card)); 
 					
 	if(cards.empty())	
 		write(fd, "GIB 0");
 	
 	else {
-		write(fd, format("GIB %i", cards.back()));
+		write(fd, format("GIB %", cards.back()));
 		players[fd].addCard(cards.back());
 		cards.pop_back();
 	}
@@ -176,7 +176,7 @@ bool revealCards() {
 		if(id == 43)
 			ret = true;
 		
-		writeAll(format("PLACE %i %i %i %i", id, x, y, flip));
+		writeAll(format("PLACE % % % %", id, x, y, flip));
 	}
 	
 	return ret;
@@ -184,32 +184,30 @@ bool revealCards() {
 
 
 ///kończy turę gracza i przesuwa wskaźnik na następnego gracza, który ma jakieś karty
-bool nextPlayer() {
+///zwraca fd następnego gracza, lub -1 jeśli karty się kończą
+int nextPlayer() {
 	for(int i = 0; i < (int)player_order.size(); i++) {
-	
 		curr_player++;
 		if(curr_player >= (int)player_order.size())
 			curr_player = 0;
 		
 		if(!players[player_order[curr_player]].cards.empty()) {
-			writeAll("TURN " + players[player_order[curr_player]].name);
-			return true;
+			return player_order[curr_player];
 		}
 	}
-	return false;
+	return -1;
 }
 
 ///kończy grę - dodaje punkty wygranym, wysyła wiadomość, resetuje wszystko
-void endGame(bool who_won) {
-	std::string msg = (who_won == TEAM_REGGID ? "END 1 " : "END 2 ");
+void endGame(int who_won) {
+	std::string msg = format("END %", who_won);
 	
 	for(auto& p : players) {
 		if(p.second.team == who_won)
 			p.second.score++;
 			
 		p.second.ready = false;
-			
-		msg += p.second.name + " " + toStr(p.second.score) + " " + (p.second.team == TEAM_REGGID ? "1 " : "2 ");
+		msg += format(" % % %", p.second.name, p.second.score, p.second.team);
 	}
 
 	writeAll(msg);
@@ -236,7 +234,6 @@ void login(int fd, std::string name) {
 		
 	for(auto c : name)
 		ASS(c > 32 && c < 127, "Only non-whitespace printable characters allowed");
-		
 		
 	writeAll("JOIN " + name);
 
@@ -285,20 +282,19 @@ void quit(int fd) {
 	//jeśli gra trwa zaktualizuj jej stan
 	if(running) {
 		//przesuń wskaźnik jeśli jest jego tura
-		if(fd == player_order[curr_player])
-			nextPlayer();
-		
-		//jeśli nikt poza nim nie ma kart (czyli wróciło do niego) to zakończ grę
-		if(fd == player_order[curr_player])
-			endGame(TEAM_RUETOBAS);
-			
-		//w przeciwnym wypadku usuń go z kolejności graczy i zaktualizuj wskaźnik
-		else {
-			int p = player_order[curr_player];
-			player_order.erase(std::find(player_order.begin(), player_order.end(), fd));
-			if(p != player_order[curr_player])
-				curr_player--;
+		if(fd == player_order[curr_player]) {
+			int fd2 = nextPlayer();
+			//jeśli nikt poza nim nie ma kart (czyli wróciło do niego) to zakończ grę
+			if(fd == fd2) 
+				endGame(TEAM_RUETOBAS);
 		}
+		
+		//usuń gracza z kolejności graczy i zaktualizuj wskaźnik
+		int p = player_order[curr_player];
+		player_order.erase(std::find(player_order.begin(), player_order.end(), fd));
+		if(p != player_order[curr_player])
+			curr_player--;
+		
 	}
 	
 	remove(fd);
@@ -318,13 +314,16 @@ void tunnel(int fd, int id, int x, int y, int flip) {
 	ASS(players[fd].buff_mask == 0, "You can't place tunnels, for you are blocked");
 	
 	ASS(placeCard(id, x, y, flip), "Invalid move");
-	writeAll(format("PLACE %i %i %i %i", id, x, y, flip));
+	writeAll(format("PLACE % % % %", id, x, y, flip));
 
 	giveNewCard(fd, id);
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % TUNNEL % % % %", players[fd_next].name, id, x, y, flip));
+	
 	if(revealCards())
 		endGame(TEAM_REGGID);
 	
-	else if(!nextPlayer())
+	else if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
 
@@ -336,10 +335,12 @@ void crush(int fd, int id, int x, int y) {
 	ASS(cardType(id) == CARD_CRUSH, "That's not a destroy card");
 	
 	ASS(useCrush(x, y), "You can't destroy that");
-	writeAll(format("PLACE 0 %i %i 0", x, y));
+	writeAll(format("PLACE 0 % % 0", x, y));
 	
 	giveNewCard(fd, id);
-	if(!nextPlayer())
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % CRUSH % % %", players[fd_next].name, id, x, y));
+	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
 
@@ -352,10 +353,12 @@ void map(int fd, int id, int x, int y) {
 	
 	int ret = useMap(x, y);
 	ASS(ret != -1, "Can't look there");
-	write(fd, format("MAP %i %i %i", ret, x, y));
+	write(fd, format("MAP % % %", ret, x, y));
 	
 	giveNewCard(fd, id);
-	if(!nextPlayer())
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % MAP % % %", players[fd_next].name, id, x, y));
+	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
 
@@ -372,10 +375,12 @@ void buff(int fd, int id, std::string name) {
 	ASS(players[fd2].hasBuff(buff), "This player already has that buff");
 	
 	players[fd2].addBuff(buff);
-	writeAll("BUFF " + players[fd].name + " " + name + " " + toStr(buff));
+	writeAll(format("BUFF % % %", players[fd].name, name, buff));
 	
 	giveNewCard(fd, id);
-	if(!nextPlayer())
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % BUFF % %", players[fd_next].name, id, name));
+	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
 
@@ -392,10 +397,12 @@ void debuff(int fd, int id, std::string name, int flip) {
 	ASS(players[fd2].hasBuff(buff), "This player doesn't have that buff");
 	
 	players[fd2].removeBuff(buff);
-	writeAll("DEBUFF " + players[fd].name + " " + name + " " + toStr(buff));
+	writeAll(format("DEBUFF % % %", players[fd].name, name, buff));
 	
 	giveNewCard(fd, id);
-	if(!nextPlayer())
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % DEBUFF % % %", players[fd_next].name, id, name, flip));
+	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
 
@@ -406,6 +413,8 @@ void discard(int fd, int id) {
 	ASS(players[fd].hasCard(id), "You don't have that card");
 	
 	giveNewCard(fd, id);
-	if(!nextPlayer())
+	int fd_next = nextPlayer();
+	writeAll(format("TURN % DISCARD", players[fd_next].name));
+	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
