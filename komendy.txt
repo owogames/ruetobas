@@ -1,4 +1,4 @@
-Logowanie:
+﻿Logowanie:
 	Komenda:
 		LOGIN <gracz>
 	Odpowiedź do gracza wysyłającego:
@@ -48,10 +48,10 @@ Gra:
 				BUFF <id> <gracz>
 			Odblokowanie:
 				DEBUFF <id> <gracz> <flip>
-			Odrzucenie karty:
-				DISCARD <id>
+			Odrzucenie kart:
+				DISCARD <id1> <id2> ...
 		Po wysłaniu akcji serwer odpisuje ERROR jeśli jest ona niepoprawna, lub OK w przeciwnym wypadku	
-		UWAGA - jeśli gracz odrzucił kartę, to w komendzie TURN [akcja] to będzie DISCARD, a nie DISCARD <id> (innymi słowy odrzucanie nie jest jawne)
+		UWAGA - jeśli gracz odrzucił karty, to w komendzie TURN [akcja] to będzie DISCARD <liczba-kart>, a nie DISCARD <id1> <id2> ... (innymi słowy odrzucanie nie jest jawne)
 		
 		Odkrywanie skarbów:
 			Kiedy w skutek położenia tunelu odkryty zostaje skarb, serwer wysyła do wszystkich tę komendę:
@@ -63,6 +63,12 @@ Gra:
 			<team> = liczba określająca frakcję, która wygrała (w ten sam sposób co wyżej)
 			<punktyx> = liczba punktów, które dany gracz ma po zakończeniu gry
 			<teamx> = frakcja, do której należał dany gracz
+
+Wychodzenie:
+	Komenda:
+		QUIT
+	Wiadomość do wszystkich graczy:
+		BYE <gracz>
 			
 Błędy:
 	Na komendę o niepoprawnej składni lub niedozwolonej akcji serwer odpowie:
