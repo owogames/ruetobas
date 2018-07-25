@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <sstream>
 #include <vector>
@@ -22,10 +24,20 @@ std::string toStr(T x) {
 
 
 ///formatuje do stringa
-template<class... Ts>
-std::string format(const char* fmt, Ts... ts) {
-	char buffer[1000];
-	sprintf(buffer, fmt, ts...);
-	return std::string(buffer);
+inline std::string format(const char* fmt) {
+	return fmt;
+}
+
+template<class T, class... Ts>
+inline std::string format(const char* fmt, T x, Ts... xs) {
+	std::stringstream ss;
+	
+	for(; *fmt && *fmt != '%'; ++fmt) 
+		ss << *fmt;
+	 
+	if(*fmt == '%') 
+		ss << x << format(fmt+1, xs...);
+	
+	return ss.str();
 }
 
