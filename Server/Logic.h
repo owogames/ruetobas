@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 void login  (int fd, std::string name);
 void chat   (int fd, std::string text);
@@ -11,5 +12,5 @@ void crush  (int fd, int id, int x, int y);
 void map    (int fd, int id, int x, int y);
 void buff   (int fd, int id, std::string player);
 void debuff (int fd, int id, std::string player, int flip);
-void discard(int fd, int id);
+void discard(int fd, std::vector<int>& ids);
 

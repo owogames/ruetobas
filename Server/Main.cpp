@@ -76,10 +76,11 @@ int main() {
 		}
 		
 		else if(command == "DISCARD") {
-			int id;
-			ss >> id;
-			
-			IF_SYNTAX_OK discard(fd, id);
+			std::vector<int> ids;
+			if(!intList(text, ids))
+				write(fd, "ERROR Incorrect syntax");
+			else
+				discard(fd, ids);
 		}
 		
 		else if(command == "") {}

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <algorithm>
 #include <map>
@@ -56,6 +57,8 @@ static void newGame() {
 		return;
 	}
 	
+	running = true;
+	
 	//inicjalizuje planszę
 	initBoard();
 	
@@ -101,12 +104,12 @@ static void newGame() {
 	{
 		if (_s > 0)
 		{
-			tab[i] = 1;
+			tab[i] = TEAM_RUETOBAS;
 			_s--;
 		}
 		else if (_k > 0)
 		{
-			tab[i] = 0;
+			tab[i] = TEAM_REGGID;
 			_k--;
 		}
 	}
@@ -141,7 +144,7 @@ static void newGame() {
 			cards.pop_back();
 		}
 
-		write(p.first, format("START % %", card_list, p.second.team));
+		write(p.first, format("START %%", card_list, p.second.team));
 	}
 	
 	writeAll(format("TURN %", players[player_order[curr_player]].name));
@@ -311,7 +314,7 @@ void tunnel(int fd, int id, int x, int y, int flip) {
 	ASS(fd == player_order[curr_player], "Not your turn");
 	ASS(players[fd].hasCard(id), "You don't have that card");
 	ASS(cardType(id) == CARD_TUNNEL, "That's not a tunnel card");
-	ASS(players[fd].buff_mask == 0, "You can't place tunnels, for you are blocked");
+	ASS(players[fd].buff_mask == 0, "You can't place tunnels when you are blocked");
 	
 	ASS(placeCard(id, x, y, flip), "Invalid move");
 	writeAll(format("PLACE % % % %", id, x, y, flip));
@@ -349,7 +352,7 @@ void map(int fd, int id, int x, int y) {
 	ASS(running, "The game is not yet running");
 	ASS(fd == player_order[curr_player], "Not your turn");
 	ASS(players[fd].hasCard(id), "You don't have that card");
-	ASS(cardType(id) == CARD_CRUSH, "That's not a map card");
+	ASS(cardType(id) == CARD_MAP, "That's not a map card");
 	
 	int ret = useMap(x, y);
 	ASS(ret != -1, "Can't look there");
@@ -372,7 +375,8 @@ void buff(int fd, int id, std::string name) {
 	
 	int fd2 = usernames[name];
 	int buff = buffType(id);
-	ASS(players[fd2].hasBuff(buff), "This player already has that buff");
+	std::cout << buff << std::endl;
+	ASS(!players[fd2].hasBuff(buff), "This player already has that buff");
 	
 	players[fd2].addBuff(buff);
 	writeAll(format("BUFF % % %", players[fd].name, name, buff));
@@ -407,14 +411,20 @@ void debuff(int fd, int id, std::string name, int flip) {
 }
 
 
-void discard(int fd, int id) {
+void discard(int fd, std::vector<int>& ids) {
+	ASS(!ids.empty(), "You must discard at least one card");
+	ASS(ids.size() <= 3, "You can't discard more than 3 cards");
 	ASS(running, "The game is not yet running");
 	ASS(fd == player_order[curr_player], "Not your turn");
-	ASS(players[fd].hasCard(id), "You don't have that card");
 	
-	giveNewCard(fd, id);
+	for(auto id : ids)
+		ASS(players[fd].hasCard(id), "You don't have one of these cards");
+	
+	for(auto id : ids)
+		giveNewCard(fd, id);
+	
 	int fd_next = nextPlayer();
-	writeAll(format("TURN % DISCARD", players[fd_next].name));
+	writeAll(format("TURN % DISCARD %", players[fd_next].name, ids.size()));
 	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
