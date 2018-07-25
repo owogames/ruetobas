@@ -144,7 +144,7 @@ namespace Ruetobas
                     Tunnel currentTL = (Tunnel)Logic.cards[current.ID];
                     if (center.GetEntrance(i + rot * 2) != currentTL.GetEntrance(i + (current.rotation - 1) * 2))
                     {
-                        //return 2;
+                        return 2;
                     }
                     else if (center.GetEntrance(i + rot * 2) && reach[x + placements[i].X, y + placements[i].Y, (i + 2) % 4])
                     {

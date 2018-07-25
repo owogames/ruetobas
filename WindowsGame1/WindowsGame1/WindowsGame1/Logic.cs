@@ -299,6 +299,7 @@ namespace Ruetobas
                     buttons[gameNamespace + "READY"].enabled = false;
                     for (int i = 0; i < data.Count() - 2; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
+                    selectedCard = -1;
 
                     for (int i = 0; i < players.Count; i++)
                         players[i].playerClass = PlayerClass.Unknown;
@@ -323,6 +324,8 @@ namespace Ruetobas
                             }
                         }
                     }
+                    selectedCard = -1;
+                    selectedRot = 0;
                 }
                 if (data[0] == "TAEK")
                 {
@@ -338,6 +341,8 @@ namespace Ruetobas
                             }
                         }
                     }
+                    selectedCard = -1;
+                    selectedRot = 0;
                 }
                 if (data[0] == "TURN")
                 {
