@@ -258,7 +258,7 @@ void chat(int fd, std::string text) {
 	for(auto c : text)
 		ASS(c >= 32 && c < 127, "Only printable characters allowed");
 	
-	writeAll("CHAT " + censored(text));	
+	writeAll(format("CHAT %: %", players[fd].name, censored(text));	
 }
 
 
