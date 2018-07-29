@@ -14,3 +14,8 @@ void buff   (int fd, int id, std::string player);
 void debuff (int fd, int id, std::string player, int flip);
 void discard(int fd, std::vector<int>& ids);
 
+void admin_login(int fd, std::string passwd);
+void admin_kick(int fd, std::string player);
+void admin_forcestart(int fd);
+void admin_forceskip(int fd);
+void admin_say(int fd, std::string text);

@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <map>
+#include <set>
 
 #include "Logic.h"
 #include "TCP.h"
@@ -20,7 +21,9 @@ static std::vector<int> player_order;
 static int curr_player;
 static bool running = false;
 
+static std::set<int> adms;
 
+static const std::string adm_passwd = "lol";
 
 //////////////////////////funkcje pomocnicze///////////////////////////
 
@@ -258,11 +261,12 @@ void chat(int fd, std::string text) {
 	for(auto c : text)
 		ASS(c >= 32 && c < 127, "Only printable characters allowed");
 	
-	writeAll(format("CHAT %: %", players[fd].name, censored(text));	
+	writeAll(format("CHAT %: %", players[fd].name, censored(text)));	
 }
 
 
 void ready(int fd) {
+	ASS(players.find(fd) != players.end(), "Not logged in");
 	ASS(!running, "The game is already running");
 	ASS(!players[fd].ready, "You're already ready");
 	
@@ -303,6 +307,7 @@ void quit(int fd) {
 	remove(fd);
 	usernames.erase(players[fd].name);
 	players.erase(fd);
+	adms.erase(fd);
 	
 	if(gameShouldStart()) 
 		newGame();
@@ -428,3 +433,40 @@ void discard(int fd, std::vector<int>& ids) {
 	if(fd_next == -1)
 		endGame(TEAM_RUETOBAS);
 }
+
+
+void admin_login(int fd, std::string passwd) {
+	ASS(players.find(fd) != players.end(), "Not logged in");
+	ASS(passwd == adm_passwd, "Wrong password");
+
+	write(fd, "OK");
+	adms.insert(fd);
+}
+	
+void admin_kick(int fd, std::string player) {
+	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
+	auto itr = usernames.find(player);
+	ASS(itr != usernames.end(), "Player not found");
+	write(fd, "OK");
+	quit(itr->second);
+}
+
+void admin_forcestart(int fd) {
+	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
+	ASS(!running, "The game is already running");
+	write(fd, "OK");
+	newGame();	
+}
+
+void admin_forceskip(int fd) {
+	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
+	ASS(running, "The game is not running");
+	write(fd, "OK");
+	nextPlayer();
+}
+
+void admin_say(int fd, std::string text) {
+	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
+	writeAll("CHAT" + text);
+}
+

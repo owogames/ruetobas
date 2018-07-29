@@ -82,7 +82,22 @@ int main() {
 			else
 				discard(fd, ids);
 		}
+
+		else if(command == "ADMIN")
+			admin_login(fd, text);
 		
+		else if(command == "KICK")
+			admin_kick(fd, text);
+		
+		else if(command == "FORCESTART")
+			admin_forcestart(fd);
+		
+		else if(command == "FORCESKIP")
+			admin_forceskip(fd);
+
+		else if(command == "SAY")
+			admin_say(fd, text);
+
 		else if(command == "") {}
 		
 		else
