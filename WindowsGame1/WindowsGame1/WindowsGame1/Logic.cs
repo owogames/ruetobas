@@ -22,7 +22,7 @@ namespace Ruetobas
 
         public static Game game;
         public static SpriteBatch spriteBatch;
-        public static Texture2D chatTexture;
+        public static Texture2D chatTexture, boardTexture;
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
         public static Texture2D skurwielTexture;
@@ -43,7 +43,7 @@ namespace Ruetobas
         public static Texture2D yesButton;
         public static Texture2D menuBackground;
         public static Texture2D optionsWindow, windowTexture, connectWindow;
-        public static Texture2D inputboxTexture, inputboxSmallTexture;
+        public static Texture2D inputboxTexture, inputboxSmallTexture, inputboxLongTexture;
         public static Texture2D dropdownTexture;
         public static Texture2D dropdownMenuTexture;
         public static Texture2D fullscreenTexture, resolutionTexture, volumeTexture, doneTexture, exitTexture, joinTexture, optionsTexture, quitTexture, connectTexture, cancelTexture;
@@ -121,7 +121,8 @@ namespace Ruetobas
             errorButton = game.Content.Load<Texture2D>("errorButton");
             unTickedTexture = game.Content.Load<Texture2D>("gui\\toggleboxoff");
             tickedTexture = game.Content.Load<Texture2D>("gui\\toggleboxon");
-            chatTexture = game.Content.Load<Texture2D>("tekstura");
+            chatTexture = game.Content.Load<Texture2D>("gamegui\\chattexture");
+            boardTexture = game.Content.Load<Texture2D>("gamegui\\boardtexture");
             chatInputTexture = game.Content.Load<Texture2D>("tekstura2");
             chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
             skurwielTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
@@ -137,6 +138,7 @@ namespace Ruetobas
             windowTexture = game.Content.Load<Texture2D>("gui\\window");
             inputboxTexture = game.Content.Load<Texture2D>("gui\\inputbox");
             inputboxSmallTexture = game.Content.Load<Texture2D>("gui\\inputboxsmall");
+            inputboxLongTexture = game.Content.Load<Texture2D>("gui\\inputboxlong");
             dropdownTexture = game.Content.Load<Texture2D>("gui\\dropdown");
             dropdownMenuTexture = game.Content.Load<Texture2D>("gui\\dropdownmenu");
             fullscreenTexture = game.Content.Load<Texture2D>("gui\\fullscreen");
@@ -434,7 +436,9 @@ namespace Ruetobas
 
         public static void SendChatMessage()
         {
-            game.TCPSend("CHAT " + username + ": " + inputBoxes[gameNamespace + "CHATINPUT"].text);
+            if (inputBoxes[gameNamespace + "CHATINPUT"].text.Trim().Length == 0)
+                return;
+            game.TCPSend("CHAT " + inputBoxes[gameNamespace + "CHATINPUT"].text);
             inputBoxes[gameNamespace + "CHATINPUT"].text = "";
         }
 

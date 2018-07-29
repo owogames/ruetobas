@@ -347,9 +347,9 @@ namespace Ruetobas
             DisableGroup(Logic.optionsNamespace);
 
             //Game
-            Logic.textBoxes[Logic.gameNamespace + "CHAT"] = new TextBox(Logic.chatTexture, 10, Alignment.Left, Logic.font, new Rectangle(1380, 50, 540, 670));
-            Logic.inputBoxes[Logic.gameNamespace + "CHATINPUT"] = new InputBox(Logic.chatInputTexture, 10, Logic.font, new Rectangle(1380, 720, 490, 60), Color.White, Color.LightGray, "Enter message...", 120);
-            Logic.buttons[Logic.gameNamespace + "SEND"] = new Button(Logic.chatSendTexture, new Rectangle(1870, 720, 50, 60), Logic.SendChatMessage);
+            Logic.textBoxes[Logic.gameNamespace + "CHAT"] = new TextBox(Logic.chatTexture, 15, Alignment.Left, Logic.font, new Rectangle(1380, 50, 540, 670));
+            Logic.inputBoxes[Logic.gameNamespace + "CHATINPUT"] = new InputBox(Logic.inputboxLongTexture, 10, Logic.font, new Rectangle(1380, 720, 480, 60), Color.White, Color.LightGray, "Enter message...", 120);
+            Logic.buttons[Logic.gameNamespace + "SEND"] = new Button(Logic.chatSendTexture, new Rectangle(1860, 720, 60, 60), Logic.SendChatMessage);
             Logic.textBoxes[Logic.gameNamespace + "HELP"] = new TextBox(Logic.errorBackground, 5, Alignment.Centered, Logic.font, new Rectangle(0, 720, 1380, 60), "");
             Logic.textBoxes[Logic.gameNamespace + "HELP"].canScroll = false;
             Logic.buttons[Logic.gameNamespace + "READY"] = new Button(Logic.notReadyTexture, new Rectangle(420, 285, 540, 210), Logic.Ready);
@@ -360,7 +360,7 @@ namespace Ruetobas
             Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayOptions(true));
             Logic.buttons[Logic.gameNamespace + "EXIT"] = new Button(Logic.errorButton, new Rectangle(1380, 1005, 540, 75), null);
             Logic.grids[Logic.gameNamespace + "CARDS"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, Logic.HandClick, Logic.HandDraw);
-            Logic.grids[Logic.gameNamespace + "BOARD"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 10, Logic.BoardClick, Logic.BoardDraw);
+            Logic.grids[Logic.gameNamespace + "BOARD"] = new Grid(Logic.game, Logic.boardTexture, Logic.cardTexture[0], 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 20, Logic.BoardClick, Logic.BoardDraw);
             Logic.grids[Logic.gameNamespace + "BOARD"].enabled = false;
             Logic.buttons[Logic.gameNamespace + "PLAYERLISTON"] = new Button(Logic.errorButton, new Rectangle(1670, 0, 250, 50), Logic.ShowPlayerList);
             Logic.buttons[Logic.gameNamespace + "PLAYERLISTOFF"] = new Button(Logic.chatSendTexture, new Rectangle(1670, 0, 250, 50), Logic.HidePlayerList);

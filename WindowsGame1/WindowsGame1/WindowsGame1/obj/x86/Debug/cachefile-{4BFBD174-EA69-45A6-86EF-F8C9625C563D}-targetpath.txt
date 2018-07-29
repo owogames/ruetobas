@@ -120,6 +120,7 @@ Content\gui\optionswindow.xnb
 Content\gui\cancel.xnb
 Content\gui\connect.xnb
 Content\gui\connectwindow.xnb
+Content\tileGrid.xnb
 Content\font.xnb
 Content\comic.xnb
 Content\guifont.xnb
@@ -133,4 +134,6 @@ Content\SoundFX\normal-hitwhistle.xnb
 Content\SoundFX\normal-hitwhistle2.xnb
 Content\SoundFX\seeya.xnb
 Content\SoundFX\soft-hitfinish.xnb
-Content\tileGrid.xnb
+Content\gamegui\chattexture.xnb
+Content\gamegui\boardtexture.xnb
+Content\gui\inputboxlong.xnb

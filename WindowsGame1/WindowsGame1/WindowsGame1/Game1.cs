@@ -700,6 +700,7 @@ namespace Ruetobas
                                 _x = textBox.location.X + textBox.margin;
                             else if (textBox.align == Alignment.Centered)
                                 _x = textBox.location.X + (textBox.location.Width - textBox.font.MeasureString(textBox.lines[i]).X) / 2;
+                            _x = (int)_x;
 
                             Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
 
