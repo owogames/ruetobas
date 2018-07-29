@@ -94,6 +94,8 @@ namespace Ruetobas
         public static string IP = "192.168.0.157";
         public static string username = "No Elo";
         public static int yourPlayerId = -1;
+        public static bool adminMode = false;
+        public static bool gameInProgress = false;
 
         public static List<Player> players = new List<Player>();
 
@@ -282,6 +284,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "START")
                 {
+                    gameInProgress = true;
                     for (int i = 0; i < 19; i++)
                         for (int j = 0; j < 15; j++)
                             map[i, j] = new PlacedCard(0, 0);
@@ -394,6 +397,7 @@ namespace Ruetobas
                 }
                 if (data[0] == "END")
                 {
+                    gameInProgress = false;
                     textBoxes[gameNamespace + "CHAT"].AppendAndWrap("Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!", Color.LawnGreen);
                     textBoxes[gameNamespace + "HELP"].lines[0] = "Team " + ((PlayerClass)int.Parse(data[1])).ToString() + " wins!";
                     for (int i = 0; i < players.Count; i++)
@@ -430,15 +434,88 @@ namespace Ruetobas
                     {
                         buttons[gameNamespace + "READY"].texture = readyTexture;
                     }
+                    if (data[1] == "ADMIN")
+                    {
+                        adminMode = true;
+                    }
                 }
             }
         }
 
         public static void SendChatMessage()
         {
-            if (inputBoxes[gameNamespace + "CHATINPUT"].text.Trim().Length == 0)
+            string input = inputBoxes[gameNamespace + "CHATINPUT"].text.Trim();
+            if (input.Length == 0)
                 return;
-            game.TCPSend("CHAT " + inputBoxes[gameNamespace + "CHATINPUT"].text);
+            if (input[0] == '/')
+            {
+                string[] data = input.Substring(1).Split(' ');
+                if (data[0] == "admin")
+                {
+                    if (data.Count() == 1)
+                        game.TCPSend("ADMIN");
+                    else
+                        game.TCPSend("ADMIN " + input.Substring(7));
+                }
+                else if (data[0] == "kick")
+                {
+                    if (!adminMode)
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You are not allowed to use this command", Color.OrangeRed);
+                    else if (data.Count() == 1)
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("Format: /kick <username>");
+                    else
+                        game.TCPSend("KICK " + data[1]);
+                }
+                else if (data[0] == "forcestart")
+                {
+                    if (adminMode)
+                    {
+                        if (!gameInProgress)
+                            game.TCPSend("FORCESTART");
+                        else
+                            textBoxes[gameNamespace + "CHAT"].AppendAndWrap("The game is already running", Color.OrangeRed);
+                    }
+                    else
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You are not allowed to use this command", Color.OrangeRed);
+                }
+                else if (data[0] == "forceskip")
+                {
+                    if (adminMode)
+                    {
+                        if (gameInProgress)
+                            game.TCPSend("FORCESKIP");
+                        else
+                            textBoxes[gameNamespace + "CHAT"].AppendAndWrap("The game is not running", Color.OrangeRed);
+                    }
+                    else
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You are not allowed to use this command", Color.OrangeRed);
+                }
+                else if (data[0] == "say")
+                {
+                    if (!adminMode)
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You are not allowed to use this command", Color.OrangeRed);
+                    else if (data.Count() == 1)
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("Format: /say <message>");
+                    else
+                        game.TCPSend("SAY " + input.Substring(5));
+                }
+                else if (data[0] == "help")
+                {
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("List of commands:");
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("/admin <password>");
+                    if (adminMode)
+                    {
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("/kick <username>");
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("/say <message>");
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("/forcestart");
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("/forceskip");
+                    }
+                }
+                else
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap("Unknown command. Type /help for list of commands", Color.OrangeRed);
+            }
+            else
+                game.TCPSend("CHAT " + inputBoxes[gameNamespace + "CHATINPUT"].text);
             inputBoxes[gameNamespace + "CHATINPUT"].text = "";
         }
 
@@ -517,6 +594,8 @@ namespace Ruetobas
             UI.EnableGroup(menuNamespace);
             if (error != "")
                 AnnounceError(error);
+            adminMode = false;
+            gameInProgress = false;
             game.tcpThread.Abort();
         }
 

@@ -68,6 +68,8 @@ namespace Ruetobas
                     }
                     Logic.players.Add(new Player(data.Length, Logic.username));
                     Logic.SortPlayers();
+                    Logic.adminMode = false;
+                    Logic.gameInProgress = false;
                     tcpThreadStart = new ThreadStart(TCPListening);
                     tcpThread = new Thread(tcpThreadStart);
                     tcpThread.Start();
