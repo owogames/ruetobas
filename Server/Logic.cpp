@@ -439,7 +439,7 @@ void admin_login(int fd, std::string passwd) {
 	ASS(players.find(fd) != players.end(), "Not logged in");
 	ASS(passwd == adm_passwd, "Wrong password");
 
-	write(fd, "OK");
+	write(fd, "OK ADMIN");
 	adms.insert(fd);
 }
 	
@@ -447,21 +447,18 @@ void admin_kick(int fd, std::string player) {
 	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
 	auto itr = usernames.find(player);
 	ASS(itr != usernames.end(), "Player not found");
-	write(fd, "OK");
 	quit(itr->second);
 }
 
 void admin_forcestart(int fd) {
 	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
 	ASS(!running, "The game is already running");
-	write(fd, "OK");
 	newGame();	
 }
 
 void admin_forceskip(int fd) {
 	ASS(adms.find(fd) != adms.end(), "You don't have admin privillages");
 	ASS(running, "The game is not running");
-	write(fd, "OK");
 	nextPlayer();
 }
 
