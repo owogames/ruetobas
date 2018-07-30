@@ -30,8 +30,11 @@ namespace Ruetobas
         public TcpClient tcpClient = new TcpClient();
         public Stream stream;
         public ASCIIEncoding asen;
-        public ThreadStart tcpThreadStart;
-        public Thread tcpThread;
+        public ThreadStart tcpThreadStart, loadThreadStart;
+        public Thread tcpThread, loadThread;
+
+        public bool isLoading = true;
+        public string loadingString = "";
 
         RenderTarget2D screen;
 
@@ -200,8 +203,15 @@ namespace Ruetobas
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Logic.spriteBatch = spriteBatch;
-            Logic.Init(this);
             cursorTexture = Content.Load<Texture2D>("cursor");
+            Logic.font = Content.Load<SpriteFont>("font");
+            Logic.guifont = Content.Load<SpriteFont>("guifont");
+            Logic.Init(this);
+
+            isLoading = true;
+            loadThreadStart = new ThreadStart(Logic.LoadContent);
+            loadThread = new Thread(loadThreadStart);
+            loadThread.Start();
             // TODO: use this.Content to load your game content here
         }
 
@@ -325,6 +335,17 @@ namespace Ruetobas
         
         protected override void Update(GameTime gameTime)
         {
+            if (isLoading)
+            {
+                if (!loadThread.IsAlive)
+                {
+                    UI.InitUI();
+                    isLoading = false;
+                }
+                return;
+            }
+            
+
             if (this.IsActive)
             {
                 mouseState = Mouse.GetState();
@@ -621,6 +642,16 @@ namespace Ruetobas
         
         protected override void Draw(GameTime gameTime)
         {
+            //Loading
+            if (isLoading)
+            {
+                GraphicsDevice.Clear(Color.Black);
+                spriteBatch.Begin();
+                spriteBatch.DrawString(Logic.guifont, loadingString, (new Vector2(Settings.resolution.X, Settings.resolution.Y) - Logic.guifont.MeasureString(loadingString)) / 2, Color.White);
+                spriteBatch.End();
+                return;
+            }
+
             //Rysowanie gridów
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {

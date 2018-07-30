@@ -113,7 +113,11 @@ namespace Ruetobas
             inputBoxes = new SortedDictionary<string, InputBox>();
             grids = new SortedDictionary<string, Grid>();
             timers = new SortedDictionary<string, Timer>();
+        }
 
+        public static void LoadContent()
+        {
+            game.loadingString = "Loading textures...";
             maskEffect = game.Content.Load<Effect>("shaders\\mask");
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
             errorWindow = game.Content.Load<Texture2D>("tekstura");
@@ -161,8 +165,6 @@ namespace Ruetobas
             tileGrass = game.Content.Load<Texture2D>("tileGrass");
             tileDirt = game.Content.Load<Texture2D>("tileDirt");
             tileGrid = game.Content.Load<Texture2D>("tileGrid");
-            for (int i = 0; i <= 45; i++)
-                tileTunnel[i] = Render.RenderTunnel(game, spriteBatch, i);
             buffTexture[0] = game.Content.Load<Texture2D>("buffpickaxe");
             buffTexture[1] = game.Content.Load<Texture2D>("bufflantern");
             buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
@@ -170,17 +172,20 @@ namespace Ruetobas
                 mapCardTexture[i] = game.Content.Load<Texture2D>("cards\\mapcard" + (i + 42).ToString());
             discardTexture = game.Content.Load<Texture2D>("buttondiscard");
 
-            font = game.Content.Load<SpriteFont>("comic");
-            guifont = game.Content.Load<SpriteFont>("guifont");
+            game.loadingString = "Loading cards...";
+            ReadCards();
 
+            for (int i = 0; i <= 45; i++)
+            {
+                game.loadingString = "Generating tunnel textures... (" + i.ToString() + "/45)";
+                tileTunnel[i] = Render.RenderTunnel(game, spriteBatch, i);
+            }
+
+            game.loadingString = "Reseting variables...";
             map = new PlacedCard[19, 15];
             for (int i = 0; i < 19; i++)
                 for (int j = 0; j < 15; j++)
                     map[i, j] = new PlacedCard(0, 0);
-
-            // grids["TESTGRID"] = new Grid(game, chatTexture, chatTexture, 30, 30, new Vector2(75, 75), new Rectangle(140, 100, 1000, 500), 10, BuchnijLolka);
-
-            UI.InitUI();
         }
         
         public static void Update()
@@ -300,7 +305,6 @@ namespace Ruetobas
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 5] = cardTexture[45];
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 7] = cardTexture[45];
                     grids[gameNamespace + "BOARD"].fieldTexture[13, 9] = cardTexture[45];
-                    //grids[gameNamespace + "BOARD"].enabled = true;
                     buttons[gameNamespace + "READY"].enabled = false;
                     for (int i = 0; i < data.Count() - 2; i++)
                         cardHand[i] = int.Parse(data[i + 1]);
@@ -554,7 +558,6 @@ namespace Ruetobas
             if (game.TCPConnect(IP, port))
             {
                 timers.Clear();
-                ReadCards();
                 UI.DisableGroup(optionsNamespace);
                 UI.DisableGroup(menuNamespace);
                 UI.EnableGroup(gameNamespace);
