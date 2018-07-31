@@ -19,6 +19,7 @@ namespace Ruetobas
         public static SortedDictionary<string, InputBox> inputBoxes;
         public static SortedDictionary<string, Grid> grids;
         public static SortedDictionary<string, Timer> timers;
+        public static List<Animation> animations;
 
         public static Game game;
         public static SpriteBatch spriteBatch;
@@ -113,6 +114,7 @@ namespace Ruetobas
             inputBoxes = new SortedDictionary<string, InputBox>();
             grids = new SortedDictionary<string, Grid>();
             timers = new SortedDictionary<string, Timer>();
+            animations = new List<Animation>();
         }
 
         public static void LoadContent()

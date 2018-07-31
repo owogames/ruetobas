@@ -204,7 +204,7 @@ namespace Ruetobas
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Logic.spriteBatch = spriteBatch;
             cursorTexture = Content.Load<Texture2D>("cursor");
-            Logic.font = Content.Load<SpriteFont>("font");
+            Logic.font = Content.Load<SpriteFont>("comic");
             Logic.guifont = Content.Load<SpriteFont>("guifont");
             Logic.Init(this);
 
@@ -352,6 +352,12 @@ namespace Ruetobas
                 keyboardState = Keyboard.GetState();
                 pressedKeys = keyboardState.GetPressedKeys();
                 Vector2 mousePos = new Vector2(mouseState.X / scale.X, mouseState.Y / scale.Y);
+                
+                for (int i = Logic.animations.Count - 1; i >= 0; i--)
+                {
+                    if (Logic.animations[i].Update((float)gameTime.ElapsedGameTime.TotalSeconds))
+                        Logic.animations.RemoveAt(i);
+                }
 
                 List<string> UIelements = new List<string>();
 

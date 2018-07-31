@@ -57,6 +57,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Render.cs" />
