@@ -50,15 +50,61 @@ namespace Ruetobas
 
     public class AnimationCurve
     {
-        public float Variable;
-        public List<AnimationKeyframe> keyframes;
-        public AnimationCurve(ref float Variable, params AnimationKeyframe[] keyframes)
+        public enum Type { Null, RawImageOpacity, RawImageRotation, RawImageX, RawImageY, ButtonX, ButtonY, TextBoxX, TextBoxY, InputBoxX, InputBoxY };
+
+        private object reference;
+        private List<AnimationKeyframe> keyframes;
+        private float startingValue;
+        private Type type;
+
+        public AnimationCurve(Type type, object reference)
         {
-            this.Variable = Variable;
+            this.type = type;
+            this.reference = reference;
+            switch (type)
+            {
+                case Type.Null:
+                    startingValue = 0.0f;
+                    break;
+                case Type.RawImageOpacity:
+                    startingValue = ((RawImage)reference).opacity;
+                    break;
+                case Type.RawImageRotation:
+                    startingValue = ((RawImage)reference).rotation;
+                    break;
+                case Type.RawImageX:
+                    startingValue = ((RawImage)reference).location.X;
+                    break;
+                case Type.RawImageY:
+                    startingValue = ((RawImage)reference).location.Y;
+                    break;
+                case Type.ButtonX:
+                    startingValue = ((Button)reference).location.X;
+                    break;
+                case Type.ButtonY:
+                    startingValue = ((Button)reference).location.Y;
+                    break;
+                case Type.InputBoxX:
+                    startingValue = ((InputBox)reference).location.X;
+                    break;
+                case Type.InputBoxY:
+                    startingValue = ((InputBox)reference).location.Y;
+                    break;
+                case Type.TextBoxX:
+                    startingValue = ((TextBox)reference).location.X;
+                    break;
+                case Type.TextBoxY:
+                    startingValue = ((TextBox)reference).location.Y;
+                    break;
+            }
+        }
+
+        public void SetKeyframes(params AnimationKeyframe[] keyframes)
+        {
             this.keyframes = new List<AnimationKeyframe>();
             foreach (AnimationKeyframe keyframe in keyframes)
                 this.keyframes.Add(keyframe);
-            this.keyframes.Add(new AnimationKeyframe(Variable, 0));
+            this.keyframes.Add(new AnimationKeyframe(startingValue, 0));
             this.keyframes.Sort((AnimationKeyframe l, AnimationKeyframe r) => { return r.time.CompareTo(l.time); });
             //Pierwszy keyframe będzie na końcu listy
         }
@@ -72,7 +118,34 @@ namespace Ruetobas
             if (time >= keyframes.ElementAt(keyframes.Count - 2).time)
                 keyframes.RemoveAt(keyframes.Count - 1);
             if (keyframes.Count <= 1) return true;
-            Variable = AnimationKeyframe.Lerp(keyframes[keyframes.Count - 1], keyframes[keyframes.Count - 2], time);
+            float value = AnimationKeyframe.Lerp(keyframes[keyframes.Count - 1], keyframes[keyframes.Count - 2], time);
+            switch (type)
+            {
+                case Type.RawImageOpacity:
+                    ((RawImage)reference).opacity = value;
+                    break;
+                case Type.RawImageRotation:
+                    ((RawImage)reference).rotation = value;
+                    break;
+                case Type.RawImageX:
+                    ((RawImage)reference).location.X = (int)value;
+                    break;
+                case Type.RawImageY:
+                    ((RawImage)reference).location.Y = (int)value;
+                    break;
+                case Type.TextBoxX:
+                    ((TextBox)reference).location.X = (int)value;
+                    break;
+                case Type.TextBoxY:
+                    ((TextBox)reference).location.Y = (int)value;
+                    break;
+                case Type.InputBoxX:
+                    ((InputBox)reference).location.X = (int)value;
+                    break;
+                case Type.InputBoxY:
+                    ((InputBox)reference).location.Y = (int)value;
+                    break;
+            }
             return false;
         }
     }

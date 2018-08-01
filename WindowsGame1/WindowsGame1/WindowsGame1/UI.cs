@@ -332,7 +332,6 @@ namespace Ruetobas
         {
             //Logo
             Logic.images["LOGO"] = new RawImage(Logic.logo, new Rectangle(0, 0, 1920, 1080), 0.0f, 0.0f);
-            Logic.images["LOGO"].enabled = false;
 
             //Menu
             Logic.images[Logic.menuNamespace + "0Background"] = new RawImage(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080));

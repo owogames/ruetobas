@@ -341,16 +341,14 @@ namespace Ruetobas
                 {
                     UI.InitUI();
                     isLoading = false;
-                    /*AnimationCurve curve = new AnimationCurve(ref Logic.images["LOGO"].opacity, new AnimationKeyframe(1.0f, 2.0f), new AnimationKeyframe(1.0f, 8.0f), new AnimationKeyframe(0.0f, 10.0f));
+                    AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, Logic.images["LOGO"]);
+                    curve.SetKeyframes(new AnimationKeyframe(1.0f, 2.0f), new AnimationKeyframe(1.0f, 8.0f), new AnimationKeyframe(0.0f, 10.0f));
                     Logic.animations.Add(new Animation(() => 
                     {
                         Logic.images.Remove("LOGO");
                         UI.EnableGroup(Logic.menuNamespace);
                         UI.DisableGroup(Logic.menuNamespace + "Z");
-                    }, curve));*/
-                    Logic.images.Remove("LOGO");
-                    UI.EnableGroup(Logic.menuNamespace);
-                    UI.DisableGroup(Logic.menuNamespace + "Z");
+                    }, curve));
                 }
                 return;
             }
@@ -686,7 +684,7 @@ namespace Ruetobas
             }
 
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
@@ -780,7 +778,7 @@ namespace Ruetobas
                 if (Logic.images.ContainsKey(name))
                 {
                     RawImage image = Logic.images[name];
-                    spriteBatch.Draw(image.texture, Geo.Scale(new Rectangle(image.location.X + image.location.Width / 2, image.location.Y + image.location.Height / 2, image.location.Width, image.location.Height)), null, Color.White, image.rotation, new Vector2(image.texture.Width, image.texture.Height) / 2, SpriteEffects.None, 0);
+                    spriteBatch.Draw(image.texture, Geo.Scale(new Rectangle(image.location.X + image.location.Width / 2, image.location.Y + image.location.Height / 2, image.location.Width, image.location.Height)), null, Color.White * image.opacity, image.rotation, new Vector2(image.texture.Width, image.texture.Height) / 2, SpriteEffects.None, 0);
                 }
             }
 
