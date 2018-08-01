@@ -341,6 +341,16 @@ namespace Ruetobas
                 {
                     UI.InitUI();
                     isLoading = false;
+                    /*AnimationCurve curve = new AnimationCurve(ref Logic.images["LOGO"].opacity, new AnimationKeyframe(1.0f, 2.0f), new AnimationKeyframe(1.0f, 8.0f), new AnimationKeyframe(0.0f, 10.0f));
+                    Logic.animations.Add(new Animation(() => 
+                    {
+                        Logic.images.Remove("LOGO");
+                        UI.EnableGroup(Logic.menuNamespace);
+                        UI.DisableGroup(Logic.menuNamespace + "Z");
+                    }, curve));*/
+                    Logic.images.Remove("LOGO");
+                    UI.EnableGroup(Logic.menuNamespace);
+                    UI.DisableGroup(Logic.menuNamespace + "Z");
                 }
                 return;
             }
@@ -604,19 +614,6 @@ namespace Ruetobas
             if (draggedGrid != null && !draggedGrid.enabled)
                 draggedGrid = null;
 
-            //Aktualizacja Timer'ów
-            for (int i = Logic.timers.Count - 1; i >= 0; i--)
-            {
-                Timer timer = Logic.timers.ElementAt(i).Value;
-                timer.currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (timer.currentTime >= timer.countDuration)
-                {
-                    if (timer.countdownEvent != null)
-                        timer.countdownEvent();
-                    Logic.timers.Remove(Logic.timers.ElementAt(i).Key);
-                }
-            }
-
             //Cofanie gdy przejedziesz grida za bardzo
             foreach (KeyValuePair<string, Grid> gridpair in Logic.grids)
             {
@@ -711,6 +708,10 @@ namespace Ruetobas
                 if (pair.Value.enabled)
                     UIelements.Add(pair.Key);
 
+            foreach (KeyValuePair<string, RawImage> pair in Logic.images)
+                if (pair.Value.enabled)
+                    UIelements.Add(pair.Key);
+
             UIelements.Sort();
 
             for (int id = 0; id < UIelements.Count; id++)
@@ -773,6 +774,13 @@ namespace Ruetobas
                     Grid grid = Logic.grids[name];
                     spriteBatch.Draw(grid.boxTexture, Geo.Scale(grid.location), Color.White);
                     spriteBatch.Draw(grid.renderTarget, Geo.Scale(Geo.Shrink(grid.location, grid.margin)), Color.White);
+                }
+
+                //Rysowanie RawImage
+                if (Logic.images.ContainsKey(name))
+                {
+                    RawImage image = Logic.images[name];
+                    spriteBatch.Draw(image.texture, Geo.Scale(new Rectangle(image.location.X + image.location.Width / 2, image.location.Y + image.location.Height / 2, image.location.Width, image.location.Height)), null, Color.White, image.rotation, new Vector2(image.texture.Width, image.texture.Height) / 2, SpriteEffects.None, 0);
                 }
             }
 

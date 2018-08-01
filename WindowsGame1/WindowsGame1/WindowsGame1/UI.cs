@@ -244,17 +244,27 @@ namespace Ruetobas
         }
     }
 
-    public class Timer
+    public class RawImage
     {
-        public float countDuration;
-        public float currentTime;
-        public Action countdownEvent;
-
-        public Timer(float countDuration, Action countdownEvent)
+        public Texture2D texture;
+        public Rectangle location;
+        public float opacity;
+        public float rotation;
+        public bool enabled = true;
+        public RawImage(Texture2D texture, Rectangle location, float opacity, float rotation)
         {
-            this.countDuration = countDuration;
-            this.countdownEvent = countdownEvent;
-            currentTime = 0f;
+            this.texture = texture;
+            this.location = location;
+            this.opacity = opacity;
+            this.rotation = rotation;
+        }
+
+        public RawImage(Texture2D texture, Rectangle location)
+        {
+            this.texture = texture;
+            this.location = location;
+            opacity = 1.0f;
+            rotation = 0.0f;
         }
     }
 
@@ -278,6 +288,11 @@ namespace Ruetobas
                     b.Value.enabled = false;
             }
             foreach (KeyValuePair<string, Grid> b in Logic.grids)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = false;
+            }
+            foreach (KeyValuePair<string, RawImage> b in Logic.images)
             {
                 if (b.Key.StartsWith(prefix))
                     b.Value.enabled = false;
@@ -306,27 +321,36 @@ namespace Ruetobas
                 if (b.Key.StartsWith(prefix))
                     b.Value.enabled = true;
             }
+            foreach (KeyValuePair<string, RawImage> b in Logic.images)
+            {
+                if (b.Key.StartsWith(prefix))
+                    b.Value.enabled = true;
+            }
         }
 
         public static void InitUI()
         {
+            //Logo
+            Logic.images["LOGO"] = new RawImage(Logic.logo, new Rectangle(0, 0, 1920, 1080), 0.0f, 0.0f);
+            Logic.images["LOGO"].enabled = false;
+
             //Menu
-            Logic.buttons[Logic.menuNamespace + "0Background"] = new Button(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080), null);
+            Logic.images[Logic.menuNamespace + "0Background"] = new RawImage(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080));
             Logic.buttons[Logic.menuNamespace + "Join"] = new Button(Logic.joinTexture, new Rectangle(120, 620, 360, 80), () => { EnableGroup(Logic.menuNamespace + "Z"); });
             Logic.buttons[Logic.menuNamespace + "Options"] = new Button(Logic.optionsTexture, new Rectangle(120, 700, 300, 80), () => Logic.DisplayOptions(true));
             Logic.buttons[Logic.menuNamespace + "Quit"] = new Button(Logic.quitTexture, new Rectangle(120, 780, 200, 80), Logic.game.Exit);
-            Logic.buttons[Logic.menuNamespace + "ZBackground"] = new Button(Logic.connectWindow, new Rectangle(0, 0, 1920, 1080), null);
+            Logic.images[Logic.menuNamespace + "ZBackground"] = new RawImage(Logic.connectWindow, new Rectangle(0, 0, 1920, 1080));
             Logic.inputBoxes[Logic.menuNamespace + "Zip"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 440, 380, 60), Color.White, Color.Gray, "Enter server IP");
             Logic.inputBoxes[Logic.menuNamespace + "Znick"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 560, 380, 60), Color.White, Color.Gray, "Enter username", 32);
             Logic.buttons[Logic.menuNamespace + "Zconnect"] = new Button(Logic.connectTexture, new Rectangle(840, 680, 260, 60), Logic.LoadGameScreen);
             Logic.buttons[Logic.menuNamespace + "Zcancel"] = new Button(Logic.cancelTexture, new Rectangle(1520, 820, 200, 60), () => { DisableGroup(Logic.menuNamespace + "Z"); });
-            DisableGroup(Logic.menuNamespace + "Z");
+            DisableGroup(Logic.menuNamespace);
 
             //Options
             Logic.buttons[Logic.optionsNamespace + "0Background"] = new Button(Logic.optionsWindow, new Rectangle(0, 0, 1920, 1080), () => { Logic.grids[Logic.optionsNamespace + "ZResolutions"].enabled = false; });
-            Logic.buttons[Logic.optionsNamespace + "FullscreenText"] = new Button(Logic.fullscreenTexture, new Rectangle(200, 200, 300, 60), null);
-            Logic.buttons[Logic.optionsNamespace + "ResolutionText"] = new Button(Logic.resolutionTexture, new Rectangle(200, 280, 300, 60), null);
-            Logic.buttons[Logic.optionsNamespace + "VolumeText"] = new Button(Logic.volumeTexture, new Rectangle(200, 360, 200, 60), null);
+            Logic.images[Logic.optionsNamespace + "FullscreenText"] = new RawImage(Logic.fullscreenTexture, new Rectangle(200, 200, 300, 60));
+            Logic.images[Logic.optionsNamespace + "ResolutionText"] = new RawImage(Logic.resolutionTexture, new Rectangle(200, 280, 300, 60));
+            Logic.images[Logic.optionsNamespace + "VolumeText"] = new RawImage(Logic.volumeTexture, new Rectangle(200, 360, 200, 60));
             Logic.buttons[Logic.optionsNamespace + "Done"] = new Button(Logic.doneTexture, new Rectangle(200, 820, 140, 60), () => Logic.DisplayOptions(false));
             Logic.buttons[Logic.optionsNamespace + "Exit"] = new Button(Logic.exitTexture, new Rectangle(1620, 820, 100, 60), Logic.game.Exit);
             Logic.textBoxes[Logic.optionsNamespace + "ResolutionSelected"] = new TextBox(Logic.inputboxTexture, 5, Alignment.Centered, Logic.guifont, new Rectangle(560, 280, 380, 60), "1280 x 720    16:9");
@@ -353,7 +377,7 @@ namespace Ruetobas
             Logic.textBoxes[Logic.gameNamespace + "HELP"] = new TextBox(Logic.errorBackground, 5, Alignment.Centered, Logic.font, new Rectangle(0, 720, 1380, 60), "");
             Logic.textBoxes[Logic.gameNamespace + "HELP"].canScroll = false;
             Logic.buttons[Logic.gameNamespace + "READY"] = new Button(Logic.notReadyTexture, new Rectangle(420, 285, 540, 210), Logic.Ready);
-            Logic.buttons[Logic.gameNamespace + "CHARACTER"] = new Button(Logic.chatTexture, new Rectangle(0, 780, 180, 300), null);
+            Logic.images[Logic.gameNamespace + "CHARACTER"] = new RawImage(Logic.chatTexture, new Rectangle(0, 780, 180, 300));
             Logic.textBoxes[Logic.gameNamespace + "ACTUALPLAYER"] = new TextBox(Logic.errorButton, 5, Alignment.Left, Logic.font, new Rectangle(1380, 0, 290, 50));
             Logic.buttons[Logic.gameNamespace + "DISCARD"] = new Button(Logic.discardTexture, new Rectangle(1380, 780, 540, 75), Logic.DiscardCard);
             Logic.buttons[Logic.gameNamespace + "REMOVE"] = new Button(Logic.errorButton, new Rectangle(1380, 855, 540, 75), null);

@@ -14,6 +14,15 @@ namespace Ruetobas
         {
             foreach (AnimationCurve curve in curves)
                 this.curves.Add(curve);
+            endEvent = null;
+        }
+
+        public Animation(Action endEvent, params AnimationCurve[] curves)
+        {
+            this.curves = new List<AnimationCurve>();
+            foreach (AnimationCurve curve in curves)
+                this.curves.Add(curve);
+            this.endEvent = endEvent;
         }
 
         private float time = 0.0f;
@@ -31,7 +40,8 @@ namespace Ruetobas
 
             if (curves.Count == 0)
             {
-                endEvent();
+                if (endEvent != null)
+                    endEvent();
                 return true;
             }
             return false;
@@ -45,6 +55,7 @@ namespace Ruetobas
         public AnimationCurve(ref float Variable, params AnimationKeyframe[] keyframes)
         {
             this.Variable = Variable;
+            this.keyframes = new List<AnimationKeyframe>();
             foreach (AnimationKeyframe keyframe in keyframes)
                 this.keyframes.Add(keyframe);
             this.keyframes.Add(new AnimationKeyframe(Variable, 0));

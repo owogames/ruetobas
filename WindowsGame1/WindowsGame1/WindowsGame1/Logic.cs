@@ -18,11 +18,12 @@ namespace Ruetobas
         public static SortedDictionary<string, TextBox> textBoxes;
         public static SortedDictionary<string, InputBox> inputBoxes;
         public static SortedDictionary<string, Grid> grids;
-        public static SortedDictionary<string, Timer> timers;
+        public static SortedDictionary<string, RawImage> images;
         public static List<Animation> animations;
 
         public static Game game;
         public static SpriteBatch spriteBatch;
+        public static Texture2D logo;
         public static Texture2D chatTexture, boardTexture;
         public static Texture2D chatInputTexture;
         public static Texture2D chatSendTexture;
@@ -113,7 +114,7 @@ namespace Ruetobas
             textBoxes = new SortedDictionary<string, TextBox>();
             inputBoxes = new SortedDictionary<string, InputBox>();
             grids = new SortedDictionary<string, Grid>();
-            timers = new SortedDictionary<string, Timer>();
+            images = new SortedDictionary<string, RawImage>();
             animations = new List<Animation>();
         }
 
@@ -121,6 +122,7 @@ namespace Ruetobas
         {
             game.loadingString = "Loading textures...";
             maskEffect = game.Content.Load<Effect>("shaders\\mask");
+            logo = game.Content.Load<Texture2D>("gui\\logo");
             errorBackground = game.Content.Load<Texture2D>("errorBackground");
             errorWindow = game.Content.Load<Texture2D>("tekstura");
             emptyTextbox = game.Content.Load<Texture2D>("empty");
@@ -559,7 +561,6 @@ namespace Ruetobas
 
             if (game.TCPConnect(IP, port))
             {
-                timers.Clear();
                 UI.DisableGroup(optionsNamespace);
                 UI.DisableGroup(menuNamespace);
                 UI.EnableGroup(gameNamespace);
@@ -568,7 +569,6 @@ namespace Ruetobas
                 for (int i = 0; i < 19; i++)
                     for (int j = 0; j < 15; j++)
                         map[i, j] = new PlacedCard(0, 0);
-                timers.Clear();
                 textBoxes[gameNamespace + "CHAT"].Reset();
                 buttons[gameNamespace + "PLAYERLISTOFF"].enabled = false;
                 //grids[gameNamespace + "BOARD"].enabled = false;
@@ -592,7 +592,6 @@ namespace Ruetobas
             for (int i = 0; i < 19; i++)
                 for (int j = 0; j < 15; j++)
                     map[i, j] = new PlacedCard(0, 0);
-            timers.Clear();
             textBoxes[gameNamespace + "CHAT"].Reset();
             UI.DisableGroup(gameNamespace);
             UI.DisableGroup(optionsNamespace);

@@ -22,5 +22,10 @@ namespace Ruetobas
         {
             return new Rectangle((int)(rect.X * Game.scale.X), (int)(rect.Y * Game.scale.Y), (int)(rect.Width * Game.scale.X), (int)(rect.Height * Game.scale.Y));
         }
+
+        public static Vector2 Scale(Vector2 vect)
+        {
+            return vect * Game.scale;
+        }
     }
 }
