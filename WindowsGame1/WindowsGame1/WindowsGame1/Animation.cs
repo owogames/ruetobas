@@ -12,6 +12,7 @@ namespace Ruetobas
         public Action endEvent;
         public Animation(params AnimationCurve[] curves)
         {
+            this.curves = new List<AnimationCurve>();
             foreach (AnimationCurve curve in curves)
                 this.curves.Add(curve);
             endEvent = null;
@@ -45,6 +46,77 @@ namespace Ruetobas
                 return true;
             }
             return false;
+        }
+
+        public static Animation GenerateTimer(float duration, Action timerEvent)
+        {
+            AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.Null, null);
+            curve.SetKeyframes(new AnimationKeyframe(0.0f, duration));
+            return new Animation(timerEvent, curve);
+        }
+
+        public static Animation GenerateFadeIn(float duration, RawImage reference)
+        {
+            AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
+            curve.SetKeyframes(new AnimationKeyframe(0.0f, 0.0f), new AnimationKeyframe(1.0f, duration));
+            return new Animation(curve);
+        }
+
+        public static Animation GenerateFadeOut(float duration, RawImage reference)
+        {
+            AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
+            curve.SetKeyframes(new AnimationKeyframe(1.0f, 0.0f), new AnimationKeyframe(0.0f, duration));
+            return new Animation(curve);
+        }
+
+        public static Animation GenerateFadeInOut(float durationIn, float durationStay, float durationOut, RawImage reference)
+        {
+            AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
+            curve.SetKeyframes(new AnimationKeyframe(0.0f, 0.0f), new AnimationKeyframe(1.0f, durationIn), new AnimationKeyframe(1.0f, durationIn + durationStay), new AnimationKeyframe(0.0f, durationIn + durationStay + durationOut));
+            return new Animation(curve);
+        }
+
+        public static Animation GenerateFadeOutIn(float durationIn, float durationStay, float durationOut, RawImage reference)
+        {
+            AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
+            curve.SetKeyframes(new AnimationKeyframe(1.0f, 0.0f), new AnimationKeyframe(0.0f, durationIn), new AnimationKeyframe(0.0f, durationIn + durationStay), new AnimationKeyframe(1.0f, durationIn + durationStay + durationOut));
+            return new Animation(curve);
+        }
+
+        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, Button reference)
+        {
+            AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.ButtonX, reference);
+            AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.ButtonY, reference);
+            curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
+            curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
+            return new Animation(curvex, curvey);
+        }
+
+        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, InputBox reference)
+        {
+            AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.InputBoxX, reference);
+            AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.InputBoxY, reference);
+            curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
+            curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
+            return new Animation(curvex, curvey);
+        }
+
+        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, TextBox reference)
+        {
+            AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.TextBoxX, reference);
+            AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.TextBoxY, reference);
+            curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
+            curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
+            return new Animation(curvex, curvey);
+        }
+
+        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, RawImage reference)
+        {
+            AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.RawImageX, reference);
+            AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.RawImageY, reference);
+            curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
+            curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
+            return new Animation(curvex, curvey);
         }
     }
 
@@ -104,8 +176,9 @@ namespace Ruetobas
             this.keyframes = new List<AnimationKeyframe>();
             foreach (AnimationKeyframe keyframe in keyframes)
                 this.keyframes.Add(keyframe);
-            this.keyframes.Add(new AnimationKeyframe(startingValue, 0));
             this.keyframes.Sort((AnimationKeyframe l, AnimationKeyframe r) => { return r.time.CompareTo(l.time); });
+            if (keyframes.Last().time >= 0.001f)
+                this.keyframes.Add(new AnimationKeyframe(startingValue, 0.0f));
             //Pierwszy keyframe będzie na końcu listy
         }
 

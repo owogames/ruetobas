@@ -341,14 +341,14 @@ namespace Ruetobas
                 {
                     UI.InitUI();
                     isLoading = false;
-                    AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, Logic.images["LOGO"]);
-                    curve.SetKeyframes(new AnimationKeyframe(1.0f, 2.0f), new AnimationKeyframe(1.0f, 8.0f), new AnimationKeyframe(0.0f, 10.0f));
-                    Logic.animations.Add(new Animation(() => 
+                    Animation logoAnimation = Animation.GenerateFadeInOut(2.0f, 5.0f, 2.0f, Logic.images["LOGO"]);
+                    logoAnimation.endEvent = () =>
                     {
                         Logic.images.Remove("LOGO");
                         UI.EnableGroup(Logic.menuNamespace);
                         UI.DisableGroup(Logic.menuNamespace + "Z");
-                    }, curve));
+                    };
+                    Logic.animations.Add(logoAnimation);
                 }
                 return;
             }
