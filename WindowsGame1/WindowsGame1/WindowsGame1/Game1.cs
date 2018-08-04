@@ -341,13 +341,14 @@ namespace Ruetobas
                 {
                     UI.InitUI();
                     isLoading = false;
-                    Animation logoAnimation = Animation.GenerateFadeInOut(2.0f, 5.0f, 2.0f, Logic.images["LOGO"]);
-                    logoAnimation.endEvent = () =>
+                    Animation logoAnimation = new Animation(() =>
                     {
                         Logic.images.Remove("LOGO");
                         UI.EnableGroup(Logic.menuNamespace);
                         UI.DisableGroup(Logic.menuNamespace + "Z");
-                    };
+                        UI.GenerateFadeIn(1.0f);
+                    });
+                    logoAnimation.AddFadeInOut(2.0f, 5.0f, 2.0f, Logic.images["LOGO"]);
                     Logic.animations.Add(logoAnimation);
                 }
                 return;

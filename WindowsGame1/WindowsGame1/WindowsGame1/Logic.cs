@@ -37,7 +37,7 @@ namespace Ruetobas
         public static Texture2D notReadyTexture;
         public static Texture2D semiTransparentTexture;
         public static Texture2D transparentTexture;
-        public static Texture2D solidTexture;
+        public static Texture2D solidTexture, solidBlack;
         public static Texture2D settingsTexture;
         public static Texture2D unTickedTexture;
         public static Texture2D tickedTexture;
@@ -140,7 +140,8 @@ namespace Ruetobas
             notReadyTexture = game.Content.Load<Texture2D>("NotReadyButton");
             semiTransparentTexture = game.Content.Load<Texture2D>("SemiTransparent");
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
-            solidTexture = game.Content.Load<Texture2D>("black");
+            solidTexture = game.Content.Load<Texture2D>("white");
+            solidBlack = game.Content.Load<Texture2D>("black");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
             menuBackground = game.Content.Load<Texture2D>("gui\\menubackground");
             optionsWindow = game.Content.Load<Texture2D>("gui\\optionswindow");

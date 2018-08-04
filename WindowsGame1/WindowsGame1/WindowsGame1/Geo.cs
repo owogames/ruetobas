@@ -27,5 +27,13 @@ namespace Ruetobas
         {
             return vect * Game.scale;
         }
+
+        public static string GenerateHash()
+        {
+            string outstring = "";
+            for (int i = 0; i < 13; i++)
+                outstring += Convert.ToChar(Logic.rand.Next(20) + 97);
+            return outstring;
+        }
     }
 }

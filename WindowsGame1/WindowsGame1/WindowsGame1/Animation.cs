@@ -26,6 +26,17 @@ namespace Ruetobas
             this.endEvent = endEvent;
         }
 
+        public Animation(Action endEvent)
+        {
+            curves = new List<AnimationCurve>();
+            this.endEvent = endEvent;
+        }
+
+        public Animation()
+        {
+            curves = new List<AnimationCurve>();
+        }
+
         private float time = 0.0f;
 
         public bool Update(float deltaTime)
@@ -48,75 +59,79 @@ namespace Ruetobas
             return false;
         }
 
-        public static Animation GenerateTimer(float duration, Action timerEvent)
+        public void AddTimer(float duration, Action timerEvent)
         {
             AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.Null, null);
             curve.SetKeyframes(new AnimationKeyframe(0.0f, duration));
-            return new Animation(timerEvent, curve);
+            curves.Add(curve);
         }
 
-        public static Animation GenerateFadeIn(float duration, RawImage reference)
+        public void AddFadeIn(float duration, RawImage reference)
         {
             AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
             curve.SetKeyframes(new AnimationKeyframe(0.0f, 0.0f), new AnimationKeyframe(1.0f, duration));
-            return new Animation(curve);
+            curves.Add(curve);
         }
 
-        public static Animation GenerateFadeOut(float duration, RawImage reference)
+        public void AddFadeOut(float duration, RawImage reference)
         {
             AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
             curve.SetKeyframes(new AnimationKeyframe(1.0f, 0.0f), new AnimationKeyframe(0.0f, duration));
-            return new Animation(curve);
+            curves.Add(curve);
         }
 
-        public static Animation GenerateFadeInOut(float durationIn, float durationStay, float durationOut, RawImage reference)
+        public void AddFadeInOut(float durationIn, float durationStay, float durationOut, RawImage reference)
         {
             AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
             curve.SetKeyframes(new AnimationKeyframe(0.0f, 0.0f), new AnimationKeyframe(1.0f, durationIn), new AnimationKeyframe(1.0f, durationIn + durationStay), new AnimationKeyframe(0.0f, durationIn + durationStay + durationOut));
-            return new Animation(curve);
+            curves.Add(curve);
         }
 
-        public static Animation GenerateFadeOutIn(float durationIn, float durationStay, float durationOut, RawImage reference)
+        public void AddFadeOutIn(float durationIn, float durationStay, float durationOut, RawImage reference)
         {
             AnimationCurve curve = new AnimationCurve(AnimationCurve.Type.RawImageOpacity, reference);
             curve.SetKeyframes(new AnimationKeyframe(1.0f, 0.0f), new AnimationKeyframe(0.0f, durationIn), new AnimationKeyframe(0.0f, durationIn + durationStay), new AnimationKeyframe(1.0f, durationIn + durationStay + durationOut));
-            return new Animation(curve);
+            curves.Add(curve);
         }
 
-        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, Button reference)
+        public void AddTranslate(float duration, Vector2 start, Vector2 end, Button reference)
         {
             AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.ButtonX, reference);
             AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.ButtonY, reference);
             curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
             curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
-            return new Animation(curvex, curvey);
+            curves.Add(curvex);
+            curves.Add(curvey);
         }
 
-        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, InputBox reference)
+        public void AddTranslate(float duration, Vector2 start, Vector2 end, InputBox reference)
         {
             AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.InputBoxX, reference);
             AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.InputBoxY, reference);
             curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
             curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
-            return new Animation(curvex, curvey);
+            curves.Add(curvex);
+            curves.Add(curvey);
         }
 
-        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, TextBox reference)
+        public void AddTranslate(float duration, Vector2 start, Vector2 end, TextBox reference)
         {
             AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.TextBoxX, reference);
             AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.TextBoxY, reference);
             curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
             curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
-            return new Animation(curvex, curvey);
+            curves.Add(curvex);
+            curves.Add(curvey);
         }
 
-        public static Animation GenerateTranslate(float duration, Vector2 start, Vector2 end, RawImage reference)
+        public void AddTranslate(float duration, Vector2 start, Vector2 end, RawImage reference)
         {
             AnimationCurve curvex = new AnimationCurve(AnimationCurve.Type.RawImageX, reference);
             AnimationCurve curvey = new AnimationCurve(AnimationCurve.Type.RawImageY, reference);
             curvex.SetKeyframes(new AnimationKeyframe(start.X, 0.0f), new AnimationKeyframe(end.X, duration));
             curvey.SetKeyframes(new AnimationKeyframe(start.Y, 0.0f), new AnimationKeyframe(end.Y, duration));
-            return new Animation(curvex, curvey);
+            curves.Add(curvex);
+            curves.Add(curvey);
         }
     }
 

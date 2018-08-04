@@ -394,5 +394,23 @@ namespace Ruetobas
             Logic.grids[Logic.gameNamespace + "ZPLAYERLIST"].useScrollToScroll = true;
             DisableGroup(Logic.gameNamespace);
         }
+
+        public static void GenerateFadeIn(float duration)
+        {
+            string hash = "ZZZZZ" + Geo.GenerateHash();
+            Logic.images[hash] = new RawImage(Logic.solidBlack, new Rectangle(0, 0, 1920, 1080));
+            Animation fade = new Animation(() => Logic.images.Remove(hash));
+            fade.AddFadeOut(duration, Logic.images[hash]);
+            Logic.animations.Add(fade);
+        }
+
+        public static void GenerateFadeOut(float duration)
+        {
+            string hash = "ZZZZZ" + Geo.GenerateHash();
+            Logic.images[hash] = new RawImage(Logic.solidBlack, new Rectangle(0, 0, 1920, 1080), 0.0f, 0.0f);
+            Animation fade = new Animation(() => Logic.images.Remove(hash));
+            fade.AddFadeIn(duration, Logic.images[hash]);
+            Logic.animations.Add(fade);
+        }
     }
 }
