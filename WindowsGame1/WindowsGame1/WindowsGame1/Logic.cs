@@ -56,7 +56,9 @@ namespace Ruetobas
         public static Texture2D[] tileTunnel = new Texture2D[46];
         public static SpriteFont font, guifont;
         public static Effect maskEffect;
-        
+
+        public static SoundEffectInstance menuMusicInstance;
+        public static SoundEffect menuMusic;
         public static SoundEffect bubbles;
         public static SoundEffect boop;
         public static SoundEffect bye;
@@ -109,6 +111,7 @@ namespace Ruetobas
             maxResDefault = game.GetCurrentDeviceResolution();
             displayModes = game.GetDisplayModes();
             Array.Sort(displayModes, SortDisplay);
+
             
             buttons = new SortedDictionary<string, Button>();
             textBoxes = new SortedDictionary<string, TextBox>();
@@ -165,6 +168,7 @@ namespace Ruetobas
             bubbles = game.Content.Load<SoundEffect>("SoundFX/menuback2");
             boop = game.Content.Load<SoundEffect>("SoundFX/normal-hitwhistle");
             bye = game.Content.Load<SoundEffect>("SoundFX/seeya");
+            menuMusic = game.Content.Load<SoundEffect>("SoundFX/ruetobastitle");
             for (int i = 0; i <= 72; i++)
                 cardTexture[i] = game.Content.Load<Texture2D>("cards\\card" + i.ToString());
             tileGrass = game.Content.Load<Texture2D>("tileGrass");
@@ -565,6 +569,7 @@ namespace Ruetobas
                 UI.DisableGroup(optionsNamespace);
                 UI.DisableGroup(menuNamespace);
                 UI.EnableGroup(gameNamespace);
+                menuMusicInstance.Stop();
                 for (int i = 0; i < 6; i++)
                     cardHand[i] = 0;
                 for (int i = 0; i < 19; i++)
