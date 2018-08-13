@@ -234,13 +234,13 @@ namespace Ruetobas
                 cardsgrid.offset = new Vector2(cardsgrid.location.Width / 2 - cardsgrid.margin, cardsgrid.location.Height / 2 - cardsgrid.margin);
                 
                 //Rysowanie hover textu
-                if (cardsgrid.enabled && Geo.Shrink(cardsgrid.location, cardsgrid.margin).Contains(new Point(game.mouseState.X, game.mouseState.Y)))
+                if (cardsgrid.enabled && Geo.Scale(Geo.Shrink(cardsgrid.location, cardsgrid.margin)).Contains(new Point(game.mouseState.X, game.mouseState.Y)))
                 {
                     int id = (game.mouseState.X - cardsgrid.location.X - cardsgrid.margin) / (int)cardsgrid.fieldSize.X;
                     Card card = cards[id];
                     string text = "ELO\nTestowy hover xDDDD";
                     Vector2 size = font.MeasureString(text);
-                    Rectangle rect = Geo.Shrink(new Rectangle(game.mouseState.X, game.mouseState.Y - (int)size.Y, (int)size.X, (int)size.Y), -3);
+                    Rectangle rect = Geo.Shrink(new Rectangle((int)(game.mouseState.X / Game.scale.X), (int)(game.mouseState.Y / Game.scale.Y) - (int)size.Y, (int)size.X, (int)size.Y), -3);
                     images[gameNamespace + "ZZHOVER"] = new RawImage(solidBlack, Geo.Shrink(rect, -2));
                     textBoxes[gameNamespace + "ZZZHOVER"] = new TextBox(solidGray, 3, Alignment.Left, font, rect, text);
                 }
