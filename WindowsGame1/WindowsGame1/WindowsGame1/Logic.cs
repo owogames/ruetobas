@@ -37,7 +37,7 @@ namespace Ruetobas
         public static Texture2D notReadyTexture;
         public static Texture2D semiTransparentTexture;
         public static Texture2D transparentTexture;
-        public static Texture2D solidTexture, solidBlack;
+        public static Texture2D solidTexture, solidBlack, solidGray;
         public static Texture2D settingsTexture;
         public static Texture2D unTickedTexture;
         public static Texture2D tickedTexture;
@@ -145,6 +145,7 @@ namespace Ruetobas
             transparentTexture = game.Content.Load<Texture2D>("Transparent");
             solidTexture = game.Content.Load<Texture2D>("white");
             solidBlack = game.Content.Load<Texture2D>("black");
+            solidGray = game.Content.Load<Texture2D>("gray");
             settingsTexture = game.Content.Load<Texture2D>("SettingsButton");
             menuBackground = game.Content.Load<Texture2D>("gui\\menubackground");
             optionsWindow = game.Content.Load<Texture2D>("gui\\optionswindow");
@@ -218,11 +219,31 @@ namespace Ruetobas
                 grids[gameNamespace + "ZPLAYERLIST"].zoom = 1.0f;
             }
 
+            //Usuwanie hover textu
+            if (textBoxes.ContainsKey(gameNamespace + "ZZZHOVER"))
+            {
+                textBoxes.Remove(gameNamespace + "ZZZHOVER");
+                images.Remove(gameNamespace + "ZZHOVER");
+            }
+
             //Żeby karty się nie przesuwały
             if (grids.ContainsKey(gameNamespace + "CARDS"))
             {
-                grids[gameNamespace + "CARDS"].zoom = 1.0f;
-                grids[gameNamespace + "CARDS"].offset = new Vector2(grids[gameNamespace + "CARDS"].location.Width / 2 - grids[gameNamespace + "CARDS"].margin, grids[gameNamespace + "CARDS"].location.Height / 2 - grids[gameNamespace + "CARDS"].margin);
+                Grid cardsgrid = grids[gameNamespace + "CARDS"];
+                cardsgrid.zoom = 1.0f;
+                cardsgrid.offset = new Vector2(cardsgrid.location.Width / 2 - cardsgrid.margin, cardsgrid.location.Height / 2 - cardsgrid.margin);
+                
+                //Rysowanie hover textu
+                if (cardsgrid.enabled && Geo.Shrink(cardsgrid.location, cardsgrid.margin).Contains(new Point(game.mouseState.X, game.mouseState.Y)))
+                {
+                    int id = (game.mouseState.X - cardsgrid.location.X - cardsgrid.margin) / (int)cardsgrid.fieldSize.X;
+                    Card card = cards[id];
+                    string text = "ELO\nTestowy hover xDDDD";
+                    Vector2 size = font.MeasureString(text);
+                    Rectangle rect = Geo.Shrink(new Rectangle(game.mouseState.X, game.mouseState.Y - (int)size.Y, (int)size.X, (int)size.Y), -3);
+                    images[gameNamespace + "ZZHOVER"] = new RawImage(solidBlack, Geo.Shrink(rect, -2));
+                    textBoxes[gameNamespace + "ZZZHOVER"] = new TextBox(solidGray, 3, Alignment.Left, font, rect, text);
+                }
             }
 
             //Ikonki buffów
@@ -920,34 +941,49 @@ namespace Ruetobas
             game.TCPSend("READY");          
         }
 
-        public static void DisplayOptions(bool shouldBeVisible)
-        {
-            if (shouldBeVisible)
-                UI.EnableGroup(optionsNamespace);
-            else UI.DisableGroup(optionsNamespace);
-            grids[optionsNamespace + "ZResolutions"].enabled = false;
-            int gcd = GCD(Settings.resolution.X, Settings.resolution.Y);
-            string line = Settings.resolution.X.ToString() + " x " + Settings.resolution.Y.ToString() + "    " +
-                (Settings.resolution.X / gcd).ToString() + ":" + (Settings.resolution.Y / gcd).ToString();
-            textBoxes[optionsNamespace + "ResolutionSelected"].lines[0] = line;
-
-            if (shouldBeVisible == false)
-            {
-                int new_volume = 0;
-                if (int.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
-                    new_volume <= 100 && new_volume >= 0)
-                    Settings.volume = new_volume * 0.01f;
-                Settings.SaveToFile();
-            }
-        }
-
         public static void ChangeFullscreen()
         {
-            game.ChangeFullscreen();
-            if (Settings.isFullscreen)
+            if (!Settings.isFullscreen)
                 buttons[optionsNamespace + "Fullscreen"].texture = tickedTexture;
             else
                 buttons[optionsNamespace + "Fullscreen"].texture = unTickedTexture;
+            Settings.ChangeFullscreen();
+        }
+
+        public static void DisplayOptions(bool shouldBeVisible, bool updateOptions)
+        {
+            if (shouldBeVisible)
+            {
+                UI.EnableGroup(optionsNamespace);
+                inputBoxes[optionsNamespace + "Volume"].text = "";
+                grids[optionsNamespace + "ZResolutions"].enabled = false;
+                int gcd = GCD(Settings.resolution.X, Settings.resolution.Y);
+                string line = Settings.resolution.X.ToString() + " x " + Settings.resolution.Y.ToString() + "    " +
+                    (Settings.resolution.X / gcd).ToString() + ":" + (Settings.resolution.Y / gcd).ToString();
+                textBoxes[optionsNamespace + "ResolutionSelected"].lines[0] = line;
+                if (Settings.isFullscreen)
+                    buttons[optionsNamespace + "Fullscreen"].texture = Logic.tickedTexture;
+                else
+                    buttons[optionsNamespace + "Fullscreen"].texture = Logic.unTickedTexture;
+            }
+            else
+            {
+                UI.DisableGroup(optionsNamespace);
+
+                if (updateOptions == true)
+                {
+                    int new_volume = 0;
+                    if (int.TryParse(inputBoxes[optionsNamespace + "Volume"].text, out new_volume) &&
+                        new_volume <= 100 && new_volume >= 0)
+                    {
+                        Settings.volume = new_volume * 0.01f;
+                        menuMusicInstance.Volume = Settings.volume;
+                    }
+                    Settings.SaveToFile();
+                }
+                else
+                    Settings.LoadFromFile();
+            }
         }
 
         public static void ResolutionsDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)

@@ -148,10 +148,9 @@ namespace Ruetobas
 
         public void ChangeResolution(Point res) => ChangeResolution(res.X, res.Y);
 
-        public void ChangeFullscreen()
+        public void ToggleFullscreen()
         {
             graphics.ToggleFullScreen();
-            Settings.isFullscreen = !Settings.isFullscreen;
         }
 
         public Point GetCurrentDeviceResolution()
@@ -350,6 +349,7 @@ namespace Ruetobas
                         UI.GenerateFadeIn(1.0f);
                         Logic.menuMusicInstance = Logic.menuMusic.CreateInstance();
                         Logic.menuMusicInstance.IsLooped = true;
+                        Logic.menuMusicInstance.Volume = Settings.volume;
                         Logic.menuMusicInstance.Play();
                     });
                     logoAnimation.AddFadeInOut(2.0f, 5.0f, 2.0f, Logic.images["LOGO"]);

@@ -336,7 +336,7 @@ namespace Ruetobas
             //Menu
             Logic.images[Logic.menuNamespace + "0Background"] = new RawImage(Logic.menuBackground, new Rectangle(0, 0, 1920, 1080));
             Logic.buttons[Logic.menuNamespace + "Join"] = new Button(Logic.joinTexture, new Rectangle(120, 620, 360, 80), () => { EnableGroup(Logic.menuNamespace + "Z"); });
-            Logic.buttons[Logic.menuNamespace + "Options"] = new Button(Logic.optionsTexture, new Rectangle(120, 700, 300, 80), () => Logic.DisplayOptions(true));
+            Logic.buttons[Logic.menuNamespace + "Options"] = new Button(Logic.optionsTexture, new Rectangle(120, 700, 300, 80), () => Logic.DisplayOptions(true, true));
             Logic.buttons[Logic.menuNamespace + "Quit"] = new Button(Logic.quitTexture, new Rectangle(120, 780, 200, 80), Logic.game.Exit);
             Logic.images[Logic.menuNamespace + "ZBackground"] = new RawImage(Logic.connectWindow, new Rectangle(0, 0, 1920, 1080));
             Logic.inputBoxes[Logic.menuNamespace + "Zip"] = new InputBox(Logic.inputboxTexture, 5, Logic.guifont, new Rectangle(770, 440, 380, 60), Color.White, Color.Gray, "Enter server IP");
@@ -350,8 +350,8 @@ namespace Ruetobas
             Logic.images[Logic.optionsNamespace + "FullscreenText"] = new RawImage(Logic.fullscreenTexture, new Rectangle(200, 200, 300, 60));
             Logic.images[Logic.optionsNamespace + "ResolutionText"] = new RawImage(Logic.resolutionTexture, new Rectangle(200, 280, 300, 60));
             Logic.images[Logic.optionsNamespace + "VolumeText"] = new RawImage(Logic.volumeTexture, new Rectangle(200, 360, 200, 60));
-            Logic.buttons[Logic.optionsNamespace + "Done"] = new Button(Logic.doneTexture, new Rectangle(200, 820, 140, 60), () => Logic.DisplayOptions(false));
-            Logic.buttons[Logic.optionsNamespace + "Exit"] = new Button(Logic.exitTexture, new Rectangle(1620, 820, 100, 60), Logic.game.Exit);
+            Logic.buttons[Logic.optionsNamespace + "Done"] = new Button(Logic.doneTexture, new Rectangle(200, 820, 140, 60), () => Logic.DisplayOptions(false, true));
+            Logic.buttons[Logic.optionsNamespace + "Cancel"] = new Button(Logic.cancelTexture, new Rectangle(1520, 820, 200, 60), () => Logic.DisplayOptions(false, false));
             Logic.textBoxes[Logic.optionsNamespace + "ResolutionSelected"] = new TextBox(Logic.inputboxTexture, 5, Alignment.Centered, Logic.guifont, new Rectangle(560, 280, 380, 60), "1280 x 720    16:9");
             Logic.textBoxes[Logic.optionsNamespace + "ResolutionSelected"].canScroll = false;
             Logic.buttons[Logic.optionsNamespace + "ResolutionButton"] = new Button(Logic.dropdownTexture, new Rectangle(960, 280, 60, 60), () => { Logic.grids[Logic.optionsNamespace + "ZResolutions"].enabled = true; });
@@ -380,7 +380,7 @@ namespace Ruetobas
             Logic.textBoxes[Logic.gameNamespace + "ACTUALPLAYER"] = new TextBox(Logic.errorButton, 5, Alignment.Left, Logic.font, new Rectangle(1380, 0, 290, 50));
             Logic.buttons[Logic.gameNamespace + "DISCARD"] = new Button(Logic.discardTexture, new Rectangle(1380, 780, 540, 75), Logic.DiscardCard);
             Logic.buttons[Logic.gameNamespace + "REMOVE"] = new Button(Logic.errorButton, new Rectangle(1380, 855, 540, 75), null);
-            Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayOptions(true));
+            Logic.buttons[Logic.gameNamespace + "MENU"] = new Button(Logic.settingsTexture, new Rectangle(1380, 930, 540, 75), () => Logic.DisplayOptions(true, true));
             Logic.buttons[Logic.gameNamespace + "EXIT"] = new Button(Logic.errorButton, new Rectangle(1380, 1005, 540, 75), null);
             Logic.grids[Logic.gameNamespace + "CARDS"] = new Grid(Logic.game, Logic.chatTexture, Logic.chatTexture, 6, 1, new Vector2(200, 300), new Rectangle(180, 780, 1200, 300), 0, Logic.HandClick, Logic.HandDraw);
             Logic.grids[Logic.gameNamespace + "BOARD"] = new Grid(Logic.game, Logic.boardTexture, Logic.cardTexture[0], 19, 15, new Vector2(105, 150), new Rectangle(0, 0, 1380, 720), 20, Logic.BoardClick, Logic.BoardDraw);

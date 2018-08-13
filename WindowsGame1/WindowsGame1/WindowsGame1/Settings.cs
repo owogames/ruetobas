@@ -17,7 +17,7 @@ namespace Ruetobas
         public static bool isFullscreen = false;
         public static bool onlyNativeRes = true;
         public static float volume = 1.0f;
-
+        
         public static void Initialize(Game game)
         {
             Settings.game = game;
@@ -40,7 +40,6 @@ namespace Ruetobas
                     + isFullscreen.ToString() + divisionChar
                     + onlyNativeRes.ToString() + divisionChar
                     + volume.ToString();
-                Console.WriteLine(volume.ToString());
                 sr.Write(output);
                 sr.Close();
             }
@@ -78,7 +77,7 @@ namespace Ruetobas
                 }
 
                 if (isFullscreen != new_fullscreen)
-                    Logic.ChangeFullscreen();
+                    ChangeFullscreen();
                 if (onlyNativeRes != new_nativeRes)
                     Logic.ChangeNativeResMode();
                 if (new_volume > 0.0f && new_volume < 1.0f)
@@ -90,6 +89,12 @@ namespace Ruetobas
             }
             else
                 return 1;
+        }
+
+        public static void ChangeFullscreen()
+        {
+            game.ToggleFullscreen();
+            isFullscreen = !isFullscreen;
         }
     }
 }
