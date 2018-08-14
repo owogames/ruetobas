@@ -415,7 +415,7 @@ namespace Ruetobas
 
                         if (Logic.textBoxes.ContainsKey(name))
                         {
-                            if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled)
+                            if (Geo.RectContains(Logic.textBoxes[name].location, mousePos) && Logic.textBoxes[name].enabled && Logic.textBoxes[name].registerClicks)
                             {
                                 if (activeInputBox != null)
                                     activeInputBox.active = false;

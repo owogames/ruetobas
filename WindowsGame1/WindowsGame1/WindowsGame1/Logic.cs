@@ -31,7 +31,6 @@ namespace Ruetobas
         public static Texture2D errorBackground;
         public static Texture2D errorWindow;
         public static Texture2D errorButton;
-        public static Texture2D discardTexture;
         public static Texture2D emptyTextbox;
         public static Texture2D readyTexture;
         public static Texture2D notReadyTexture;
@@ -54,6 +53,7 @@ namespace Ruetobas
         public static Texture2D[] mapCardTexture = new Texture2D[3];
         public static Texture2D tileGrass, tileDirt, tileGrid;
         public static Texture2D[] tileTunnel = new Texture2D[46];
+        public static Texture2D gameChatTexture;
         public static SpriteFont font, guifont;
         public static Effect maskEffect;
 
@@ -136,8 +136,8 @@ namespace Ruetobas
             tickedTexture = game.Content.Load<Texture2D>("gui\\toggleboxon");
             chatTexture = game.Content.Load<Texture2D>("gamegui\\chattexture");
             boardTexture = game.Content.Load<Texture2D>("gamegui\\boardtexture");
-            chatInputTexture = game.Content.Load<Texture2D>("tekstura2");
-            chatSendTexture = game.Content.Load<Texture2D>("tekstura3");
+            chatInputTexture = game.Content.Load<Texture2D>("gamegui\\chatinput");
+            chatSendTexture = game.Content.Load<Texture2D>("gamegui\\chatsend");
             skurwielTexture = game.Content.Load<Texture2D>("zoltyskurwiel");
             readyTexture = game.Content.Load<Texture2D>("ReadyButton");
             notReadyTexture = game.Content.Load<Texture2D>("NotReadyButton");
@@ -180,7 +180,7 @@ namespace Ruetobas
             buffTexture[2] = game.Content.Load<Texture2D>("buffcart");
             for (int i = 0; i < 3; i++)
                 mapCardTexture[i] = game.Content.Load<Texture2D>("cards\\mapcard" + (i + 42).ToString());
-            discardTexture = game.Content.Load<Texture2D>("buttondiscard");
+            gameChatTexture = game.Content.Load<Texture2D>("gamegui\\chatgroup");
 
             game.loadingString = "Loading cards...";
             ReadCards();
@@ -242,7 +242,10 @@ namespace Ruetobas
                     Vector2 size = font.MeasureString(text);
                     Rectangle rect = Geo.Shrink(new Rectangle((int)(game.mouseState.X / Game.scale.X), (int)(game.mouseState.Y / Game.scale.Y) - (int)size.Y, (int)size.X, (int)size.Y), -3);
                     images[gameNamespace + "ZZHOVER"] = new RawImage(solidBlack, Geo.Shrink(rect, -2));
-                    textBoxes[gameNamespace + "ZZZHOVER"] = new TextBox(solidGray, 3, Alignment.Left, font, rect, text);
+                    textBoxes[gameNamespace + "ZZZHOVER"] = new TextBox(solidGray, 3, Alignment.Left, font, rect, text)
+                    {
+                        registerClicks = false
+                    };
                 }
             }
 
@@ -271,17 +274,17 @@ namespace Ruetobas
                 Console.WriteLine(sub);
                 string[] data = sub.Split(' ');
                 if (data[0] == "CHAT")
-                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim());
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim(), Color.Black);
                 if (data[0] == "JOIN")
                 {
-                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim() + " has joined the game.", Color.Yellow);
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(5).Trim() + " has joined the game.", Color.DarkGoldenrod);
                     players.Add(new Player(0, sub.Substring(5).Trim()));
                     SortPlayers();
                 }
                 if (data[0] == "BYE")
                 {
                     PlaySound(bye, 1.0f);
-                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.", Color.Yellow);
+                    textBoxes[gameNamespace + "CHAT"].AppendAndWrap(sub.Substring(4).Trim() + " has left the game.", Color.DarkGoldenrod);
                     for (int i = 0; i < players.Count; i++)
                     {
                         if (players[i].username == sub.Substring(4).Trim())
@@ -414,14 +417,14 @@ namespace Ruetobas
                         }
                         if (data[2] == "DISCARD")
                             line = playerTurn + " discarded " + int.Parse(data[3]) + " card" + (int.Parse(data[3]) > 1 ? "s" : "");
-                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap(line, Color.PaleTurquoise);
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap(line, Color.Purple);
                     }
 
                     playerTurn = data[1].Trim();
                     if (playerTurn == username)
                     {
                         textBoxes[gameNamespace + "HELP"].lines[0] = "Select card from your hand";
-                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("It's your turn", Color.PaleTurquoise);
+                        textBoxes[gameNamespace + "CHAT"].AppendAndWrap("It's your turn", Color.Purple);
                         PlaySound(bubbles, 1.0f);
                     }
                     else
@@ -600,7 +603,7 @@ namespace Ruetobas
                 buttons[gameNamespace + "PLAYERLISTOFF"].enabled = false;
                 //grids[gameNamespace + "BOARD"].enabled = false;
                 grids[gameNamespace + "ZPLAYERLIST"].enabled = false;
-                textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You joined the game.", Color.Yellow);
+                textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You joined the game.", Color.DarkGoldenrod);
                 inputBoxes[gameNamespace + "CHATINPUT"].text = "";
                 buttons[gameNamespace + "READY"].texture = notReadyTexture;
             }
