@@ -53,7 +53,7 @@ namespace Ruetobas
         public static Texture2D[] mapCardTexture = new Texture2D[3];
         public static Texture2D tileGrass, tileDirt, tileGrid;
         public static Texture2D[] tileTunnel = new Texture2D[46];
-        public static Texture2D gameChatTexture;
+        public static Texture2D gameChatTexture, gameBackgroundTexture;
         public static SpriteFont font, guifont;
         public static Effect maskEffect;
 
@@ -181,6 +181,7 @@ namespace Ruetobas
             for (int i = 0; i < 3; i++)
                 mapCardTexture[i] = game.Content.Load<Texture2D>("cards\\mapcard" + (i + 42).ToString());
             gameChatTexture = game.Content.Load<Texture2D>("gamegui\\chatgroup");
+            gameBackgroundTexture = game.Content.Load<Texture2D>("gamegui\\gamebackground");
 
             game.loadingString = "Loading cards...";
             ReadCards();
@@ -421,6 +422,7 @@ namespace Ruetobas
                     }
 
                     playerTurn = data[1].Trim();
+                    textBoxes[gameNamespace + "PLAYERTURNTEXT"].lines[0] = playerTurn + "'s turn";
                     if (playerTurn == username)
                     {
                         textBoxes[gameNamespace + "HELP"].lines[0] = "Select card from your hand";
@@ -593,6 +595,7 @@ namespace Ruetobas
                 UI.DisableGroup(optionsNamespace);
                 UI.DisableGroup(menuNamespace);
                 UI.EnableGroup(gameNamespace);
+                HidePlayerList();
                 menuMusicInstance.Stop();
                 for (int i = 0; i < 6; i++)
                     cardHand[i] = 0;
@@ -600,9 +603,6 @@ namespace Ruetobas
                     for (int j = 0; j < 15; j++)
                         map[i, j] = new PlacedCard(0, 0);
                 textBoxes[gameNamespace + "CHAT"].Reset();
-                buttons[gameNamespace + "PLAYERLISTOFF"].enabled = false;
-                //grids[gameNamespace + "BOARD"].enabled = false;
-                grids[gameNamespace + "ZPLAYERLIST"].enabled = false;
                 textBoxes[gameNamespace + "CHAT"].AppendAndWrap("You joined the game.", Color.DarkGoldenrod);
                 inputBoxes[gameNamespace + "CHATINPUT"].text = "";
                 buttons[gameNamespace + "READY"].texture = notReadyTexture;
@@ -635,16 +635,16 @@ namespace Ruetobas
 
         public static void ShowPlayerList()
         {
-            buttons[gameNamespace + "PLAYERLISTON"].enabled = false;
-            buttons[gameNamespace + "PLAYERLISTOFF"].enabled = true;
+            buttons[gameNamespace + "PLAYERLISTTOGGLE"].clickEvent = HidePlayerList;
             grids[gameNamespace + "ZPLAYERLIST"].enabled = true;
+            textBoxes[gameNamespace + "PLAYERLISTTOGGLETEXT"].lines[0] = "Hide player list";
         }
 
         public static void HidePlayerList()
         {
-            buttons[gameNamespace + "PLAYERLISTON"].enabled = true;
-            buttons[gameNamespace + "PLAYERLISTOFF"].enabled = false;
+            buttons[gameNamespace + "PLAYERLISTTOGGLE"].clickEvent = ShowPlayerList;
             grids[gameNamespace + "ZPLAYERLIST"].enabled = false;
+            textBoxes[gameNamespace + "PLAYERLISTTOGGLETEXT"].lines[0] = "Show player list";
         }
 
         public static void DiscardCard()
@@ -693,6 +693,7 @@ namespace Ruetobas
 
         public static void HandDraw(SpriteBatch spriteBatch, Rectangle location, int x, int y)
         {
+            location = Geo.Shrink(location, 20);
             if (selectedRot == 0 || x != selectedCard)
             {
                 if (cards[cardHand[x]].cardType == CardType.Tunnel)

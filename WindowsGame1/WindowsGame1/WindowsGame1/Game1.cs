@@ -326,6 +326,12 @@ namespace Ruetobas
         public InputBox activeInputBox = null;
         Grid draggedGrid;
 
+
+        //FPS count
+        int frames = 0;
+        int fps = 0;
+        float framesTimeSinceCheck = 0.0f;
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -648,6 +654,15 @@ namespace Ruetobas
         
         protected override void Draw(GameTime gameTime)
         {
+            framesTimeSinceCheck += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            frames++;
+            if (framesTimeSinceCheck >= 1.0f)
+            {
+                fps = frames;
+                frames = 0;
+                framesTimeSinceCheck = 0.0f;
+            }
+
             //Loading
             if (isLoading)
             {
@@ -725,30 +740,29 @@ namespace Ruetobas
                 if (Logic.buttons.ContainsKey(name))
                 {
                     Button button = Logic.buttons[name];
-                    spriteBatch.Draw(button.texture, Geo.Scale(button.location), Color.White);
+                    if (button.texture != null)
+                        spriteBatch.Draw(button.texture, Geo.Scale(button.location), Color.White);
                 }
 
                 //Rysowanie textBoxów
                 if (Logic.textBoxes.ContainsKey(name))
                 {
                     TextBox textBox = Logic.textBoxes[name];
-                    if (textBox.enabled)
-                    {
+                    if (textBox.texture != null)
                         spriteBatch.Draw(textBox.texture, Geo.Scale(textBox.location), Color.White);
-                        for (int i = textBox.scroll; i < textBox.lines.Count && i < textBox.lineCount + textBox.scroll; i++)
-                        {
-                            float _x = 0;
+                    for (int i = textBox.scroll; i < textBox.lines.Count && i < textBox.lineCount + textBox.scroll; i++)
+                    {
+                        float _x = 0;
 
-                            if (textBox.align == Alignment.Left)
-                                _x = textBox.location.X + textBox.margin;
-                            else if (textBox.align == Alignment.Centered)
-                                _x = textBox.location.X + (textBox.location.Width - textBox.font.MeasureString(textBox.lines[i]).X) / 2;
-                            _x = (int)_x;
+                        if (textBox.align == Alignment.Left)
+                            _x = textBox.location.X + textBox.margin;
+                        else if (textBox.align == Alignment.Centered)
+                            _x = textBox.location.X + (textBox.location.Width - textBox.font.MeasureString(textBox.lines[i]).X) / 2;
+                        _x = (int)_x;
 
-                            Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
+                        Vector2 position = new Vector2(_x, textBox.location.Y + textBox.font.LineSpacing * (i - textBox.scroll) + textBox.margin);
 
-                            spriteBatch.DrawString(textBox.font, textBox.lines[i], position * scale, textBox.colors[i], 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
-                        }
+                        spriteBatch.DrawString(textBox.font, textBox.lines[i], position * scale, textBox.colors[i], 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0);
                     }
                 }
 
@@ -756,7 +770,8 @@ namespace Ruetobas
                 if (Logic.inputBoxes.ContainsKey(name))
                 {
                     InputBox inputBox = Logic.inputBoxes[name];
-                    spriteBatch.Draw(inputBox.texture, Geo.Scale(inputBox.location), inputBox.active ? Color.Gray : Color.White);
+                    if (inputBox.texture != null)
+                        spriteBatch.Draw(inputBox.texture, Geo.Scale(inputBox.location), inputBox.active ? Color.Gray : Color.White);
                     string text = inputBox.GetText();
                     if (inputBox.active) text += "|";
                     Vector2 position = new Vector2(inputBox.location.X + inputBox.margin, inputBox.location.Y + inputBox.location.Height / 2 - inputBox.font.LineSpacing / 2);
@@ -775,7 +790,8 @@ namespace Ruetobas
                 if (Logic.grids.ContainsKey(name))
                 {
                     Grid grid = Logic.grids[name];
-                    spriteBatch.Draw(grid.boxTexture, Geo.Scale(grid.location), Color.White);
+                    if (grid.boxTexture != null)
+                        spriteBatch.Draw(grid.boxTexture, Geo.Scale(grid.location), Color.White);
                     spriteBatch.Draw(grid.renderTarget, Geo.Scale(Geo.Shrink(grid.location, grid.margin)), Color.White);
                 }
 
@@ -789,7 +805,9 @@ namespace Ruetobas
 
             //Rysowanie kursora
             spriteBatch.Draw(cursorTexture, new Rectangle(Mouse.GetState().X - 16, Mouse.GetState().Y, 32, 32), Color.White);
-            
+
+            spriteBatch.DrawString(Logic.font, fps.ToString(), new Vector2(0, 0), Color.White);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
